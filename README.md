@@ -20,13 +20,12 @@ Imprenta4.0 es un sistema administrativo para gestionar las operaciones de una i
 ```bash
 Imprenta4.0/
 │
-├── /assets           # Recursos estáticos (imágenes, estilos, scripts)
+├── /bd               # Scripts y modelos de la base de datos
+├── /config           # Configuraciones generales
 ├── /src              # Código fuente (vistas, controladores, modelos)
 │   ├── /controllers  # Lógica del negocio
 │   ├── /models       # Clases y conexión a la base de datos
 │   └── /views        # Vistas PHP, templates con includes
+│       ├── /assets   # Recursos estáticos (imágenes, estilos, scripts)
 │
-├── /config           # Configuraciones generales
-├── /public           # Carpeta pública del servidor (index.php)
-├── README.md         # Documento que estás leyendo
-└── /database         # Scripts y modelos de la base de datos
+└── README.md         # Documento que estás leyendo
