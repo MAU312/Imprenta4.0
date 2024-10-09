@@ -24,7 +24,7 @@ $('#Form_Login').on('submit', function (event) {
                             confirmButton: 'bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700'
                         },
                         preConfirm: () => {
-                            window.location.href = '../views/starter.php';
+                            window.location.href = '../views/index.php';
                         }
                     });
                     break;

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body class="bg-gradient-to-r from-blue-500 to-blue-800 min-h-screen flex items-center justify-center">
 
     <!-- Notificación personalizada -->
@@ -22,11 +24,11 @@
             <!-- Email -->
             <div class="mb-4">
                 <label for="email" class="block text-gray-700 font-semibold mb-2">Correo Electrónico</label>
-                <input 
-                    type="email" 
-                    id="email" 
-                    name="email" 
-                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Ingresa tu correo"
                     required>
             </div>
@@ -34,11 +36,11 @@
             <!-- Password -->
             <div class="mb-6">
                 <label for="password" class="block text-gray-700 font-semibold mb-2">Contraseña</label>
-                <input 
-                    type="password" 
-                    id="password" 
-                    name="password" 
-                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Ingresa tu contraseña"
                     required>
             </div>
@@ -54,4 +56,5 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="./assets/JavaScript/login.js"></script>
 </body>
+
 </html>
