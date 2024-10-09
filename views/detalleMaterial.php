@@ -41,7 +41,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                 </svg>
-                Agregar Material
+                Agregar Entrada
             </button>
             <h1 class="text-3xl font-bold text-blue-700 flex-1" style="margin-left: 15%;">Inventario de Materiales</h1>
         </div>
@@ -76,11 +76,19 @@
             <table id="tbllistado" class="min-w-full bg-white rounded-lg border-collapse">
                 <thead class="bg-gray-200">
                     <tr class="border-b">
-                        <th class="px-6 py-4 text-left text-gray-700">ID</th>
-                        <th class="px-6 py-4 text-left text-gray-700">Material</th>
-                        <th class="px-6 py-4 text-left text-gray-700">Cantidad Inventario</th>
-                        <th class="px-6 py-4 text-left text-gray-700">Valor Inventario</th>
-                        <th class="px-6 py-4 text-left text-gray-700">Acciones</th>
+                        <th class="px-6 py-4 text-left text-gray-700">ID Detalle</th>
+                        <th class="px-6 py-4 text-left text-gray-700">ID Material</th>
+                        <th class="px-6 py-4 text-left text-gray-700">Fecha</th>
+                        <th class="px-6 py-4 text-left text-gray-700">Proveedor</th>
+                        <th class="px-6 py-4 text-left text-gray-700">Factura</th>
+                        <th class="px-6 py-4 text-left text-gray-700">Cantidad Resma</th>
+                        <th class="px-6 py-4 text-left text-gray-700">Pliegos Resma</th>
+                        <th class="px-6 py-4 text-left text-gray-700">Cantidad Pliegos</th>
+                        <th class="px-6 py-4 text-left text-gray-700">Precio por Pliego</th>
+                        <th class="px-6 py-4 text-left text-gray-700">Subtotal</th>
+                        <th class="px-6 py-4 text-left text-gray-700">Descuento</th>
+                        <th class="px-6 py-4 text-left text-gray-700">Tipo de Cambio</th>
+                        <th class="px-6 py-4 text-left text-gray-700">Precio Total</th>
                     </tr>
                 </thead>
                 <tbody id="materialTableBody" class="text-gray-700">
@@ -88,6 +96,8 @@
                 </tbody>
             </table>
         </div>
+
+
     </div>
 
 
@@ -95,8 +105,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
-    <script src="./assets/JavaScript/mostrar.js"></script>
-    <script src="./assets/JavaScript/agregarMaterial.js"></script>
+    <script src="./assets/JavaScript/mostrarEntrada.js"></script>
 </body>
 
 </html>

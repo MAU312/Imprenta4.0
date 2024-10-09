@@ -1,5 +1,5 @@
 <?php
-require_once '../models/TablaProductos.php';
+require_once '../models/TablaProductos.php'; // Asegúrate de que este archivo esté en la ubicación correcta
 
 // Verificar si se ha enviado la operación deseada
 switch ($_GET["op"]) {
@@ -8,18 +8,17 @@ switch ($_GET["op"]) {
         break;
 
     case 'agregar':
-        //agregar();
+        agregar();
         break;
 
-    case 'editar':
-        //editar();
+    case 'detalles':
+        //listarDetalles(); // Llama a la función para obtener detalles
         break;
 
     case 'eliminar':
         //eliminar();
         break;
 }
-
 
 function listar()
 {
@@ -76,95 +75,33 @@ function transformarDatos($datos)
     return $data;
 }
 
-
-/*
- 
-
 function agregar()
 {
-    $nombre = isset($_POST["nombre"]) ? trim($_POST["nombre"]) : "";
-    $descripcion = isset($_POST["descripcion"]) ? trim($_POST["descripcion"]) : "";
-    $precio = isset($_POST["precio"]) ? trim($_POST["precio"]) : "";
+    // Obtiene y limpia el nombre del material
+    $material = isset($_POST["material"]) ? trim($_POST["material"]) : "";
 
-    if (empty($nombre) || empty($descripcion) || empty($precio)) {
+    if (empty($material)) {
         echo "Favor ingresar todos los datos";
         return;
     }
 
-    $producto = new TablaProductos();
-    $producto->setNombre($nombre);
-    $producto->setDescripcion($descripcion);
-    $producto->setPrecio($precio);
+    $tablaProductos = new TablaProductos(); // Instancia del modelo
+    $tablaProductos->setMaterial($material); // Asigna el material
 
     try {
-        $resultado = $producto->agregar();
+        // Primero, verifica si el material ya existe
+        if ($tablaProductos->existeMaterial()) {
+            echo "2"; // Respuesta: el material ya existe
+            return;
+        }
 
-        if ($resultado) {
-            echo "1";
-
+        // Llama al método agregar del modelo
+        if ($tablaProductos->agregar()) {
+            echo "1"; // Respuesta exitosa
         } else {
-            echo "No fue posible la operación";
+            echo "3"; // Respuesta de error (no fue posible la operación)
         }
     } catch (Exception $e) {
-        echo "Error: " . $e->getMessage();
+        echo "Error: " . $e->getMessage(); // Captura de errores
     }
 }
-
-function editar()
-{
-    $id = isset($_POST["id"]) ? trim($_POST["id"]) : "";
-    $nombre = isset($_POST["nombre"]) ? trim($_POST["nombre"]) : "";
-    $descripcion = isset($_POST["descripcion"]) ? trim($_POST["descripcion"]) : "";
-    $precio = isset($_POST["precio"]) ? trim($_POST["precio"]) : "";
-
-    
-
-    if (empty($id) || empty($nombre) || empty($descripcion) || empty($precio)) {
-        echo "Favor ingresar todos los datos";
-        return;
-    }
-
-    $producto = new TablaProductos();
-    $producto->setId($id);
-    $producto->setNombre($nombre);
-    $producto->setDescripcion($descripcion);
-    $producto->setPrecio($precio);
-
-    try {
-        $resultado = $producto->editar($id, $nombre, $descripcion, $precio);
-
-        if ($resultado) {
-            echo "1";
-        } else {
-            echo "No fue posible la operación";
-        }
-    } catch (Exception $e) {
-        echo "Error: " . $e->getMessage();
-    }
-}
-
-function eliminar()
-{
-    $id = isset($_POST["id"]) ? trim($_POST["id"]) : "";
-
-    if (empty($id)) {
-        echo "Favor ingresar todos los datos";
-        return;
-    }
-
-    $producto = new TablaProductos();
-    $producto->setId($id);
-
-    try {
-        $resultado = $producto->eliminar($id);
-
-        if ($resultado) {
-            echo "1";
-        } else {
-            echo "No fue posible la operación";
-        }
-    } catch (Exception $e) {
-        echo "Error: " . $e->getMessage();
-    }
-}
-    */

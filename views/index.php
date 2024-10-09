@@ -63,7 +63,7 @@
             const pulgadas = parseFloat(this.value);
             if (!isNaN(pulgadas)) {
                 const centimetros = pulgadas * 2.54;
-                document.getElementById('outputCentimetros').value = centimetros.toFixed(5);
+                document.getElementById('outputCentimetros').value = centimetros.toFixed(2);
             } else {
                 document.getElementById('outputCentimetros').value = '';
             }
@@ -74,7 +74,7 @@
             const centimetros = parseFloat(this.value);
             if (!isNaN(centimetros)) {
                 const pulgadas = centimetros / 2.54;
-                document.getElementById('outputPulgadas').value = pulgadas.toFixed(5);
+                document.getElementById('outputPulgadas').value = pulgadas.toFixed(2);
             } else {
                 document.getElementById('outputPulgadas').value = '';
             }

@@ -86,4 +86,46 @@ class TablaProductos extends Conexion
             self::desconectar();
         }
     }
+
+    public function agregar()
+    {
+        $query = "CALL agregarMaterial(:Material)";
+
+        try {
+            // Intentamos conectar dentro del bloque try para capturar cualquier fallo en la conexión
+            self::getConexion();
+
+            $resultado = self::$cnx->prepare($query);
+            $resultado->bindParam(":Material", $this->Material);
+            $resultado->execute();
+
+            return true; // Retorno verdadero si se agregó correctamente
+        } catch (PDOException $e) {
+            throw new Exception("Error al agregar el material: " . $e->getMessage());
+        } finally {
+            // Aseguramos la desconexión al final de la ejecución
+            self::desconectar();
+        }
+    }
+
+
+    public function existeMaterial()
+    {
+        $query = "CALL existeMaterial(:Material)";
+
+        try {
+            self::getConexion();
+            $resultado = self::$cnx->prepare($query);
+            $resultado->bindParam(":Material", $this->Material);
+            $resultado->execute();
+
+            // Obtenemos el resultado de la consulta
+            $row = $resultado->fetch(PDO::FETCH_ASSOC);
+            return isset($row['existe']) && $row['existe'] === '1'; // Verificamos si la clave existe antes de comparar
+        } catch (PDOException $e) {
+            throw new Exception("Error al verificar la existencia del material: " . $e->getMessage());
+        } finally {
+            self::desconectar();
+        }
+    }
 }
