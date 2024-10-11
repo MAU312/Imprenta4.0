@@ -1,6 +1,7 @@
-function openPopup() {
+function agregarEntrada() {
     var urlParams = new URLSearchParams(window.location.search);
     var idMaterial = urlParams.get('idMaterial');
+    console.log("ID de Material en openPopup:", idMaterial);
     document.getElementById('idMaterial').value = idMaterial; // Asigna el valor del idMaterial al campo oculto
     document.getElementById('popup').classList.remove('hidden');
 }

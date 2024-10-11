@@ -91,7 +91,7 @@
                 <span class="slider"></span>
             </label>
 
-            <button id="btnAgregarEntrada" onclick="openPopup()" class="flex items-center bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200 ease-in-out mr-2" style="margin-left: 5%;">
+            <button id="btnAgregarEntrada" onclick="agregarEntrada()" class="flex items-center bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200 ease-in-out mr-2" style="margin-left: 5%;">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                 </svg>
@@ -99,7 +99,7 @@
             </button>
 
             <!-- Oculta el botón de Agregar Salida inicialmente -->
-            <button id="btnAgregarSalida" onclick="openPopupSalida()" class="flex items-center bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200 ease-in-out mr-2 hidden" style="margin-left: 5%;">
+            <button id="btnAgregarSalida" onclick="agregarSalida()" class="flex items-center bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200 ease-in-out mr-2 hidden" style="margin-left: 5%;">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                 </svg>
@@ -156,6 +156,8 @@
         <div id="popupSalida" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
             <div class="bg-white rounded-lg p-6 w-full max-w-4xl">
                 <h2 class="text-lg font-bold mb-4 text-center">Agregar Salida de Material</h2>
+
+                <input type="hidden" id="idMaterial"  value=""/>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
@@ -223,7 +225,8 @@
                         <th class="px-6 py-4 text-left text-gray-700">ID Material</th>
                         <th class="px-6 py-4 text-left text-gray-700">Fecha</th>
                         <th class="px-6 py-4 text-left text-gray-700">Cliente</th>
-                        <th class="px-6 py-4 text-left text-gray-700">Corte Producción</th>
+                        <th class="px-6 py-4 text-left text-gray-700">Corte</th>
+                        <th class="px-6 py-4 text-left text-gray-700">Producción</th>
                         <th class="px-6 py-4 text-left text-gray-700">Cantidad Pliegos</th>
                         <th class="px-6 py-4 text-left text-gray-700">Precio por Pliego</th>
                         <th class="px-6 py-4 text-left text-gray-700">Tipo de Cambio</th>
@@ -232,17 +235,6 @@
                 </thead>
                 <tbody id="salidaTableBody" class="text-gray-700">
                     <!-- Aquí se insertarán los registros de la tabla de salidas -->
-                    <tr>
-                        <td class="px-6 py-4 border-b">1</td>
-                        <td class="px-6 py-4 border-b">1001</td>
-                        <td class="px-6 py-4 border-b">2024-10-10</td>
-                        <td class="px-6 py-4 border-b">Cliente A</td>
-                        <td class="px-6 py-4 border-b">Corte 001</td>
-                        <td class="px-6 py-4 border-b">50</td>
-                        <td class="px-6 py-4 border-b">$2.00</td>
-                        <td class="px-6 py-4 border-b">1.00</td>
-                        <td class="px-6 py-4 border-b">$100.00</td>
-                    </tr>
                 </tbody>
             </table>
         </div>
@@ -279,17 +271,20 @@
 
 
 
-        function openPopup() {
-            document.getElementById('popup').classList.remove('hidden');
-        }
+        // Asocia el evento click al botón con id 'btnAgregarEntrada'
+        document.getElementById('btnAgregarEntrada').addEventListener('click', function() {
+            document.getElementById('popup').classList.remove('hidden'); // Muestra el popup
+        });
+
 
         function closePopup() {
             document.getElementById('popup').classList.add('hidden');
         }
 
-        function openPopupSalida() {
-            document.getElementById('popupSalida').classList.remove('hidden');
-        }
+        document.getElementById('btnAgregarSalida').addEventListener('click', function() {
+            document.getElementById('popupSalida').classList.remove('hidden'); // Muestra el popup
+        });
+
 
         function closePopupSalida() {
             document.getElementById('popupSalida').classList.add('hidden');

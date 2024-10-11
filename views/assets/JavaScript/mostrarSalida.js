@@ -41,7 +41,8 @@ $(document).ready(function () {
                 <td class="px-6 py-4 border-b">${detalle.idMateriales}</td>
                 <td class="px-6 py-4 border-b">${detalle.fechaDetalle}</td>
                 <td class="px-6 py-4 border-b">${detalle.cliente}</td>
-                <td class="px-6 py-4 border-b">${detalle.corteProduccion}</td>
+                <td class="px-6 py-4 border-b">${detalle.corte}</td>
+                <td class="px-6 py-4 border-b">${detalle.produccion}</td>
                 <td class="px-6 py-4 border-b">${detalle.cantidadPliegos}</td>
                 <td class="px-6 py-4 border-b">${detalle.precioPliego}</td>
                 <td class="px-6 py-4 border-b">${detalle.tipoCambio}</td>
