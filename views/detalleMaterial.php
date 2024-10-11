@@ -28,6 +28,52 @@
             z-index: 1000;
             /* Asegúrate de que el popup esté encima de otros elementos */
         }
+
+        /* Estilo para el interruptor */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: #2196F3;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(26px);
+        }
     </style>
 </head>
 
@@ -37,42 +83,114 @@
 
     <div class="flex-1 p-6">
         <div class="flex items-center mb-6">
-            <button onclick="showPopup()" class="flex items-center bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200 ease-in-out mr-2" style="margin-left: 5%;">
+
+            <h1 class="text-3xl font-bold text-blue-700 flex-1" style="margin-left: 5%;">Gestión de Materiales</h1>
+
+            <label class="switch">
+                <input type="checkbox" id="toggleSwitch" onchange="toggleButtons()">
+                <span class="slider"></span>
+            </label>
+
+            <button id="btnAgregarEntrada" onclick="openPopup()" class="flex items-center bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200 ease-in-out mr-2" style="margin-left: 5%;">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                 </svg>
                 Agregar Entrada
             </button>
-            <h1 class="text-3xl font-bold text-blue-700 flex-1" style="margin-left: 15%;">Inventario de Materiales</h1>
-        </div>
 
+            <!-- Oculta el botón de Agregar Salida inicialmente -->
+            <button id="btnAgregarSalida" onclick="openPopupSalida()" class="flex items-center bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200 ease-in-out mr-2 hidden" style="margin-left: 5%;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                Agregar Salida
+            </button>
+        </div>
         <!-- Popup -->
         <div id="popup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-            <div class="bg-white rounded-lg p-6 w-96">
-                <h2 class="text-lg font-bold mb-4">Nombre del Material</h2>
-                <input type="text" id="materialName" class="border border-gray-300 rounded px-3 py-2 w-full" placeholder="Ingresa el nombre del material" name="material">
-                <div class="mt-4 flex justify-end">
-                    <button onclick="addMaterial()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Agregar</button>
+            <div class="bg-white rounded-lg p-6 w-full max-w-4xl">
+                <h2 class="text-lg font-bold mb-4 text-center">Agregar Entrada de Material</h2>
+
+                <!-- Campo oculto para el ID del material -->
+                <input type="hidden" id="idMaterial" />
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="proveedor" class="block text-gray-700">Proveedor</label>
+                        <input type="text" id="proveedor" class="border border-gray-300 rounded px-3 py-2 w-full mb-4" placeholder="Ingresa el proveedor">
+
+                        <label for="factura" class="block text-gray-700">Factura</label>
+                        <input type="number" id="factura" class="border border-gray-300 rounded px-3 py-2 w-full mb-4" placeholder="Ingresa la factura">
+
+                        <label for="cantidadResma" class="block text-gray-700">Cantidad Resma</label>
+                        <input type="number" id="cantidadResma" class="border border-gray-300 rounded px-3 py-2 w-full mb-4" placeholder="Ingresa la cantidad de resmas">
+
+                        <label for="pliegosResma" class="block text-gray-700">Pliegos por Resma</label>
+                        <input type="number" id="pliegosResma" class="border border-gray-300 rounded px-3 py-2 w-full mb-4" placeholder="Ingresa los pliegos por resma">
+                    </div>
+
+                    <div>
+                        <label for="cantidadPliegos" class="block text-gray-700">Cantidad de Pliegos</label>
+                        <input type="number" id="cantidadPliegos" class="border border-gray-300 rounded px-3 py-2 w-full mb-4" placeholder="Ingresa la cantidad de pliegos">
+
+                        <label for="precioPliego" class="block text-gray-700">Precio por Pliego</label>
+                        <input type="number" id="precioPliego" class="border border-gray-300 rounded px-3 py-2 w-full mb-4" placeholder="Ingresa el precio por pliego">
+
+                        <label for="descuento" class="block text-gray-700">Descuento</label>
+                        <input type="number" id="descuento" class="border border-gray-300 rounded px-3 py-2 w-full mb-4" value="0">
+
+                        <label for="tipoCambio" class="block text-gray-700">Tipo de Cambio</label>
+                        <input type="number" id="tipoCambio" class="border border-gray-300 rounded px-3 py-2 w-full mb-4" value="1.00">
+                    </div>
+                </div>
+
+                <!-- Botones -->
+                <div class="flex justify-end mt-6">
+                    <button onclick="addEntradaMaterial()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Agregar</button>
                     <button onclick="closePopup()" class="bg-gray-300 text-gray-700 px-4 py-2 rounded ml-2">Cancelar</button>
                 </div>
             </div>
         </div>
 
+        <!-- Popup para agregar salida -->
+        <div id="popupSalida" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+            <div class="bg-white rounded-lg p-6 w-full max-w-4xl">
+                <h2 class="text-lg font-bold mb-4 text-center">Agregar Salida de Material</h2>
 
-        <script>
-            function showPopup() {
-                document.getElementById('popup').classList.remove('hidden');
-            }
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="cliente" class="block text-gray-700">Cliente</label>
+                        <input type="text" id="cliente" class="border border-gray-300 rounded px-3 py-2 w-full mb-4" placeholder="Ingresa el cliente">
 
-            function closePopup() {
-                document.getElementById('popup').classList.add('hidden');
-            }
-        </script>
+                        <label for="ordenCorte" class="block text-gray-700">Orden de Corte</label>
+                        <input type="text" id="ordenCorte" class="border border-gray-300 rounded px-3 py-2 w-full mb-4" placeholder="Ingresa la orden de corte">
 
+                        <label for="ordenProduccion" class="block text-gray-700">Orden de Producción</label>
+                        <input type="text" id="ordenProduccion" class="border border-gray-300 rounded px-3 py-2 w-full mb-4" placeholder="Ingresa la orden de producción">
 
+                        <label for="cantidadPliegosSalida" class="block text-gray-700">Cantidad de Pliegos</label>
+                        <input type="number" id="cantidadPliegosSalida" class="border border-gray-300 rounded px-3 py-2 w-full mb-4" placeholder="Ingresa la cantidad de pliegos">
 
+                    </div>
+
+                    <div>
+                        <label for="precioPliegoSalida" class="block text-gray-700">Precio por Pliego</label>
+                        <input type="number" id="precioPliegoSalida" class="border border-gray-300 rounded px-3 py-2 w-full mb-4" placeholder="Ingresa el precio por pliego">
+
+                        <label for="tipoCambioSalida" class="block text-gray-700">Tipo de Cambio</label>
+                        <input type="number" id="tipoCambioSalida" class="border border-gray-300 rounded px-3 py-2 w-full mb-4" value="1.00">
+                    </div>
+                </div>
+
+                <!-- Botones -->
+                <div class="flex justify-end mt-6">
+                    <button onclick="addSalidaMaterial()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Agregar</button>
+                    <button onclick="closePopupSalida()" class="bg-gray-300 text-gray-700 px-4 py-2 rounded ml-2">Cancelar</button>
+                </div>
+            </div>
+        </div>
         <!-- Tabla de materiales -->
-        <div class="w-full bg-white rounded-lg shadow-lg border border-gray-300 mb-6 overflow-x-auto">
+        <div id="diventradas" class="w-full bg-white rounded-lg shadow-lg border border-gray-300 mb-6 overflow-x-auto">
             <table id="tbllistado" class="min-w-full bg-white rounded-lg border-collapse">
                 <thead class="bg-gray-200">
                     <tr class="border-b">
@@ -96,16 +214,88 @@
                 </tbody>
             </table>
         </div>
-
+        <!-- Tabla de salidas -->
+        <div id="tablaSalidas" class="hidden w-full bg-white rounded-lg shadow-lg border border-gray-300 mb-6 overflow-x-auto">
+            <table id="tblSalidas" class="min-w-full bg-white rounded-lg border-collapse">
+                <thead class="bg-gray-200">
+                    <tr class="border-b">
+                        <th class="px-6 py-4 text-left text-gray-700">ID Detalle</th>
+                        <th class="px-6 py-4 text-left text-gray-700">ID Material</th>
+                        <th class="px-6 py-4 text-left text-gray-700">Fecha</th>
+                        <th class="px-6 py-4 text-left text-gray-700">Cliente</th>
+                        <th class="px-6 py-4 text-left text-gray-700">Corte Producción</th>
+                        <th class="px-6 py-4 text-left text-gray-700">Cantidad Pliegos</th>
+                        <th class="px-6 py-4 text-left text-gray-700">Precio por Pliego</th>
+                        <th class="px-6 py-4 text-left text-gray-700">Tipo de Cambio</th>
+                        <th class="px-6 py-4 text-left text-gray-700">Precio Total</th>
+                    </tr>
+                </thead>
+                <tbody id="salidaTableBody" class="text-gray-700">
+                    <!-- Aquí se insertarán los registros de la tabla de salidas -->
+                    <tr>
+                        <td class="px-6 py-4 border-b">1</td>
+                        <td class="px-6 py-4 border-b">1001</td>
+                        <td class="px-6 py-4 border-b">2024-10-10</td>
+                        <td class="px-6 py-4 border-b">Cliente A</td>
+                        <td class="px-6 py-4 border-b">Corte 001</td>
+                        <td class="px-6 py-4 border-b">50</td>
+                        <td class="px-6 py-4 border-b">$2.00</td>
+                        <td class="px-6 py-4 border-b">1.00</td>
+                        <td class="px-6 py-4 border-b">$100.00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
     </div>
-
-
     <!-- JavaScript para manejar el CRUD -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="./assets/JavaScript/agregarEntrada.js"></script>
     <script src="./assets/JavaScript/mostrarEntrada.js"></script>
+    <script src="./assets/JavaScript/agregarSalida.js"></script>
+    <script src="./assets/JavaScript/mostrarSalida.js"></script>
+    <script>
+        function toggleButtons() {
+            const toggle = document.getElementById('toggleSwitch');
+            const btnAgregarEntrada = document.getElementById('btnAgregarEntrada');
+            const btnAgregarSalida = document.getElementById('btnAgregarSalida');
+            const tablaEntradas = document.getElementById('diventradas');
+            const tablaSalidas = document.getElementById('tablaSalidas');
+
+            if (toggle.checked) {
+                btnAgregarEntrada.classList.add('hidden');
+                btnAgregarSalida.classList.remove('hidden');
+                tablaEntradas.classList.add('hidden'); // Ocultar tabla de entradas
+                tablaSalidas.classList.remove('hidden'); // Mostrar tabla de salidas
+            } else {
+                btnAgregarEntrada.classList.remove('hidden');
+                btnAgregarSalida.classList.add('hidden');
+                tablaEntradas.classList.remove('hidden'); // Mostrar tabla de entradas
+                tablaSalidas.classList.add('hidden'); // Ocultar tabla de salidas
+            }
+        }
+
+
+
+        function openPopup() {
+            document.getElementById('popup').classList.remove('hidden');
+        }
+
+        function closePopup() {
+            document.getElementById('popup').classList.add('hidden');
+        }
+
+        function openPopupSalida() {
+            document.getElementById('popupSalida').classList.remove('hidden');
+        }
+
+        function closePopupSalida() {
+            document.getElementById('popupSalida').classList.add('hidden');
+        }
+    </script>
+
 </body>
 
 </html>

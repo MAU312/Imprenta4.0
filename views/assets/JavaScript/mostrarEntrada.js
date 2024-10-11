@@ -9,17 +9,19 @@ $(document).ready(function () {
         listarDetallesMaterial(idMaterial);
     }
 
+    
+
+    // Función para listar los detalles de entrada
     function listarDetallesMaterial(idMaterial) {
         $.ajax({
             url: '../controllers/entradaMaterialController.php?op=listarDetalles&idMaterial=' + idMaterial,
             type: 'GET',
             dataType: 'json',
             success: function (data) {
-                if (data.success) { // Cambiado a data.success
-                    // Aquí asumo que 'data.data' es un array de objetos con los detalles
-                    llenarTablaDetalles(data.data); // Cambiado a data.data
+                if (data.success) {
+                    llenarTablaDetalles(data.data);
                 } else {
-                    alert(data.message); // Mostrar mensaje si no hay detalles
+                    alert(data.message);
                 }
             },
             error: function (xhr, status, error) {
@@ -29,12 +31,12 @@ $(document).ready(function () {
         });
     }
 
+    // Función para llenar la tabla de detalles de entrada
     function llenarTablaDetalles(detalles) {
         let tbody = $('#materialTableBody');
         tbody.empty(); // Limpiar tabla antes de llenarla
 
         detalles.forEach(detalle => {
-            // Asumiendo que 'detalle' tiene las propiedades que necesitas
             tbody.append(`
                 <tr>
                     <td class="px-6 py-4 border-b">${detalle.idDetalleEntrada}</td>

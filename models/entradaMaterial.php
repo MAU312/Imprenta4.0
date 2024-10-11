@@ -188,4 +188,38 @@ class TablaProductos extends Conexion
             self::desconectar();
         }
     }
+
+    // Método para insertar una nueva entrada de material
+    public function insertarEntrada($idMaterial, $proveedor, $factura, $cantidadResma, $pliegosResma, $cantidadPliegos, $precioPliego, $descuento, $tipoCambio)
+    {
+        // SQL para llamar al stored procedure
+        $sql = "CALL agregarEntradaMaterial(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try {
+            self::getConexion();
+            $stmt = self::$cnx->prepare($sql);
+
+            // Vincular parámetros
+            $stmt->bindParam(1, $idMaterial, PDO::PARAM_INT);
+            $stmt->bindParam(2, $proveedor, PDO::PARAM_STR);
+            $stmt->bindParam(3, $factura, PDO::PARAM_STR);
+            $stmt->bindParam(4, $cantidadResma, PDO::PARAM_INT);
+            $stmt->bindParam(5, $pliegosResma, PDO::PARAM_INT);
+            $stmt->bindParam(6, $cantidadPliegos, PDO::PARAM_INT);
+            $stmt->bindParam(7, $precioPliego, PDO::PARAM_STR);
+            $stmt->bindParam(8, $descuento, PDO::PARAM_STR);
+            $stmt->bindParam(9, $tipoCambio, PDO::PARAM_STR);
+
+            // Ejecutar el stored procedure
+            if ($stmt->execute()) {
+                return true; // Retorna true si la inserción fue exitosa
+            } else {
+                return false; // Si algo falla, retorna false
+            }
+        } catch (PDOException $e) {
+            throw new Exception("Error al insertar la entrada: " . $e->getMessage());
+        } finally {
+            self::desconectar();
+        }
+    }
 }
