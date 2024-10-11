@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRUD de Materiales</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Enlace de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -20,77 +21,81 @@
     <?php include './assets/Fragments/sidebar.php'; ?>
 
     <div class="flex-1 p-6">
-        <h1 class="text-3xl font-bold mb-6 text-center text-blue-700">Inventario de Materiales</h1>
+        <h1 class="text-3xl font-bold mb-6 text-center text-blue-700">Home</h1>
 
-        <!-- Tabla de materiales -->
-        <div class="bg-white rounded-lg shadow-md border border-gray-300 mb-6 overflow-hidden">
-            <table id="tbllistado" class="table-auto w-full bg-white rounded-lg">
-                <thead class="bg-gray-200">
-                    <tr>
-                        <th class="px-4 py-2 text-left text-gray-700">ID</th>
-                        <th class="px-4 py-2 text-left text-gray-700">Material</th>
-                        <th class="px-4 py-2 text-left text-gray-700">Cantidad Inventario</th>
-                        <th class="px-4 py-2 text-left text-gray-700">Valor Inventario</th>
-                    </tr>
-                </thead>
-                <tbody id="materialTableBody" class="text-gray-700">
-                    <!-- Filas de materiales serán agregadas aquí -->
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Botones para agregar, editar y eliminar -->
-        <div class="flex justify-center space-x-4 mb-6">
-            <button id="btnAgregar" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200" onclick="openModal()"><i class="fas fa-plus"></i> Agregar Material</button>
-            <button id="btnEditar" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition duration-200"><i class="fas fa-edit"></i> Editar Material</button>
-            <button id="btnEliminar" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200"><i class="fas fa-trash"></i> Eliminar Material</button>
-        </div>
-
-        <!-- Modal para agregar material -->
-        <div id="modalAgregar" class="fixed inset-0 flex items-center justify-center z-50 hidden">
-            <div class="bg-white rounded-lg shadow-lg p-6 w-1/3">
-                <h2 class="text-xl font-bold mb-4">Agregar Material</h2>
-                <form id="formAgregar">
-                    <div class="mb-4">
-                        <label for="nombre" class="block text-gray-700">Nombre del Material</label>
-                        <input type="text" id="nombre" name="nombreMaterial" class="border border-gray-300 rounded-lg w-full p-2" required>
+        <!-- Conversor de medidas con icono mejorado -->
+        <div class="bg-white rounded-lg shadow-md border border-gray-300 mb-6 p-4">
+            <h2 class="text-xl font-semibold mb-4 text-center">Conversor de Medidas</h2>
+            <div class="flex flex-col space-y-4">
+                <div class="flex justify-between items-center">
+                    <div class="flex flex-col w-1/2 pr-2">
+                        <label id="labelInput" for="inputValor" class="mb-1 text-gray-700">Pulgadas:</label>
+                        <input type="number" id="inputValor" placeholder="Ingrese valor" class="border rounded-lg p-2" />
                     </div>
-                    <div class="mb-4">
-                        <label for="cantidad" class="block text-gray-700">Cantidad Disponible</label>
-                        <input type="number" id="cantidad" name="cantidadDisponible" class="border border-gray-300 rounded-lg w-full p-2" required>
+                    <div class="flex justify-center">
+                        <!-- Botón con icono de cambio (flechas en círculo) -->
+                        <button id="swapButton" class="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-semibold rounded-full shadow-lg px-6 py-3 transition-transform transform hover:scale-105">
+                            <i class="fas fa-sync-alt"></i> <!-- Ícono de flechas en círculo -->
+                        </button>
                     </div>
-                    <div class="mb-4">
-                        <label for="valor" class="block text-gray-700">Valor de Inventario</label>
-                        <input type="number" id="valor" name="valorInventario" step="0.01" class="border border-gray-300 rounded-lg w-full p-2" required>
+                    <div class="flex flex-col w-1/2 pl-2">
+                        <label id="labelOutput" for="outputValor" class="mb-1 text-gray-700">Centímetros:</label>
+                        <input type="text" id="outputValor" placeholder="Resultado" class="border rounded-lg p-2" readonly />
                     </div>
-                    <div class="flex justify-end">
-                        <button type="button" class="bg-gray-400 text-white px-4 py-2 rounded-lg mr-2" onclick="closeModal()">Cancelar</button>
-                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Guardar</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
-
-        <!-- Footer -->
-        <footer class="text-center text-gray-600 text-sm">
-            &copy; 2024 Tu Empresa. Todos los derechos reservados.
-        </footer>
     </div>
 
-    <!-- JavaScript para manejar el CRUD -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    <script src="./assets/JavaScript/mostrar.js"></script>
-
-    <!-- JavaScript para manejar el modal -->
     <script>
-        function openModal() {
-            document.getElementById('modalAgregar').classList.remove('hidden');
+        let isPulgadasToCentimetros = true; // Para saber si estamos convirtiendo de pulgadas a centímetros
+
+        // Función para realizar las conversiones
+        function convertir() {
+            const valorInput = parseFloat(document.getElementById('inputValor').value);
+            if (!isNaN(valorInput)) {
+                if (isPulgadasToCentimetros) {
+                    const centimetros = valorInput * 2.54; // De pulgadas a centímetros
+                    document.getElementById('outputValor').value = centimetros.toFixed(2);
+                } else {
+                    const pulgadas = valorInput / 2.54; // De centímetros a pulgadas
+                    document.getElementById('outputValor').value = pulgadas.toFixed(2);
+                }
+            } else {
+                document.getElementById('outputValor').value = '';
+            }
         }
 
-        function closeModal() {
-            document.getElementById('modalAgregar').classList.add('hidden');
-        }
+        // Detectar cambios en el input para hacer la conversión automática
+        document.getElementById('inputValor').addEventListener('input', convertir);
+
+        // Botón para cambiar entre pulgadas y centímetros
+        document.getElementById('swapButton').addEventListener('click', function() {
+            const labelInput = document.getElementById('labelInput');
+            const labelOutput = document.getElementById('labelOutput');
+            const inputValor = document.getElementById('inputValor');
+            const outputValor = document.getElementById('outputValor');
+
+            // Cambiar las etiquetas
+            if (isPulgadasToCentimetros) {
+                labelInput.textContent = 'Centímetros:';
+                labelOutput.textContent = 'Pulgadas:';
+                inputValor.placeholder = 'Ingrese centímetros';
+                outputValor.placeholder = 'Resultado en pulgadas';
+            } else {
+                labelInput.textContent = 'Pulgadas:';
+                labelOutput.textContent = 'Centímetros:';
+                inputValor.placeholder = 'Ingrese pulgadas';
+                outputValor.placeholder = 'Resultado en centímetros';
+            }
+
+            // Limpiar los valores de entrada y salida
+            inputValor.value = '';
+            outputValor.value = '';
+
+            // Cambiar el estado de la conversión
+            isPulgadasToCentimetros = !isPulgadasToCentimetros;
+        });
     </script>
 </body>
 

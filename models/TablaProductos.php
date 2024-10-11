@@ -71,10 +71,10 @@ class TablaProductos extends Conexion
             $data = array();
             foreach ($filas as $fila) {
                 $tabla = new self();  // Asumiendo que esta clase tiene setters para cada atributo
-                $tabla->setIdMateriales($fila["idMaterial"]);
-                $tabla->setMaterial($fila["nombreMaterial"]);
-                $tabla->setCantidad_Inventario($fila["cantidadDisponible"]);
-                $tabla->setValor_Inventario($fila["valorInventario"]);
+                $tabla->setIdMateriales($fila["idMateriales"]);
+                $tabla->setMaterial($fila["Material"]);
+                $tabla->setCantidad_Inventario($fila["Cantidad_Inventario"]);
+                $tabla->setValor_Inventario($fila["Valor_Inventario"]);
                 $data[] = $tabla;
             }
 
@@ -87,23 +87,45 @@ class TablaProductos extends Conexion
         }
     }
 
-    public function insertarMaterial($nombreMaterial, $cantidadDisponible, $valorInventario)
+    public function agregar()
     {
-        $query = "CALL insertarMaterial(:nombreMaterialre, :cantidadDisponible, :valorInventario)";
+        $query = "CALL agregarMaterial(:Material)";
+
+        try {
+            // Intentamos conectar dentro del bloque try para capturar cualquier fallo en la conexión
+            self::getConexion();
+
+            $resultado = self::$cnx->prepare($query);
+            $resultado->bindParam(":Material", $this->Material);
+            $resultado->execute();
+
+            return true; // Retorno verdadero si se agregó correctamente
+        } catch (PDOException $e) {
+            throw new Exception("Error al agregar el material: " . $e->getMessage());
+        } finally {
+            // Aseguramos la desconexión al final de la ejecución
+            self::desconectar();
+        }
+    }
+
+
+    public function existeMaterial()
+    {
+        $query = "CALL existeMaterial(:Material)";
 
         try {
             self::getConexion();
-            $stmt = self::$cnx->prepare($query);
-            $stmt->bindParam(':nombreMaterialre', $nombreMaterial);
-            $stmt->bindParam(':cantidadDisponible', $cantidadDisponible);
-            $stmt->bindParam(':valorInventario', $valorInventario);
+            $resultado = self::$cnx->prepare($query);
+            $resultado->bindParam(":Material", $this->Material);
+            $resultado->execute();
 
-            return $stmt->execute();
+            // Obtenemos el resultado de la consulta
+            $row = $resultado->fetch(PDO::FETCH_ASSOC);
+            return isset($row['existe']) && $row['existe'] === '1'; // Verificamos si la clave existe antes de comparar
         } catch (PDOException $e) {
-            throw new Exception("Error al insertar el material: " . $e->getMessage());
+            throw new Exception("Error al verificar la existencia del material: " . $e->getMessage());
         } finally {
             self::desconectar();
         }
     }
 }
-

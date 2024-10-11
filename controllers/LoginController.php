@@ -50,8 +50,8 @@ switch ($_GET["op"]) {
 
     case 'CerrarSesion':
         session_start();
-        session_unset();
-        session_destroy();
-        echo 'success';
-        break;
+        session_unset(); // Elimina todas las variables de sesión
+        session_destroy(); // Destruye la sesión
+        echo json_encode(['status' => 'success']); // Respuesta en formato JSON
+        exit();
 }

@@ -1,44 +1,59 @@
-$(document).ready(function () {
-    $('#tablaMateriales').DataTable();
-});
+function addMaterial() {
+    var materialName = document.getElementById('materialName').value.trim(); // Obtiene el valor del input
 
-// Función para abrir el modal
-function openModal() {
-    $('#modalAgregar').removeClass('hidden');
-}
+    // Prepara los datos para enviar
+    var formData = new FormData();
+    formData.append('material', materialName); // Agrega el nombre del material
 
-// Función para cerrar el modal
-function closeModal() {
-    $('#modalAgregar').addClass('hidden');
-    $('#formAgregar')[0].reset(); // Limpiar el formulario
-}
-
-// Manejar el evento de enviar el formulario
-$('#formAgregar').on('submit', function (event) {
-    event.preventDefault();
-    // Obtener los datos del formulario
-    const nombreMaterial = $('#nombre').val();
-    const cantidadDisponible = $('#cantidad').val();
-    const valorInventario = $('#valor').val();
-
-    // Lógica para agregar el material
-    // Esta parte debe realizar una llamada AJAX a tu servidor para guardar los datos
+    // Realiza la solicitud AJAX
     $.ajax({
-        url: 'ruta/a/tu/servidor/para/agregarMaterial.php', // Cambia esta ruta
+        url: '../controllers/TablaProductoController.php?op=agregar',
         type: 'POST',
-        data: {
-            nombreMaterial: nombreMaterial,
-            cantidadDisponible: cantidadDisponible,
-            valorInventario: valorInventario
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            switch (response) {
+                case '1':
+                    Swal.fire({
+                        title: 'Éxito!',
+                        text: 'Material agregado exitosamente.',
+                        icon: 'success',
+                    }).then(() => {
+                        window.location.reload(); // Recarga la página para ver los cambios
+                    });
+                    break;
+                case '2':
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'El material ya existe. Corrija e inténtelo nuevamente.',
+                        icon: 'warning',
+                    });
+                    break;
+                case '3':
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Hubo un error al tratar de ingresar los datos.',
+                        icon: 'error',
+                    });
+                    break;
+                default:
+                    Swal.fire({
+                        title: 'Error!',
+                        text: response,
+                        icon: 'error',
+                    });
+                    break;
+            }
         },
-        success: function(response) {
-            // Aquí puedes agregar lógica para manejar la respuesta
-            console.log(response);
-            closeModal();
-            // Opcional: Recargar la tabla o agregar el nuevo material a la tabla
-        },
-        error: function(xhr, status, error) {
-            console.error('Error al agregar material:', error);
+        error: function (xhr, textStatus, errorThrown) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'Error al registrar la información: ' + errorThrown,
+                icon: 'error',
+            });
         }
     });
-});
+
+    closePopup(); // Cierra el popup
+}
