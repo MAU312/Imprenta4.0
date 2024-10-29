@@ -14,8 +14,8 @@
     </style>
 </head>
 <body class="bg-gray-100 p-6">
-
-<?php include './assets/Fragments/sidebar.php'; ?>
+    <div class="flex h-full min-h-screen">
+    <?php include './assets/Fragments/sidebar.php'; ?>
 
     <div class="w-full max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
         <div class="p-6">
@@ -422,6 +422,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </body>
 </html>
