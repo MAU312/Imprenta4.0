@@ -120,17 +120,21 @@ final class Usuario extends Conexion
         try {
             self::getConexion();
             $resultado = self::$cnx->prepare($query);
+            
+            // Obtener el email actual del objeto
             $email = $this->getEmail();
             $resultado->bindParam(":email", $email, PDO::PARAM_STR);
+
+            // Ejecutar la consulta
             $resultado->execute();
+            
+            // Desconectar después de ejecutar la consulta
             self::desconectar();
 
-            $encontrado = false;
-            foreach ($resultado->fetchAll() as $reg) {
-                $encontrado = true;
-            }
-            return $encontrado;
-            var_dump($encontrado);
+            // Comprobar si se encontraron registros
+            $encontrado = $resultado->rowCount() > 0;
+
+            return $encontrado; // true si existe, false si no
         } catch (PDOException $Exception) {
             self::desconectar();
             $error = "Error " . $Exception->getCode() . ": " . $Exception->getMessage();
@@ -199,36 +203,50 @@ final class Usuario extends Conexion
     }
 
     public function guardarEnDb()
-    {
-        $query = "INSERT INTO usuarios (nombre, apellido, email, telefono, clave, idRol, sexo) 
-    VALUES (:nombre, :apellido, :email, :telefono, :clave, :idRol, :sexo)";
-        try {
-            self::getConexion();
-            $nombre = strtoupper($this->getNombre());
-            $apellido = strtoupper($this->getApellido());
-            $email = $this->getEmail();
-            $telefono = $this->getTelefono();
-            $clave = $this->getClave();
-            $idRol = $this->getRol();
-            $sexo = $this->getSexo();
-
-            $resultado = self::$cnx->prepare($query);
-            $resultado->bindParam(":nombre", $nombre, PDO::PARAM_STR);
-            $resultado->bindParam(":apellido", $apellido, PDO::PARAM_STR);
-            $resultado->bindParam(":email", $email, PDO::PARAM_STR);
-            $resultado->bindParam(":telefono", $telefono, PDO::PARAM_STR);
-            $resultado->bindParam(":clave", $clave, PDO::PARAM_STR);
-            $resultado->bindParam(":idRol", $idRol, PDO::PARAM_INT);
-            $resultado->bindParam(":sexo", $sexo, PDO::PARAM_STR);
-            $resultado->execute();
-            self::desconectar();
-            return true;
-        } catch (PDOException $Exception) {
-            self::desconectar();
-            $error = "Error " . $Exception->getCode() . ": " . $Exception->getMessage();;
-            return json_encode($error);
-        }
+{
+    $query = "INSERT INTO usuarios (nombreUsu, nombre, apellido, apellido2, email, clave, idRol, activo) 
+              VALUES (:nombreUsu, :nombre, :apellido, :apellido2, :email, :clave, :idRol, :activo)";
+    try {
+        self::getConexion();
+        
+      
+        $nombreUsu = strtoupper($this->getNombreUsu());
+        $nombre = strtoupper($this->getNombre());
+        $apellido = strtoupper($this->getApellido());
+        $apellido2 = strtoupper($this->getApellido2());
+        $email = $this->getEmail();
+        $clave = $this->getClave();
+        $Rol = $this->getRol();
+        $activo = $this->getActivo();
+        
+        // Preparar la consulta
+        $resultado = self::$cnx->prepare($query);
+        
+        // Asignar los valores a los parámetros de la consulta
+        $resultado->bindParam(":nombreUsu", $nombreUsu, PDO::PARAM_STR);
+        $resultado->bindParam(":nombre", $nombre, PDO::PARAM_STR);
+        $resultado->bindParam(":apellido", $apellido, PDO::PARAM_STR);
+        $resultado->bindParam(":apellido2", $apellido2, PDO::PARAM_STR);
+        $resultado->bindParam(":email", $email, PDO::PARAM_STR);
+        $resultado->bindParam(":clave", $clave, PDO::PARAM_STR);
+        $resultado->bindParam(":idRol", $Rol, PDO::PARAM_STR);
+        $resultado->bindParam(":activo", $activo, PDO::PARAM_STR);
+        
+        // Ejecutar la consulta
+        $resultado->execute();
+        
+        // Desconectar de la base de datos
+        self::desconectar();
+        
+        return true;
+    } catch (PDOException $Exception) {
+        // Manejo de errores
+        self::desconectar();
+        $error = "Error " . $Exception->getCode() . ": " . $Exception->getMessage();
+        return json_encode($error);
     }
+}
+
 
     public function listarTodosUsuarios()
     {
