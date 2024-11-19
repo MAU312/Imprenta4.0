@@ -15,7 +15,7 @@ $(document).ready(function () {
             "searching": false,
             "info": false,
             "ajax": {
-                "url": '../controllers/TablaDetalleEntradaController.php?op=listar', // Cambié la URL aquí
+                "url": '../controllers/TablaDetalleEntradaController.php?op=listar',
                 "type": 'GET',
                 "dataType": 'json',
                 "error": function (xhr, status, error) {
