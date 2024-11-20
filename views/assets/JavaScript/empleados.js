@@ -3,7 +3,6 @@ $(document).ready(function () {
     var tabla;
 
     function listarEmpleados() {
-        // Si la tabla ya existe, destruirla antes de volver a inicializar
         if ($.fn.dataTable.isDataTable('#tblEmpleados')) {
             $('#tblEmpleados').DataTable().clear().destroy();
         }
@@ -11,9 +10,6 @@ $(document).ready(function () {
         tabla = $('#tblEmpleados').DataTable({
             "processing": true,
             "serverSide": true,
-            "paging": false,
-            "searching": false,
-            "info": false,
             "ajax": {
                 "url": '../controllers/EmpleadosController.php?op=listar',
                 "type": 'POST',
@@ -23,8 +19,6 @@ $(document).ready(function () {
                     alert("Hubo un problema al cargar los datos de los empleados. Intenta de nuevo más tarde.");
                 }
             },
-            "destroy": true,
-            "iDisplayLength": 5,
             "columns": [
                 { "data": "identificacion" },
                 { "data": "numero_asegurado" },
@@ -66,6 +60,39 @@ $(document).ready(function () {
         });
     }
 
-    // Llamar a la función para listar empleados al cargar el documento
+    // Llamar a la función para listar empleados
     listarEmpleados();
+
+    // Botón Agregar
+    $('#btnAgregar').on('click', function () {
+        window.location.href = 'agregarEmpleado.php';
+    });
+
+    // Botón Editar en la tabla
+    $('#btnEditar').on('click', function () {
+        const identificacion = $('#identificacionEmpleado').val().trim();
+    
+        if (!identificacion) {
+            alert("Por favor, ingresa una identificación.");
+            return;
+        }
+    
+        // Llamar al controlador para verificar la existencia del empleado
+        $.ajax({
+            url: '../controllers/EmpleadosController.php?op=verificar',
+            type: 'POST',
+            data: { identificacion: identificacion },
+            dataType: 'json',
+            success: function (response) {
+                if (response.success) {
+                    window.location.href = `editarEmpleado.php?id=${identificacion}`;
+                } else {
+                    alert(response.message || "El empleado no existe.");
+                }
+            },
+            error: function () {
+                alert("Ocurrió un error al verificar la identificación. Intenta nuevamente.");
+            }
+        });
+    });
 });

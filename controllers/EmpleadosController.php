@@ -1,5 +1,5 @@
 <?php
-require_once '../models/Empleado.php'; 
+require_once '../models/Empleado.php';
 
 // Verificar si se ha enviado la operación deseada
 switch ($_GET["op"]) {
@@ -12,11 +12,11 @@ switch ($_GET["op"]) {
         break;
 
     case 'editar':
-        //editar();
+        editar();
         break;
 
-    case 'eliminar':
-        //eliminar();
+    case 'verificar':
+        verificar();
         break;
 }
 
@@ -107,89 +107,122 @@ function transformarDatos($datos)
     return $data;
 }
 
-/*
 function agregar()
 {
-    $identificacion = isset($_POST["identificacion"]) ? trim($_POST["identificacion"]) : "";
-    $numAsegurado = isset($_POST["numAsegurado"]) ? trim($_POST["numAsegurado"]) : "";
-    $nombre = isset($_POST["nombre"]) ? trim($_POST["nombre"]) : "";
-    // Agregar el resto de los campos aquí...
-
-    if (empty($identificacion) || empty($nombre) || empty($numAsegurado)) {
-        echo "Favor ingresar todos los datos";
-        return;
-    }
-
-    $empleado = new Empleado();
-    $empleado->setIdentificacion($identificacion);
-    $empleado->setNumAsegurado($numAsegurado);
-    $empleado->setNombre($nombre);
-    // Agregar el resto de los setters...
-
     try {
+        $empleado = new Empleado();
+
+        $empleado->setIdentificacion($_POST["identificacion"]);
+        $empleado->setNumeroAsegurado($_POST["numero_asegurado"]);
+        $empleado->setNombre($_POST["nombre"]);
+        $empleado->setPrimerApellido($_POST["primer_apellido"]);
+        $empleado->setSegundoApellido($_POST["segundo_apellido"]);
+        $empleado->setFechaNacimiento($_POST["fecha_nacimiento"]);
+        $empleado->setEdad($_POST["edad"]);
+        $empleado->setTelefono1($_POST["telefono1"]);
+        $empleado->setCorreo($_POST["correo"]);
+        $empleado->setSexo($_POST["sexo"]);
+        $empleado->setEstadoCivil($_POST["estado_civil"]);
+        $empleado->setLugarNacimiento($_POST["lugar_nacimiento"]);
+        $empleado->setNacionalidad($_POST["nacionalidad"]);
+        $empleado->setDireccionDomicilio($_POST["direccion_domicilio"]);
+        $empleado->setTelefono2($_POST["telefono2"]);
+        $empleado->setNombreContacto1($_POST["nombre_contacto1"]);
+        $empleado->setParentescoContacto1($_POST["parentesco_contacto1"]);
+        $empleado->setTelefonoContacto1($_POST["telefono_contacto1"]);
+        $empleado->setDireccionContacto1($_POST["direccion_contacto1"]);
+        $empleado->setNombreContacto2($_POST["nombre_contacto2"]);
+        $empleado->setParentescoContacto2($_POST["parentesco_contacto2"]);
+        $empleado->setTelefonoContacto2($_POST["telefono_contacto2"]);
+        $empleado->setDireccionContacto2($_POST["direccion_contacto2"]);
+        $empleado->setTipoSangre($_POST["tipo_sangre"]);
+        $empleado->setPadecimientos($_POST["padecimientos"]);
+        $empleado->setDiscapacidades($_POST["discapacidades"]);
+        $empleado->setIntervenciones($_POST["intervenciones"]);
+        $empleado->setUsoAparatos($_POST["uso_aparatos"]);
+        $empleado->setMedicamentos($_POST["medicamentos"]);
+        $empleado->setDosificacion($_POST["dosificacion"]);
+        $empleado->setFrecuencia($_POST["frecuencia"]);
+        $empleado->setProposito($_POST["proposito"]);
+        $empleado->setFechaIngreso($_POST["fecha_ingreso"]);
+        $empleado->setJefeSupervisor($_POST["jefe_supervisor"]);
+        $empleado->setPuestoActual($_POST["puesto_actual"]);
+        $empleado->setUltimoGradoEstudio($_POST["ultimo_grado_estudio"]);
+
         $resultado = $empleado->agregar();
 
-        if ($resultado) {
-            echo "1"; // Operación exitosa
-        } else {
-            echo "No fue posible la operación";
-        }
+        echo json_encode(["success" => $resultado]);
     } catch (Exception $e) {
-        echo "Error: " . $e->getMessage();
+        echo json_encode(["success" => false, "message" => $e->getMessage()]);
     }
 }
+
 
 function editar()
 {
-    $id = isset($_POST["id"]) ? trim($_POST["id"]) : "";
-    $nombre = isset($_POST["nombre"]) ? trim($_POST["nombre"]) : "";
-    // Agregar los campos a editar aquí...
-
-    if (empty($id) || empty($nombre)) {
-        echo "Favor ingresar todos los datos";
-        return;
-    }
-
-    $empleado = new Empleado();
-    $empleado->setId($id);
-    $empleado->setNombre($nombre);
-    // Agregar el resto de los setters...
-
     try {
-        $resultado = $empleado->editar($id);
+        $empleado = new Empleado();
 
-        if ($resultado) {
-            echo "1"; // Operación exitosa
-        } else {
-            echo "No fue posible la operación";
-        }
+        $empleado->setIdentificacion($_POST["identificacion"]);
+        $empleado->setNumeroAsegurado($_POST["numero_asegurado"]);
+        $empleado->setNombre($_POST["nombre"]);
+        $empleado->setPrimerApellido($_POST["primer_apellido"]);
+        $empleado->setSegundoApellido($_POST["segundo_apellido"]);
+        $empleado->setFechaNacimiento($_POST["fecha_nacimiento"]);
+        $empleado->setEdad($_POST["edad"]);
+        $empleado->setTelefono1($_POST["telefono1"]);
+        $empleado->setCorreo($_POST["correo"]);
+        $empleado->setSexo($_POST["sexo"]);
+        $empleado->setEstadoCivil($_POST["estado_civil"]);
+        $empleado->setLugarNacimiento($_POST["lugar_nacimiento"]);
+        $empleado->setNacionalidad($_POST["nacionalidad"]);
+        $empleado->setDireccionDomicilio($_POST["direccion_domicilio"]);
+        $empleado->setTelefono2($_POST["telefono2"]);
+        $empleado->setNombreContacto1($_POST["nombre_contacto1"]);
+        $empleado->setParentescoContacto1($_POST["parentesco_contacto1"]);
+        $empleado->setTelefonoContacto1($_POST["telefono_contacto1"]);
+        $empleado->setDireccionContacto1($_POST["direccion_contacto1"]);
+        $empleado->setNombreContacto2($_POST["nombre_contacto2"]);
+        $empleado->setParentescoContacto2($_POST["parentesco_contacto2"]);
+        $empleado->setTelefonoContacto2($_POST["telefono_contacto2"]);
+        $empleado->setDireccionContacto2($_POST["direccion_contacto2"]);
+        $empleado->setTipoSangre($_POST["tipo_sangre"]);
+        $empleado->setPadecimientos($_POST["padecimientos"]);
+        $empleado->setDiscapacidades($_POST["discapacidades"]);
+        $empleado->setIntervenciones($_POST["intervenciones"]);
+        $empleado->setUsoAparatos($_POST["uso_aparatos"]);
+        $empleado->setMedicamentos($_POST["medicamentos"]);
+        $empleado->setDosificacion($_POST["dosificacion"]);
+        $empleado->setFrecuencia($_POST["frecuencia"]);
+        $empleado->setProposito($_POST["proposito"]);
+        $empleado->setFechaIngreso($_POST["fecha_ingreso"]);
+        $empleado->setJefeSupervisor($_POST["jefe_supervisor"]);
+        $empleado->setPuestoActual($_POST["puesto_actual"]);
+        $empleado->setUltimoGradoEstudio($_POST["ultimo_grado_estudio"]);
+
+        $resultado = $empleado->editar();
+
+        echo json_encode(["success" => $resultado]);
     } catch (Exception $e) {
-        echo "Error: " . $e->getMessage();
+        echo json_encode(["success" => false, "message" => $e->getMessage()]);
     }
 }
 
-function eliminar()
+function verificar()
 {
-    $id = isset($_POST["id"]) ? trim($_POST["id"]) : "";
-
-    if (empty($id)) {
-        echo "Favor ingresar todos los datos";
-        return;
-    }
-
-    $empleado = new Empleado();
-    $empleado->setId($id);
-
     try {
-        $resultado = $empleado->eliminar($id);
+        $empleado = new Empleado();
+        $empleado->setIdentificacion($_POST["identificacion"]);
+        $existe = $empleado->verificar();
 
-        if ($resultado) {
-            echo "1"; // Operación exitosa
-        } else {
-            echo "No fue posible la operación";
-        }
+        echo json_encode([
+            "success" => $existe,
+            "message" => $existe ? "Empleado encontrado." : "El empleado no existe."
+        ]);
     } catch (Exception $e) {
-        echo "Error: " . $e->getMessage();
+        echo json_encode([
+            "success" => false,
+            "message" => "Error: " . $e->getMessage()
+        ]);
     }
 }
-*/

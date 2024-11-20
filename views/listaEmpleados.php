@@ -61,6 +61,7 @@
                         <th class="px-6 py-3 text-left text-gray-700">Supervisor</th>
                         <th class="px-6 py-3 text-left text-gray-700">Puesto actual</th>
                         <th class="px-6 py-3 text-left text-gray-700">Último grado</th>
+
                     </tr>
                 </thead>
                 <tbody id="empleadoTableBody" class="text-gray-700">
@@ -71,9 +72,11 @@
 
         <!-- Botones para agregar, editar y eliminar -->
         <div class="flex justify-center space-x-4 mb-6">
-            <button id="btnAgregar" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200"><i class="fas fa-plus"></i> Agregar Material</button>
-            <button id="btnEditar" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition duration-200"><i class="fas fa-edit"></i> Editar Material</button>
-            <button id="btnEliminar" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200"><i class="fas fa-trash"></i> Eliminar Material</button>
+            <button id="btnAgregar" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200"><i class="fas fa-plus"></i> Agregar Empleado</button>
+            <div class="flex items-center space-x-2">
+                <input type="text" id="identificacionEmpleado" class="border border-gray-300 rounded-lg px-4 py-2" placeholder="Identificación">
+                <button id="btnEditar" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition duration-200"><i class="fas fa-edit"></i> Editar Empleado</button>
+            </div>
         </div>
 
         <!-- Footer -->
@@ -81,7 +84,7 @@
             &copy; 2024 Tu Empresa. Todos los derechos reservados.
         </footer>
     </div>
-    
+
     <!-- JavaScript para manejar el CRUD -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>

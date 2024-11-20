@@ -424,7 +424,7 @@ class Empleado extends Conexion
 
             $resultado = self::$cnx->prepare($query);
             $resultado->execute();
-            $filas = $resultado->fetchAll();
+            $filas = $resultado->fetchAll(PDO::FETCH_ASSOC);
 
             $data = array();
             foreach ($filas as $fila) {
@@ -475,4 +475,184 @@ class Empleado extends Conexion
             self::desconectar();
         }
     }
+
+    public function agregar()
+    {
+        $query = "INSERT INTO empleados (
+                identificacion, numero_asegurado, nombre, primer_apellido, segundo_apellido,
+                fecha_nacimiento, edad, telefono1, correo, sexo, estado_civil, lugar_nacimiento,
+                nacionalidad, direccion_domicilio, telefono2, nombre_contacto1, parentesco_contacto1,
+                telefono_contacto1, direccion_contacto1, nombre_contacto2, parentesco_contacto2,
+                telefono_contacto2, direccion_contacto2, tipo_sangre, padecimientos, discapacidades,
+                intervenciones, uso_aparatos, medicamentos, dosificacion, frecuencia, proposito,
+                fecha_ingreso, jefe_supervisor, puesto_actual, ultimo_grado_estudio
+              ) VALUES (
+                :identificacion, :numero_asegurado, :nombre, :primer_apellido, :segundo_apellido,
+                :fecha_nacimiento, :edad, :telefono1, :correo, :sexo, :estado_civil, :lugar_nacimiento,
+                :nacionalidad, :direccion_domicilio, :telefono2, :nombre_contacto1, :parentesco_contacto1,
+                :telefono_contacto1, :direccion_contacto1, :nombre_contacto2, :parentesco_contacto2,
+                :telefono_contacto2, :direccion_contacto2, :tipo_sangre, :padecimientos, :discapacidades,
+                :intervenciones, :uso_aparatos, :medicamentos, :dosificacion, :frecuencia, :proposito,
+                :fecha_ingreso, :jefe_supervisor, :puesto_actual, :ultimo_grado_estudio
+              )";
+
+        try {
+            self::getConexion();
+            $resultado = self::$cnx->prepare($query);
+
+            $resultado->execute([
+                ':identificacion' => $this->identificacion,
+                ':numero_asegurado' => $this->numero_asegurado,
+                ':nombre' => $this->nombre,
+                ':primer_apellido' => $this->primer_apellido,
+                ':segundo_apellido' => $this->segundo_apellido,
+                ':fecha_nacimiento' => $this->fecha_nacimiento,
+                ':edad' => $this->edad,
+                ':telefono1' => $this->telefono1,
+                ':correo' => $this->correo,
+                ':sexo' => $this->sexo,
+                ':estado_civil' => $this->estado_civil,
+                ':lugar_nacimiento' => $this->lugar_nacimiento,
+                ':nacionalidad' => $this->nacionalidad,
+                ':direccion_domicilio' => $this->direccion_domicilio,
+                ':telefono2' => $this->telefono2,
+                ':nombre_contacto1' => $this->nombre_contacto1,
+                ':parentesco_contacto1' => $this->parentesco_contacto1,
+                ':telefono_contacto1' => $this->telefono_contacto1,
+                ':direccion_contacto1' => $this->direccion_contacto1,
+                ':nombre_contacto2' => $this->nombre_contacto2,
+                ':parentesco_contacto2' => $this->parentesco_contacto2,
+                ':telefono_contacto2' => $this->telefono_contacto2,
+                ':direccion_contacto2' => $this->direccion_contacto2,
+                ':tipo_sangre' => $this->tipo_sangre,
+                ':padecimientos' => $this->padecimientos,
+                ':discapacidades' => $this->discapacidades,
+                ':intervenciones' => $this->intervenciones,
+                ':uso_aparatos' => $this->uso_aparatos,
+                ':medicamentos' => $this->medicamentos,
+                ':dosificacion' => $this->dosificacion,
+                ':frecuencia' => $this->frecuencia,
+                ':proposito' => $this->proposito,
+                ':fecha_ingreso' => $this->fecha_ingreso,
+                ':jefe_supervisor' => $this->jefe_supervisor,
+                ':puesto_actual' => $this->puesto_actual,
+                ':ultimo_grado_estudio' => $this->ultimo_grado_estudio
+            ]);
+
+
+            return true;
+        } catch (PDOException $e) {
+            throw new Exception("Error al agregar el empleado: " . $e->getMessage());
+        } finally {
+            self::desconectar();
+        }
+    }
+
+    public function editar()
+    {
+        $query = "UPDATE empleados SET
+                numero_asegurado = :numero_asegurado,
+                nombre = :nombre,
+                primer_apellido = :primer_apellido,
+                segundo_apellido = :segundo_apellido,
+                fecha_nacimiento = :fecha_nacimiento,
+                edad = :edad,
+                telefono1 = :telefono1,
+                correo = :correo,
+                sexo = :sexo,
+                estado_civil = :estado_civil,
+                lugar_nacimiento = :lugar_nacimiento,
+                nacionalidad = :nacionalidad,
+                direccion_domicilio = :direccion_domicilio,
+                telefono2 = :telefono2,
+                nombre_contacto1 = :nombre_contacto1,
+                parentesco_contacto1 = :parentesco_contacto1,
+                telefono_contacto1 = :telefono_contacto1,
+                direccion_contacto1 = :direccion_contacto1,
+                nombre_contacto2 = :nombre_contacto2,
+                parentesco_contacto2 = :parentesco_contacto2,
+                telefono_contacto2 = :telefono_contacto2,
+                direccion_contacto2 = :direccion_contacto2,
+                tipo_sangre = :tipo_sangre,
+                padecimientos = :padecimientos,
+                discapacidades = :discapacidades,
+                intervenciones = :intervenciones,
+                uso_aparatos = :uso_aparatos,
+                medicamentos = :medicamentos,
+                dosificacion = :dosificacion,
+                frecuencia = :frecuencia,
+                proposito = :proposito,
+                fecha_ingreso = :fecha_ingreso,
+                jefe_supervisor = :jefe_supervisor,
+                puesto_actual = :puesto_actual,
+                ultimo_grado_estudio = :ultimo_grado_estudio
+              WHERE identificacion = :identificacion";
+
+        try {
+            self::getConexion();
+            $resultado = self::$cnx->prepare($query);
+
+            $resultado->execute([
+                ':numero_asegurado' => $this->numero_asegurado,
+                ':nombre' => $this->nombre,
+                ':primer_apellido' => $this->primer_apellido,
+                ':segundo_apellido' => $this->segundo_apellido,
+                ':fecha_nacimiento' => $this->fecha_nacimiento,
+                ':edad' => $this->edad,
+                ':telefono1' => $this->telefono1,
+                ':correo' => $this->correo,
+                ':sexo' => $this->sexo,
+                ':estado_civil' => $this->estado_civil,
+                ':lugar_nacimiento' => $this->lugar_nacimiento,
+                ':nacionalidad' => $this->nacionalidad,
+                ':direccion_domicilio' => $this->direccion_domicilio,
+                ':telefono2' => $this->telefono2,
+                ':nombre_contacto1' => $this->nombre_contacto1,
+                ':parentesco_contacto1' => $this->parentesco_contacto1,
+                ':telefono_contacto1' => $this->telefono_contacto1,
+                ':direccion_contacto1' => $this->direccion_contacto1,
+                ':nombre_contacto2' => $this->nombre_contacto2,
+                ':parentesco_contacto2' => $this->parentesco_contacto2,
+                ':telefono_contacto2' => $this->telefono_contacto2,
+                ':direccion_contacto2' => $this->direccion_contacto2,
+                ':tipo_sangre' => $this->tipo_sangre,
+                ':padecimientos' => $this->padecimientos,
+                ':discapacidades' => $this->discapacidades,
+                ':intervenciones' => $this->intervenciones,
+                ':uso_aparatos' => $this->uso_aparatos,
+                ':medicamentos' => $this->medicamentos,
+                ':dosificacion' => $this->dosificacion,
+                ':frecuencia' => $this->frecuencia,
+                ':proposito' => $this->proposito,
+                ':fecha_ingreso' => $this->fecha_ingreso,
+                ':jefe_supervisor' => $this->jefe_supervisor,
+                ':puesto_actual' => $this->puesto_actual,
+                ':ultimo_grado_estudio' => $this->ultimo_grado_estudio,
+                ':identificacion' => $this->identificacion
+            ]);
+
+            return true;
+        } catch (PDOException $e) {
+            throw new Exception("Error al editar el empleado: " . $e->getMessage());
+        } finally {
+            self::desconectar();
+        }
+    }
+
+    public function verificar()
+{
+    $query = "SELECT COUNT(*) as total FROM empleados WHERE identificacion = :identificacion";
+    try {
+        self::getConexion();
+        $resultado = self::$cnx->prepare($query);
+        $resultado->execute([":identificacion" => $this->identificacion]);
+        $fila = $resultado->fetch(PDO::FETCH_ASSOC);
+        return $fila['total'] > 0;
+    } catch (PDOException $e) {
+        throw new Exception("Error al verificar el empleado: " . $e->getMessage());
+    } finally {
+        self::desconectar();
+    }
+}
+
 }
