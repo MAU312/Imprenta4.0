@@ -56,6 +56,16 @@ $(document).ready(function () {
                 { "data": "jefe_supervisor" },
                 { "data": "puesto_actual" },
                 { "data": "ultimo_grado_estudio" },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        return `
+                            <a href="detalleEmpleado.php?identificacion=${row.identificacion}" class="btnDetalles bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600">
+                                Detalles
+                            </a>
+                        `;
+                    }
+                }
             ]
         });
     }

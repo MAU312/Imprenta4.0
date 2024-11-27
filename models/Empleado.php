@@ -640,19 +640,37 @@ class Empleado extends Conexion
     }
 
     public function verificar()
-{
-    $query = "SELECT COUNT(*) as total FROM empleados WHERE identificacion = :identificacion";
-    try {
-        self::getConexion();
-        $resultado = self::$cnx->prepare($query);
-        $resultado->execute([":identificacion" => $this->identificacion]);
-        $fila = $resultado->fetch(PDO::FETCH_ASSOC);
-        return $fila['total'] > 0;
-    } catch (PDOException $e) {
-        throw new Exception("Error al verificar el empleado: " . $e->getMessage());
-    } finally {
-        self::desconectar();
+    {
+        $query = "SELECT COUNT(*) as total FROM empleados WHERE identificacion = :identificacion";
+        try {
+            self::getConexion();
+            $resultado = self::$cnx->prepare($query);
+            $resultado->execute([":identificacion" => $this->identificacion]);
+            $fila = $resultado->fetch(PDO::FETCH_ASSOC);
+            return $fila['total'] > 0;
+        } catch (PDOException $e) {
+            throw new Exception("Error al verificar el empleado: " . $e->getMessage());
+        } finally {
+            self::desconectar();
+        }
     }
-}
+    public function obtenerDetalles($identificacion)
+    {
+        $query = "SELECT * FROM empleados WHERE identificacion = :identificacion";
 
+        try {
+            self::getConexion();
+            $stmt = self::$cnx->prepare($query);
+            $stmt->bindParam(':identificacion', $identificacion, PDO::PARAM_STR);
+            $stmt->execute();
+
+            $empleado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return $empleado;
+        } catch (PDOException $e) {
+            throw new Exception("Error al obtener los detalles del empleado: " . $e->getMessage());
+        } finally {
+            self::desconectar();
+        }
+    }
 }

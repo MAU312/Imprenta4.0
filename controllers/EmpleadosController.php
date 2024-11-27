@@ -18,6 +18,10 @@ switch ($_GET["op"]) {
     case 'verificar':
         verificar();
         break;
+
+    case 'detalle':
+        detalle();
+        break;
 }
 
 function listar()
@@ -226,3 +230,34 @@ function verificar()
         ]);
     }
 }
+
+function detalle()
+{
+    if (isset($_GET['identificacion'])) {
+        $id = $_GET['identificacion'];
+
+        // Crear una instancia del modelo Empleado
+        $empleado = new Empleado();
+
+        // Llamar al método del modelo que obtiene los detalles por idEmpleado
+        $resultado = $empleado->obtenerDetalles($id);
+
+        if ($resultado) {
+            // Si se encontraron detalles, devolverlos como JSON
+            echo json_encode([
+                "success" => true,
+                "data" => $resultado
+            ]);
+        } else {
+            // Si no se encontraron detalles, devolver un mensaje
+            echo json_encode([
+                "success" => false,
+                "message" => "No se encontraron detalles para el empleado solicitado."
+            ]);
+        }
+    } else {
+        // Manejar el caso donde no se envió el idEmpleado
+        echo json_encode(['success' => false, 'message' => 'ID de empleado no proporcionado.']);
+    }
+}
+

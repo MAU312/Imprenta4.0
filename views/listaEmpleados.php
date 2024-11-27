@@ -61,7 +61,7 @@
                         <th class="px-6 py-3 text-left text-gray-700">Supervisor</th>
                         <th class="px-6 py-3 text-left text-gray-700">Puesto actual</th>
                         <th class="px-6 py-3 text-left text-gray-700">Último grado</th>
-
+                        <th class="px-6 py-3 text-left text-gray-700">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="empleadoTableBody" class="text-gray-700">
