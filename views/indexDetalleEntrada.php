@@ -22,7 +22,6 @@
     <div class="flex-1 p-6">
         <h1 class="text-3xl font-bold mb-6 text-center text-blue-700">Inventario de Materiales</h1>
 
-        <!-- Tabla de materiales -->
         <div class="bg-white rounded-lg shadow-md border border-gray-300 mb-6 overflow-hidden">
             <table id="tbllistado" class="table-auto w-full bg-white rounded-lg">
                 <thead class="bg-gray-200">
