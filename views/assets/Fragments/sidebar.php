@@ -72,6 +72,29 @@ if (isset($_SESSION['user_nombre'])) {
                     </li>
                 </ul>
             </li>
+
+            <!-- Dropdown para Produccion -->
+            <li class="mb-2 relative">
+                <a href="#" class="block p-2 rounded hover:bg-gray-700 flex justify-between items-center" id="produccionToggle">
+                    Produccion
+                    <span class="text-gray-400 ml-2 transition-transform duration-200">▼</span> <!-- Flecha -->
+                </a>
+                <ul id="produccionDropdown" class="hidden bg-gray-700 rounded-lg mt-2 p-2">
+                    <li class="mb-2">
+                        <a href="#" class="block p-2 rounded hover:bg-gray-600">Orden de Produccion AC</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="block p-2 rounded hover:bg-gray-600">Gran Formato</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="block p-2 rounded hover:bg-gray-600">Digital</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="block p-2 rounded hover:bg-gray-600">Solicitud de Cotización</a>
+                    </li>
+                </ul>
+            </li>
+
             <li class="mb-2">
                 <a href="#" class="block p-2 rounded hover:bg-gray-700">Configuraciones</a>
             </li>
@@ -103,6 +126,16 @@ if (isset($_SESSION['user_nombre'])) {
         document.getElementById('planillaToggle').addEventListener('click', function(e) {
             e.preventDefault(); // Evitar comportamiento predeterminado del enlace
             var dropdown = document.getElementById('planillaDropdown');
+            dropdown.classList.toggle('hidden'); // Alternar visibilidad del dropdown
+
+            // Rotar la flecha
+            var arrow = this.querySelector('span');
+            arrow.classList.toggle('rotate-180'); // Cambiar dirección de la flecha
+        });
+
+        document.getElementById('produccionToggle').addEventListener('click', function(e) {
+            e.preventDefault(); // Evitar comportamiento predeterminado del enlace
+            var dropdown = document.getElementById('produccionDropdown');
             dropdown.classList.toggle('hidden'); // Alternar visibilidad del dropdown
 
             // Rotar la flecha
