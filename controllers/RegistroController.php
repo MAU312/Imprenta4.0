@@ -5,7 +5,7 @@ require_once '../models/Usuario.php';
 switch ($_GET["op"]) {
 
     case 'insertar':
-        session_start();
+       
         $nombreUsu = isset($_POST["nombreUsu"]) ? trim($_POST["nombreUsu"]) : "";
         $nombre = isset($_POST["nombre"]) ? trim($_POST["nombre"]) : "";
         $apellido = isset($_POST["apellido"]) ? trim($_POST["apellido"]) : "";
