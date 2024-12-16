@@ -1,5 +1,5 @@
 <?php
-require_once '../models/entradaMaterial.php'; // Asegúrate de que este archivo esté en la ubicación correcta
+require_once '../models/salidaMaterial.php'; // Asegúrate de que este archivo esté en la ubicación correcta
 
 // Verificar si se ha enviado la operación deseada
 if (isset($_GET["op"])) {
@@ -7,8 +7,8 @@ if (isset($_GET["op"])) {
         case 'listarDetalles':
             listarDetalles();
             break;
-        case 'agregarEntrada':
-            insertarEntrada();
+        case 'agregarSalida':
+            insertarSalida();
             break;
     }
 }
@@ -19,10 +19,10 @@ function listarDetalles()
         $idMaterial = $_GET['idMaterial'];
 
         // Crear una instancia del modelo TablaProductos
-        $detalleEntrada = new TablaProductos();
+        $detalleSalida = new salidaMaterial();
 
         // Llamar al método del modelo que obtiene los detalles por idMaterial
-        $resultado = $detalleEntrada->obtenerDetallesPorMaterial($idMaterial);
+        $resultado = $detalleSalida->obtenerDetallesPorMaterial($idMaterial);
 
         if ($resultado) {
             // Si se encontraron detalles, devolverlos como JSON
@@ -43,30 +43,27 @@ function listarDetalles()
     }
 }
 
-function insertarEntrada()
+function insertarSalida()
 {
     // Verificar si se ha proporcionado el idMaterial en la URL
     if (isset($_GET['idMaterial'])) {
         $idMaterial = $_GET['idMaterial'];
 
         // Recibir y sanitizar los valores enviados desde el formulario
-        $proveedor = $_POST['proveedor'];
-        $factura = $_POST['factura'];
-        $cantidadResma = $_POST['cantidadResma'];
-        $pliegosResma = $_POST['pliegosResma'];
+        $cliente = $_POST['cliente'];
+        $corte = $_POST['corte'];
+        $produccion = $_POST['produccion'];
         $cantidadPliegos = $_POST['cantidadPliegos'];
         $precioPliego = $_POST['precioPliego'];
-        $descuento = $_POST['descuento'] ?? 0;
         $tipoCambio = $_POST['tipoCambio'] ?? 1.00;
 
         // Crear una instancia del modelo
-        $detalleEntrada = new TablaProductos();
+        $detalleSalida = new salidaMaterial();
 
-        // Llamar al método que inserta la nueva entrada en la tabla, utilizando un stored procedure
-        $resultado = $detalleEntrada->insertarEntrada(
-            $idMaterial, $proveedor, $factura, $cantidadResma, 
-            $pliegosResma, $cantidadPliegos, $precioPliego, 
-            $descuento, $tipoCambio
+        // Llamar al método que inserta la nueva salida en la tabla, utilizando un stored procedure
+        $resultado = $detalleSalida->insertarSalida(
+            $idMaterial, $cliente, $corte, $produccion, 
+            $cantidadPliegos, $precioPliego, $tipoCambio
         );
 
         // Verificar si la inserción fue exitosa
@@ -79,3 +76,4 @@ function insertarEntrada()
         echo 'ID de material no proporcionado.'; // Error si no se proporciona el idMaterial
     }
 }
+?>

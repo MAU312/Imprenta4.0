@@ -1,36 +1,32 @@
 <?php
 require_once '../config/Conexion.php';
 
-class TablaProductos extends Conexion
+class salidaMaterial extends Conexion
 {
     protected static $cnx;
-    private $idDetalleEntrada;
+    private $idDetalleSalida;
     private $idMateriales;
     private $fechaDetalle;
-    private $proveedor;
-    private $factura;
-    private $cantidadResma;
-    private $pliegosResma;
+    private $cliente;
+    private $corte;
+    private $produccion;
     private $cantidadPliegos;
     private $precioPliego;
-    private $subtotal;
-    private $descuento;
     private $tipoCambio;
     private $precioTotal;
-
 
     // Getters y setters
 
     public function __construct() {}
 
-    public function getIdDetalleEntrada()
+    public function getIdDetalleSalida()
     {
-        return $this->idDetalleEntrada;
+        return $this->idDetalleSalida;
     }
 
-    public function setIdDetalleEntrada($idDetalleEntrada)
+    public function setIdDetalleSalida($idDetalleSalida)
     {
-        $this->idDetalleEntrada = $idDetalleEntrada;
+        $this->idDetalleSalida = $idDetalleSalida;
     }
 
     public function getIdMateriales()
@@ -53,44 +49,34 @@ class TablaProductos extends Conexion
         $this->fechaDetalle = $fechaDetalle;
     }
 
-    public function getProveedor()
+    public function getCliente()
     {
-        return $this->proveedor;
+        return $this->cliente;
     }
 
-    public function setProveedor($proveedor)
+    public function setCliente($cliente)
     {
-        $this->proveedor = $proveedor;
+        $this->cliente = $cliente;
     }
 
-    public function getFactura()
+    public function getCorte()
     {
-        return $this->factura;
+        return $this->corte;
     }
 
-    public function setFactura($factura)
+    public function setCorte($corte)
     {
-        $this->factura = $factura;
+        $this->corte = $corte;
     }
 
-    public function getCantidadResma()
+    public function getProduccion()
     {
-        return $this->cantidadResma;
+        return $this->produccion;
     }
 
-    public function setCantidadResma($cantidadResma)
+    public function setProduccion($produccion)
     {
-        $this->cantidadResma = $cantidadResma;
-    }
-
-    public function getPliegosResma()
-    {
-        return $this->pliegosResma;
-    }
-
-    public function setPliegosResma($pliegosResma)
-    {
-        $this->pliegosResma = $pliegosResma;
+        $this->produccion = $produccion;
     }
 
     public function getCantidadPliegos()
@@ -111,26 +97,6 @@ class TablaProductos extends Conexion
     public function setPrecioPliego($precioPliego)
     {
         $this->precioPliego = $precioPliego;
-    }
-
-    public function getSubtotal()
-    {
-        return $this->subtotal;
-    }
-
-    public function setSubtotal($subtotal)
-    {
-        $this->subtotal = $subtotal;
-    }
-
-    public function getDescuento()
-    {
-        return $this->descuento;
-    }
-
-    public function setDescuento($descuento)
-    {
-        $this->descuento = $descuento;
     }
 
     public function getTipoCambio()
@@ -163,11 +129,11 @@ class TablaProductos extends Conexion
         self::$cnx = null;
     }
 
-    // Obtener detalles por idMaterial
+    // Obtener detalles de salida por material
     public function obtenerDetallesPorMaterial($idMaterial)
     {
-        // Query para obtener los detalles del material
-        $query = "SELECT * FROM detalleentrada WHERE idMateriales = :idMaterial";
+        // Query para obtener los detalles de salida del material
+        $query = "SELECT * FROM detallesalida WHERE idMateriales = :idMaterial";
 
         try {
             // Intentamos conectar dentro del bloque try para capturar cualquier fallo en la conexión
@@ -189,26 +155,24 @@ class TablaProductos extends Conexion
         }
     }
 
-    // Método para insertar una nueva entrada de material
-    public function insertarEntrada($idMaterial, $proveedor, $factura, $cantidadResma, $pliegosResma, $cantidadPliegos, $precioPliego, $descuento, $tipoCambio)
+    // Método para insertar una nueva salida de material
+    public function insertarSalida($idMateriales, $cliente, $corte, $produccion, $cantidadPliegos, $precioPliego, $tipoCambio)
     {
         // SQL para llamar al stored procedure
-        $sql = "CALL agregarEntradaMaterial(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "CALL agregarSalidaMaterial(?, ?, ?, ?, ?, ?, ?)";
 
         try {
             self::getConexion();
             $stmt = self::$cnx->prepare($sql);
 
             // Vincular parámetros
-            $stmt->bindParam(1, $idMaterial, PDO::PARAM_INT);
-            $stmt->bindParam(2, $proveedor, PDO::PARAM_STR);
-            $stmt->bindParam(3, $factura, PDO::PARAM_STR);
-            $stmt->bindParam(4, $cantidadResma, PDO::PARAM_INT);
-            $stmt->bindParam(5, $pliegosResma, PDO::PARAM_INT);
-            $stmt->bindParam(6, $cantidadPliegos, PDO::PARAM_INT);
-            $stmt->bindParam(7, $precioPliego, PDO::PARAM_STR);
-            $stmt->bindParam(8, $descuento, PDO::PARAM_STR);
-            $stmt->bindParam(9, $tipoCambio, PDO::PARAM_STR);
+            $stmt->bindParam(1, $idMateriales, PDO::PARAM_INT);
+            $stmt->bindParam(2, $cliente, PDO::PARAM_STR);
+            $stmt->bindParam(3, $corte, PDO::PARAM_STR);
+            $stmt->bindParam(4, $produccion, PDO::PARAM_STR);
+            $stmt->bindParam(5, $cantidadPliegos, PDO::PARAM_INT);
+            $stmt->bindParam(6, $precioPliego, PDO::PARAM_STR);
+            $stmt->bindParam(7, $tipoCambio, PDO::PARAM_STR);
 
             // Ejecutar el stored procedure
             if ($stmt->execute()) {
@@ -217,9 +181,10 @@ class TablaProductos extends Conexion
                 return false; // Si algo falla, retorna false
             }
         } catch (PDOException $e) {
-            throw new Exception("Error al insertar la entrada: " . $e->getMessage());
+            throw new Exception("Error al insertar la salida: " . $e->getMessage());
         } finally {
             self::desconectar();
         }
     }
 }
+?>

@@ -1,11 +1,11 @@
 <?php
 require_once '../config/Conexion.php';
 
-class TablaProductos extends Conexion
+class TablaDetalleEntrada extends Conexion
 {
     protected static $cnx;
     private $idDetalleEntrada;
-    private $idMateriales;
+    private $idMaterial;
     private $fechaDetalle;
     private $proveedor;
     private $factura;
@@ -17,7 +17,6 @@ class TablaProductos extends Conexion
     private $descuento;
     private $tipoCambio;
     private $precioTotal;
-
 
     // Getters y setters
 
@@ -33,14 +32,14 @@ class TablaProductos extends Conexion
         $this->idDetalleEntrada = $idDetalleEntrada;
     }
 
-    public function getIdMateriales()
+    public function getIdMaterial()
     {
-        return $this->idMateriales;
+        return $this->idMaterial;
     }
 
-    public function setIdMateriales($idMateriales)
+    public function setIdMaterial($idMaterial)
     {
-        $this->idMateriales = $idMateriales;
+        $this->idMaterial = $idMaterial;
     }
 
     public function getFechaDetalle()
@@ -163,61 +162,39 @@ class TablaProductos extends Conexion
         self::$cnx = null;
     }
 
-    // Obtener detalles por idMaterial
-    public function obtenerDetallesPorMaterial($idMaterial)
+    public function listar()
     {
-        // Query para obtener los detalles del material
-        $query = "SELECT * FROM detalleentrada WHERE idMateriales = :idMaterial";
+        $query = "CALL listarDetalleEntrada()"; 
 
         try {
-            // Intentamos conectar dentro del bloque try para capturar cualquier fallo en la conexión
             self::getConexion();
 
             $resultado = self::$cnx->prepare($query);
-            $resultado->bindParam(':idMaterial', $idMaterial, PDO::PARAM_INT); // Vinculamos el parámetro
             $resultado->execute();
+            $filas = $resultado->fetchAll();
 
-            // Recuperamos todas las filas
-            $filas = $resultado->fetchAll(PDO::FETCH_ASSOC); // Obtener como array asociativo
-
-            return $filas; // Retornar los resultados
-        } catch (PDOException $e) {
-            throw new Exception("Error al obtener los detalles: " . $e->getMessage());
-        } finally {
-            // Aseguramos la desconexión al final de la ejecución
-            self::desconectar();
-        }
-    }
-
-    // Método para insertar una nueva entrada de material
-    public function insertarEntrada($idMaterial, $proveedor, $factura, $cantidadResma, $pliegosResma, $cantidadPliegos, $precioPliego, $descuento, $tipoCambio)
-    {
-        // SQL para llamar al stored procedure
-        $sql = "CALL agregarEntradaMaterial(?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-        try {
-            self::getConexion();
-            $stmt = self::$cnx->prepare($sql);
-
-            // Vincular parámetros
-            $stmt->bindParam(1, $idMaterial, PDO::PARAM_INT);
-            $stmt->bindParam(2, $proveedor, PDO::PARAM_STR);
-            $stmt->bindParam(3, $factura, PDO::PARAM_STR);
-            $stmt->bindParam(4, $cantidadResma, PDO::PARAM_INT);
-            $stmt->bindParam(5, $pliegosResma, PDO::PARAM_INT);
-            $stmt->bindParam(6, $cantidadPliegos, PDO::PARAM_INT);
-            $stmt->bindParam(7, $precioPliego, PDO::PARAM_STR);
-            $stmt->bindParam(8, $descuento, PDO::PARAM_STR);
-            $stmt->bindParam(9, $tipoCambio, PDO::PARAM_STR);
-
-            // Ejecutar el stored procedure
-            if ($stmt->execute()) {
-                return true; // Retorna true si la inserción fue exitosa
-            } else {
-                return false; // Si algo falla, retorna false
+            $data = array();
+            foreach ($filas as $fila) {
+                $tabla = new self();  // Crear una nueva instancia de la clase
+                $tabla->setIdDetalleEntrada($fila["idDetalleEntrada"]);
+                $tabla->setIdMaterial($fila["idMaterial"]);
+                $tabla->setFechaDetalle($fila["fechaDetalle"]);
+                $tabla->setProveedor($fila["proveedor"]);
+                $tabla->setFactura($fila["factura"]);
+                $tabla->setCantidadResma($fila["cantidadResma"]);
+                $tabla->setPliegosResma($fila["pliegosResma"]);
+                $tabla->setCantidadPliegos($fila["cantidadPliegos"]);
+                $tabla->setPrecioPliego($fila["precioPliego"]);
+                $tabla->setSubtotal($fila["subtotal"]);
+                $tabla->setDescuento($fila["descuento"]);
+                $tabla->setTipoCambio($fila["tipoCambio"]);
+                $tabla->setPrecioTotal($fila["precioTotal"]);
+                $data[] = $tabla;
             }
+
+            return $data;
         } catch (PDOException $e) {
-            throw new Exception("Error al insertar la entrada: " . $e->getMessage());
+            throw new Exception("Error al obtener los registros: " . $e->getMessage());
         } finally {
             self::desconectar();
         }
