@@ -26,7 +26,7 @@ $(document).ready(function () {
             },
             error: function (xhr, status, error) {
                 console.error("Error en la solicitud:", error);
-                alert("Hubo un problema al cargar los detalles del material. Intenta de nuevo más tarde.");
+                
             }
         });
     }
