@@ -3,11 +3,13 @@ $(document).ready(function () {
     var tabla;
 
     function listarProductosTodos() {
-        // Si la tabla ya existe, destruirla antes de volver a inicializar
         if ($.fn.dataTable.isDataTable('#tbllistado')) {
             $('#tbllistado').DataTable().destroy();
         }
-
+    
+        // Array para acumular materiales con inventario bajo
+        let materialesBajoInventario = [];
+    
         tabla = $('#tbllistado').DataTable({
             "processing": true,
             "serverSide": true,
@@ -28,7 +30,16 @@ $(document).ready(function () {
             "columns": [
                 { "data": "idMateriales" },
                 { "data": "material" },
-                { "data": "cantidad_inventario" },
+                {
+                    "data": "cantidad_inventario",
+                    "render": function (data, type, row) {
+                        // Acumular materiales con inventario bajo
+                        if (row.cantidad_inventario < 1000) {
+                            materialesBajoInventario.push(`${row.material} (${row.cantidad_inventario} unidades)`);
+                        }
+                        return row.cantidad_inventario;
+                    }
+                },
                 { "data": "valor_inventario" },
                 {
                     "data": null,
@@ -42,9 +53,24 @@ $(document).ready(function () {
                         `;
                     }
                 }
-            ]
+            ],
+            "initComplete": function () {
+                // Mostrar alerta después de cargar la tabla si hay materiales con inventario bajo
+                if (materialesBajoInventario.length > 0) {
+                    Swal.fire({
+                        toast: true,
+                        position: 'bottom-end',
+                        icon: 'warning',
+                        title: 'Inventarios bajos',
+                        html: `Los siguientes materiales tienen menos de 1000 unidades en inventario:<br><br>${materialesBajoInventario.join('<br>')}`,
+                        showConfirmButton: false,
+                        timer: 10000,
+                        timerProgressBar: true
+                    });
+                }
+            }
         });
-    }
+    }    
 
     // Llamar a la función para listar productos al cargar el documento
     listarProductosTodos();
@@ -54,4 +80,3 @@ $(document).ready(function () {
 function redirectToDetail(idMaterial) {
     window.location.href = `detalleMaterial.php?idMaterial=${idMaterial}`;
 }
-
