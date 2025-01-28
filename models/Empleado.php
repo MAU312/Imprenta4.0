@@ -654,6 +654,7 @@ class Empleado extends Conexion
             self::desconectar();
         }
     }
+
     public function obtenerDetalles($identificacion)
     {
         $query = "SELECT * FROM empleados WHERE identificacion = :identificacion";
@@ -671,6 +672,19 @@ class Empleado extends Conexion
             throw new Exception("Error al obtener los detalles del empleado: " . $e->getMessage());
         } finally {
             self::desconectar();
+        }
+    }
+
+    public function eliminar($identificacion)
+    {
+        try {
+            self::getConexion();
+            $sql = "DELETE FROM empleados WHERE identificacion = :identificacion";
+            $stmt = self::$cnx->prepare($sql);
+            $stmt->bindParam(':identificacion', $identificacion, PDO::PARAM_STR);
+            return $stmt->execute();
+        } catch (Exception $e) {
+            throw new Exception("Error al eliminar empleado: " . $e->getMessage());
         }
     }
 }
