@@ -86,10 +86,9 @@
 
             <h1 class="text-3xl font-bold text-blue-700 flex-1" style="margin-left: 5%;">Gestión de Materiales</h1>
 
-            <label class="switch">
-                <input type="checkbox" id="toggleSwitch" onchange="toggleButtons()">
-                <span class="slider"></span>
-            </label>
+            <button id="btnEntradas" onclick="toggleTab('entradas')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200 ease-in-out mr-2">Ver Entradas</button>
+            <button id="btnSalidas" onclick="toggleTab('salidas')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200 ease-in-out mr-2">VerSalidas</button>
+
 
             <button id="btnAgregarEntrada" onclick="agregarEntrada()" class="flex items-center bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200 ease-in-out mr-2" style="margin-left: 5%;">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -197,7 +196,6 @@
                 <thead class="bg-gray-200">
                     <tr class="border-b">
                         <th class="px-6 py-4 text-left text-gray-700">ID Detalle</th>
-                        <th class="px-6 py-4 text-left text-gray-700">ID Material</th>
                         <th class="px-6 py-4 text-left text-gray-700">Fecha</th>
                         <th class="px-6 py-4 text-left text-gray-700">Proveedor</th>
                         <th class="px-6 py-4 text-left text-gray-700">Factura</th>
@@ -222,7 +220,6 @@
                 <thead class="bg-gray-200">
                     <tr class="border-b">
                         <th class="px-6 py-4 text-left text-gray-700">ID Detalle</th>
-                        <th class="px-6 py-4 text-left text-gray-700">ID Material</th>
                         <th class="px-6 py-4 text-left text-gray-700">Fecha</th>
                         <th class="px-6 py-4 text-left text-gray-700">Cliente</th>
                         <th class="px-6 py-4 text-left text-gray-700">Corte</th>
@@ -249,25 +246,35 @@
     <script src="./assets/JavaScript/agregarSalida.js"></script>
     <script src="./assets/JavaScript/mostrarSalida.js"></script>
     <script>
-        function toggleButtons() {
-            const toggle = document.getElementById('toggleSwitch');
-            const btnAgregarEntrada = document.getElementById('btnAgregarEntrada');
-            const btnAgregarSalida = document.getElementById('btnAgregarSalida');
-            const tablaEntradas = document.getElementById('diventradas');
-            const tablaSalidas = document.getElementById('tablaSalidas');
+        // Función para mostrar u ocultar las secciones de Entradas y Salidas
+function toggleTab(tab) {
+    if (tab === 'entradas') {
+        document.getElementById('diventradas').classList.remove('hidden');
+        document.getElementById('tablaSalidas').classList.add('hidden');
+        document.getElementById('btnEntradas').classList.add('bg-blue-600');
+        document.getElementById('btnEntradas').classList.remove('bg-blue-500');
+        document.getElementById('btnSalidas').classList.add('bg-blue-500');
+        document.getElementById('btnSalidas').classList.remove('bg-blue-600');
+        document.getElementById('btnAgregarEntrada').classList.remove('hidden');
+        document.getElementById('btnAgregarSalida').classList.add('hidden');
+        // Mostrar solo el botón de ver Salidas
+        document.getElementById('btnSalidas').classList.remove('hidden');
+        document.getElementById('btnEntradas').classList.add('hidden');
+    } else {
+        document.getElementById('diventradas').classList.add('hidden');
+        document.getElementById('tablaSalidas').classList.remove('hidden');
+        document.getElementById('btnSalidas').classList.add('bg-blue-600');
+        document.getElementById('btnSalidas').classList.remove('bg-blue-500');
+        document.getElementById('btnEntradas').classList.add('bg-blue-500');
+        document.getElementById('btnEntradas').classList.remove('bg-blue-600');
+        document.getElementById('btnAgregarEntrada').classList.add('hidden');
+        document.getElementById('btnAgregarSalida').classList.remove('hidden');
+        // Mostrar solo el botón de ver Entradas
+        document.getElementById('btnEntradas').classList.remove('hidden');
+        document.getElementById('btnSalidas').classList.add('hidden');
+    }
+}
 
-            if (toggle.checked) {
-                btnAgregarEntrada.classList.add('hidden');
-                btnAgregarSalida.classList.remove('hidden');
-                tablaEntradas.classList.add('hidden'); // Ocultar tabla de entradas
-                tablaSalidas.classList.remove('hidden'); // Mostrar tabla de salidas
-            } else {
-                btnAgregarEntrada.classList.remove('hidden');
-                btnAgregarSalida.classList.add('hidden');
-                tablaEntradas.classList.remove('hidden'); // Mostrar tabla de entradas
-                tablaSalidas.classList.add('hidden'); // Ocultar tabla de salidas
-            }
-        }
 
 
 

@@ -22,6 +22,7 @@ $(document).ready(function () {
                 "dataType": 'json',
                 "error": function (xhr, status, error) {
                     console.error("Error en la solicitud:", error);
+                    console.error("Respuesta del servidor:", xhr.responseText);
                     alert("Hubo un problema al cargar los productos. Intenta de nuevo más tarde.");
                 }
             },

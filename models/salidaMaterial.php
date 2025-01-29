@@ -132,7 +132,7 @@ class salidaMaterial extends Conexion
     // Obtener detalles de salida por material
     public function obtenerDetallesPorMaterial($idMaterial)
     {
-        // Query para obtener los detalles de salida del material
+        // Query para obtener los detalles del material, pero sin seleccionar idMateriales
         $query = "SELECT * FROM detallesalida WHERE idMateriales = :idMaterial";
 
         try {
@@ -146,7 +146,13 @@ class salidaMaterial extends Conexion
             // Recuperamos todas las filas
             $filas = $resultado->fetchAll(PDO::FETCH_ASSOC); // Obtener como array asociativo
 
-            return $filas; // Retornar los resultados
+            // Eliminar el campo 'idMateriales' de cada fila
+            foreach ($filas as &$fila) {
+                unset($fila['idMateriales']);
+            }
+            unset($fila); // Liberar la referencia
+
+            return $filas; // Retornar los resultados sin el campo idMateriales
         } catch (PDOException $e) {
             throw new Exception("Error al obtener los detalles: " . $e->getMessage());
         } finally {

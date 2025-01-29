@@ -40,7 +40,6 @@ $(document).ready(function () {
             tbody.append(`
                 <tr>
                     <td class="px-6 py-4 border-b">${detalle.idDetalleEntrada}</td>
-                    <td class="px-6 py-4 border-b">${detalle.idMateriales}</td>
                     <td class="px-6 py-4 border-b">${detalle.fechaDetalle}</td>
                     <td class="px-6 py-4 border-b">${detalle.proveedor}</td>
                     <td class="px-6 py-4 border-b">${detalle.factura}</td>

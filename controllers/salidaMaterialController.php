@@ -25,6 +25,11 @@ function listarDetalles()
         $resultado = $detalleSalida->obtenerDetallesPorMaterial($idMaterial);
 
         if ($resultado) {
+            // Eliminar el campo 'idMaterial' de cada detalle
+            foreach ($resultado as &$detalle) {
+                unset($detalle['idMaterial']);
+            }
+            unset($detalle); // Liberar la referencia
             // Si se encontraron detalles, devolverlos como JSON
             echo json_encode([
                 "success" => true,
