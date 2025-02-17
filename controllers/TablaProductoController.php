@@ -11,12 +11,16 @@ switch ($_GET["op"]) {
         agregar();
         break;
 
+    case 'editar':
+        editar();
+        break;    
+
     case 'detalles':
         //listarDetalles(); // Llama a la función para obtener detalles
         break;
 
     case 'eliminar':
-        //eliminar();
+        eliminar();
         break;
 }
 
@@ -105,3 +109,53 @@ function agregar()
         echo "Error: " . $e->getMessage(); // Captura de errores
     }
 }
+
+function editar() {
+    $idMateriales = isset($_POST["idMateriales"]) ? intval($_POST["idMateriales"]) : 0;
+    $material = isset($_POST["material"]) ? trim($_POST["material"]) : "";
+
+    if (empty($idMateriales) || empty($material)) {
+        echo json_encode(["success" => false, "message" => "Datos incompletos"]);
+        return;
+    }
+
+    $tablaProductos = new TablaProductos();
+    $tablaProductos->setIdMateriales($idMateriales);
+    $tablaProductos->setMaterial($material);
+
+    try {
+        if ($tablaProductos->editar()) {
+            echo json_encode(["success" => true]); // Enviar respuesta JSON correcta
+        } else {
+            echo json_encode(["success" => false, "message" => "Error al actualizar"]);
+        }
+    } catch (Exception $e) {
+        echo json_encode(["success" => false, "message" => $e->getMessage()]);
+    }
+}
+
+function eliminar() {
+    // Obtener el ID del material a eliminar
+    $idMateriales = isset($_POST["idMateriales"]) ? intval($_POST["idMateriales"]) : 0;
+
+    if (empty($idMateriales)) {
+        echo json_encode(["success" => false, "message" => "ID de material no válido"]);
+        return;
+    }
+
+    // Crear una instancia del modelo
+    $tablaProductos = new TablaProductos();
+    $tablaProductos->setIdMateriales($idMateriales);
+
+    try {
+        // Intentar eliminar el material
+        if ($tablaProductos->eliminar()) {
+            echo json_encode(["success" => true, "message" => "Material eliminado correctamente."]);
+        } else {
+            echo json_encode(["success" => false, "message" => "No se pudo eliminar el material."]);
+        }
+    } catch (Exception $e) {
+        echo json_encode(["success" => false, "message" => "Error: " . $e->getMessage()]);
+    }
+}
+
