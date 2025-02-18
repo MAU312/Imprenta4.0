@@ -9,7 +9,7 @@ $(document).ready(function () {
         listarDetallesMaterial(idMaterial);
     }
 
-    
+
 
     // Función para listar los detalles de entrada
     function listarDetallesMaterial(idMaterial) {
@@ -26,7 +26,7 @@ $(document).ready(function () {
             },
             error: function (xhr, status, error) {
                 console.error("Error en la solicitud:", error);
-                
+
             }
         });
     }
@@ -40,7 +40,6 @@ $(document).ready(function () {
             tbody.append(`
                 <tr>
                     <td class="px-6 py-4 border-b">${detalle.idDetalleEntrada}</td>
-                    <td class="px-6 py-4 border-b">${detalle.idMateriales}</td>
                     <td class="px-6 py-4 border-b">${detalle.fechaDetalle}</td>
                     <td class="px-6 py-4 border-b">${detalle.proveedor}</td>
                     <td class="px-6 py-4 border-b">${detalle.factura}</td>
@@ -52,6 +51,16 @@ $(document).ready(function () {
                     <td class="px-6 py-4 border-b">${detalle.descuento}</td>
                     <td class="px-6 py-4 border-b">${detalle.tipoCambio}</td>
                     <td class="px-6 py-4 border-b">${detalle.precioTotal}</td>
+                    <td class="px-6 py-4 border-b">
+                        <div class="flex justify-center space-x-2">
+                            <button onclick="editarDetalle(${detalle.idDetalleEntrada})" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition duration-200 ease-in-out">
+                                Editar
+                            </button>
+                            <button onclick="eliminarDetalle(${detalle.idDetalleEntrada})" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-200 ease-in-out">
+                                Eliminar
+                            </button>
+                        </div>
+                    </td>
                 </tr>
             `);
         });

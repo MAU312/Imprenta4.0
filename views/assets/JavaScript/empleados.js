@@ -1,5 +1,29 @@
+function eliminarEmpleado(event, identificacion) {
+    event.preventDefault();
+    if (confirm("¿Estás seguro de que deseas eliminar a este empleado?")) {
+        $.ajax({
+            url: '../controllers/EmpleadosController.php?op=eliminar',
+            type: 'POST',
+            data: { identificacion: identificacion },
+            dataType: 'json',
+            success: function (response) {
+                if (response.success) {
+                    alert("Empleado eliminado correctamente.");
+                    $('#tblEmpleados').DataTable().row($(`button[data-id="${identificacion}"]`).parents('tr')).remove().draw();
+                } else {
+                    alert("Error al eliminar el empleado: " + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error al eliminar empleado:", error);
+                alert("Hubo un problema al eliminar el empleado. Intenta de nuevo más tarde.");
+            }
+        });
+    }
+}
+
 $(document).ready(function () {
-    // Inicializar la tabla DataTable
+
     var tabla;
 
     function listarEmpleados() {
@@ -10,6 +34,9 @@ $(document).ready(function () {
         tabla = $('#tblEmpleados').DataTable({
             "processing": true,
             "serverSide": true,
+            "lengthChange": false,
+            "searching": false,
+            "paging": false,
             "ajax": {
                 "url": '../controllers/EmpleadosController.php?op=listar',
                 "type": 'POST',
@@ -21,47 +48,22 @@ $(document).ready(function () {
             },
             "columns": [
                 { "data": "identificacion" },
-                { "data": "numero_asegurado" },
                 { "data": "nombre" },
                 { "data": "primer_apellido" },
-                { "data": "segundo_apellido" },
-                { "data": "fecha_nacimiento" },
-                { "data": "edad" },
                 { "data": "telefono1" },
-                { "data": "correo" },
-                { "data": "sexo" },
-                { "data": "estado_civil" },
-                { "data": "lugar_nacimiento" },
-                { "data": "nacionalidad" },
-                { "data": "direccion_domicilio" },
-                { "data": "telefono2" },
-                { "data": "nombre_contacto1" },
-                { "data": "parentesco_contacto1" },
-                { "data": "telefono_contacto1" },
-                { "data": "direccion_contacto1" },
-                { "data": "nombre_contacto2" },
-                { "data": "parentesco_contacto2" },
-                { "data": "telefono_contacto2" },
-                { "data": "direccion_contacto2" },
-                { "data": "tipo_sangre" },
-                { "data": "padecimientos" },
-                { "data": "discapacidades" },
-                { "data": "intervenciones" },
-                { "data": "uso_aparatos" },
-                { "data": "medicamentos" },
-                { "data": "dosificacion" },
-                { "data": "frecuencia" },
-                { "data": "proposito" },
-                { "data": "fecha_ingreso" },
-                { "data": "jefe_supervisor" },
-                { "data": "puesto_actual" },
-                { "data": "ultimo_grado_estudio" },
                 {
                     "data": null,
                     "render": function (data, type, row) {
                         return `
-                            <a href="detalleEmpleado.php?identificacion=${row.identificacion}" class="btnDetalles bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600">
+                            <a href="detalleEmpleado.php?identificacion=${row.identificacion}" class="btnDetalles bg-blue-500 text-white px-5 py-0 rounded-lg hover:bg-blue-600">
                                 Detalles
+                            </a>
+                            <a href="editarEmpleado.php?id=${row.identificacion}" class="btnEditar bg-yellow-500 text-white px-5 py-0 rounded-lg hover:bg-yellow-600 ml-2">
+                                Editar
+                            </a>
+                            <a href="javascript:void(0);" class="btnEliminar bg-red-500 text-white px-5 py-0 rounded-lg hover:bg-red-600 ml-2" 
+                               onclick="eliminarEmpleado(event, ${row.identificacion})">
+                                Eliminar
                             </a>
                         `;
                     }
@@ -76,33 +78,5 @@ $(document).ready(function () {
     // Botón Agregar
     $('#btnAgregar').on('click', function () {
         window.location.href = 'agregarEmpleado.php';
-    });
-
-    // Botón Editar en la tabla
-    $('#btnEditar').on('click', function () {
-        const identificacion = $('#identificacionEmpleado').val().trim();
-    
-        if (!identificacion) {
-            alert("Por favor, ingresa una identificación.");
-            return;
-        }
-    
-        // Llamar al controlador para verificar la existencia del empleado
-        $.ajax({
-            url: '../controllers/EmpleadosController.php?op=verificar',
-            type: 'POST',
-            data: { identificacion: identificacion },
-            dataType: 'json',
-            success: function (response) {
-                if (response.success) {
-                    window.location.href = `editarEmpleado.php?id=${identificacion}`;
-                } else {
-                    alert(response.message || "El empleado no existe.");
-                }
-            },
-            error: function () {
-                alert("Ocurrió un error al verificar la identificación. Intenta nuevamente.");
-            }
-        });
     });
 });

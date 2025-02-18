@@ -22,6 +22,10 @@ switch ($_GET["op"]) {
     case 'detalle':
         detalle();
         break;
+
+    case 'eliminar':
+        eliminar();
+        break;
 }
 
 function listar()
@@ -33,6 +37,9 @@ function listar()
         // Obtener los datos de los empleados
         $datos = $empleado->listar();
 
+        // Contar el total de registros sin filtrar
+        $totalRegistros = count($datos);
+
         // Verificar si hay datos
         if (!empty($datos)) {
             // Transformar los datos a un array de forma separada
@@ -41,6 +48,9 @@ function listar()
             // Preparar los resultados para la respuesta JSON
             $resultados = array(
                 "success" => true,
+                "draw" => intval($_POST['draw']), // El draw debe venir del cliente
+                "recordsTotal" => $totalRegistros, // Total de registros en la base de datos
+                "recordsFiltered" => $totalRegistros,
                 "data" => $data
             );
         } else {
@@ -155,8 +165,16 @@ function agregar()
 
         $resultado = $empleado->agregar();
 
-        echo json_encode(["success" => $resultado]);
+        if ($resultado) {
+            // Redirigir al listado de empleados
+            header("Location: ../views/listaEmpleados.php");
+            exit(); // Asegúrate de llamar a exit() para detener la ejecución del código posterior
+        } else {
+            // Si no fue exitosa, mostrar mensaje de error
+            echo 'Hubo un error al guardar la información.';
+        }
     } catch (Exception $e) {
+        // En caso de excepciones, mostrar el error
         echo json_encode(["success" => false, "message" => $e->getMessage()]);
     }
 }
@@ -206,8 +224,16 @@ function editar()
 
         $resultado = $empleado->editar();
 
-        echo json_encode(["success" => $resultado]);
+        if ($resultado) {
+            // Redirigir al listado de empleados
+            header("Location: ../views/listaEmpleados.php");
+            exit(); // Asegúrate de llamar a exit() para detener la ejecución del código posterior
+        } else {
+            // Si no fue exitosa, mostrar mensaje de error
+            echo 'Hubo un error al guardar la información.';
+        }
     } catch (Exception $e) {
+        // En caso de excepciones, mostrar el error
         echo json_encode(["success" => false, "message" => $e->getMessage()]);
     }
 }
@@ -261,3 +287,19 @@ function detalle()
     }
 }
 
+function eliminar()
+{
+    try {
+        $identificacion = $_POST['identificacion'];
+        $empleado = new Empleado();
+        $resultado = $empleado->eliminar($identificacion);
+
+        if ($resultado) {
+            echo json_encode(["success" => true]);
+        } else {
+            echo json_encode(["success" => false, "message" => "No se pudo eliminar al empleado"]);
+        }
+    } catch (Exception $e) {
+        echo json_encode(["success" => false, "message" => $e->getMessage()]);
+    }
+}

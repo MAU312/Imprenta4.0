@@ -30,7 +30,7 @@ $empleadoData = $data[0];
 <body class="bg-gray-100 p-6">
     <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-lg">
         <h1 class="text-2xl font-bold text-center mb-6 text-blue-700">Editar Empleado</h1>
-        <form action="../controllers/EmpleadosController.php?op=agregar" method="POST"
+        <form action="../controllers/EmpleadosController.php?op=editar" method="POST"
             class="bg-white shadow-md rounded-lg p-6 mt-6 w-full max-w-3xl">
             <div class="grid grid-cols-1 gap-4">
             <div>

@@ -50,7 +50,7 @@ if (isset($_GET['identificacion'])) {
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div><strong>Identificación:</strong> <span><?php echo $detalle['identificacion']; ?></span></div>
                     <div><strong>Número Asegurado:</strong> <span><?php echo $detalle['numero_asegurado']; ?></span></div>
-                    <div><strong>Nombre Completo:</strong> 
+                    <div><strong>Nombre Completo:</strong>
                         <span><?php echo $detalle['nombre'] . ' ' . $detalle['primer_apellido'] . ' ' . $detalle['segundo_apellido']; ?></span>
                     </div>
                     <div><strong>Fecha de Nacimiento:</strong> <span><?php echo $detalle['fecha_nacimiento']; ?></span></div>
@@ -113,13 +113,11 @@ if (isset($_GET['identificacion'])) {
             </div>
 
             <!-- Botones de acción -->
-            <div class="flex justify-center space-x-4 mt-6">
-                <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200">
-                    Editar Perfil
-                </button>
-                <button class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200">
-                    Eliminar Perfil
-                </button>
+            <div class="container flex justify-center mt-4">
+                <!-- Botón de regresar centrado -->
+                <a href="listaEmpleados.php" class="btnRegresar bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">
+                    Regresar a la lista de empleados
+                </a>
             </div>
         </div>
     </div>
