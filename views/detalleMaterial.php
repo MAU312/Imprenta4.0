@@ -84,6 +84,10 @@
     <div class="flex-1 p-6">
         <div class="flex items-center mb-6">
 
+        <button onclick="window.history.back()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-200 ease-in-out mr-4">
+        ← Atrás
+        </button>
+
             <h1 class="text-3xl font-bold text-blue-700 flex-1" style="margin-left: 5%;">Gestión de Materiales</h1>
 
             <button id="btnEntradas" onclick="toggleTab('entradas')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200 ease-in-out mr-2">Ver Entradas</button>
@@ -192,6 +196,53 @@
                 </div>
             </div>
         </div>
+
+        <!-- Popup para editar detalle de entrada -->
+        <div id="popupEditarEntrada" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+            <div class="bg-white rounded-lg p-6 w-full max-w-4xl">
+                <h2 class="text-lg font-bold mb-4 text-center">Editar Entrada de Material</h2>
+
+                <!-- Campo oculto para el ID de la entrada -->
+                <input type="hidden" id="idEntradaMaterial" />
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="editarProveedor" class="block text-gray-700">Proveedor</label>
+                        <input type="text" id="editarProveedor" class="border border-gray-300 rounded px-3 py-2 w-full mb-4">
+
+                        <label for="editarFactura" class="block text-gray-700">Factura</label>
+                        <input type="number" id="editarFactura" class="border border-gray-300 rounded px-3 py-2 w-full mb-4">
+
+                        <label for="editarCantidadResma" class="block text-gray-700">Cantidad Resma</label>
+                        <input type="number" id="editarCantidadResma" class="border border-gray-300 rounded px-3 py-2 w-full mb-4">
+
+                        <label for="editarPliegosResma" class="block text-gray-700">Pliegos por Resma</label>
+                        <input type="number" id="editarPliegosResma" class="border border-gray-300 rounded px-3 py-2 w-full mb-4">
+                    </div>
+
+                    <div>
+                        <label for="editarCantidadPliegos" class="block text-gray-700">Cantidad de Pliegos</label>
+                        <input type="number" id="editarCantidadPliegos" class="border border-gray-300 rounded px-3 py-2 w-full mb-4">
+
+                        <label for="editarPrecioPliego" class="block text-gray-700">Precio por Pliego</label>
+                        <input type="number" id="editarPrecioPliego" class="border border-gray-300 rounded px-3 py-2 w-full mb-4">
+
+                        <label for="editarDescuento" class="block text-gray-700">Descuento</label>
+                        <input type="number" id="editarDescuento" class="border border-gray-300 rounded px-3 py-2 w-full mb-4" value="0">
+
+                        <label for="editarTipoCambio" class="block text-gray-700">Tipo de Cambio</label>
+                        <input type="number" id="editarTipoCambio" class="border border-gray-300 rounded px-3 py-2 w-full mb-4" value="1.00">
+                    </div>
+                </div>
+
+                <!-- Botones -->
+                <div class="flex justify-end mt-6">
+                    <button onclick="guardarEdicionEntrada()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Guardar Cambios</button>
+                    <button onclick="cerrarPopupEditarEntrada()" class="bg-gray-300 text-gray-700 px-4 py-2 rounded ml-2">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Tabla de materiales -->
         <div id="diventradas" class="w-full bg-white rounded-lg shadow-lg border border-gray-300 mb-6 overflow-x-auto">
             <table id="tbllistado" class="min-w-full bg-white rounded-lg border-collapse">
@@ -248,6 +299,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script src="./assets/JavaScript/agregarEntrada.js"></script>
     <script src="./assets/JavaScript/mostrarEntrada.js"></script>
+    <script src="./assets/JavaScript/editarEntrada.js"></script>
     <script src="./assets/JavaScript/agregarSalida.js"></script>
     <script src="./assets/JavaScript/mostrarSalida.js"></script>
     <script>
@@ -301,6 +353,17 @@ function toggleTab(tab) {
         function closePopupSalida() {
             document.getElementById('popupSalida').classList.add('hidden');
         }
+
+        function agregarEntrada() {
+            let popup = document.getElementById("popup");
+            popup.classList.remove("hidden"); // Mostrar el popup
+        }
+
+        function closePopup() {
+            let popup = document.getElementById("popup");
+            popup.classList.add("hidden"); // Ocultar el popup
+        }
+
     </script>
 
 </body>

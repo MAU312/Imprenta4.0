@@ -50,9 +50,13 @@ $user_nombre = isset($_SESSION['user_nombre']) ? $_SESSION['user_nombre'] : 'Inv
                 </a>
                 <ul id="planillaDropdown" class="hidden bg-gray-700 rounded-lg mt-2 p-2 relative left-0 w-full">
                     <li class="mb-2">
-                        <a href="../views/agregarHoras2.php" class="block p-2 rounded hover:bg-gray-600">Lista de Empleados</a>
+                        <a href="../views/agregarHoras2.php" class="block p-2 rounded hover:bg-gray-600">Lista de Empleados(Cambiar nombre)</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="../views/listaEmpleados.php" class="block p-2 rounded hover:bg-gray-600">Lista de Empleados</a>
                     </li>
                 </ul>
+                
             </li>
 
             <li class="mb-2">
