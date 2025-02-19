@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/044bd74f-63b4-444e-b7cb-334f6528d9d1/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/imprenta4",
+    "appService.deploySubpath": "."
+}
