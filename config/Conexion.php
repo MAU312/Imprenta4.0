@@ -6,7 +6,7 @@ class Conexion
 {
     function __construct()
     {
-        # code...
+        
     }
     
     public static function conectar(){
