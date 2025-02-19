@@ -10,9 +10,6 @@ class Conexion
     }
     
     public static function conectar(){
-        //conexion mysql
-        
-        //Aqui hace la conexion a la base de datos, las variables se encuentran en la clase global
         try {
             $cn = new PDO("mysql:host=".DB_HOST_MYSQL.
             ";dbname=".DB_NAME_MYSQL.
