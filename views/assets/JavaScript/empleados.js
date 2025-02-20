@@ -80,4 +80,3 @@ $(document).ready(function () {
         window.location.href = 'agregarEmpleado.php';
     });
 });
-;
