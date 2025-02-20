@@ -1,6 +1,6 @@
 <?php
 $host = "imprenta4-0.mysql.database.azure.com";
-$user = "Sebastian@imprenta4-0.mysql.database.azure.com";
+$user = "Sebastian";
 $password = "Bootysniper1311";
 $database = "imprenta4-0";
 
