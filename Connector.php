@@ -4,9 +4,13 @@ $user = "Sebastian";
 $password = "Bootysniper1311";
 $database = "imprenta";
 
-// Inicializa la conexión sin SSL
+// Define la ruta al certificado SSL
+define('SSL_CERT_PATH', __DIR__ . '/certs/DigiCertGlobalRootCA.crt.pem');
+
+// Inicializa la conexión con SSL
 $conn = mysqli_init();
-mysqli_real_connect($conn, $host, $user, $password, $database, 3306, NULL, 0); // Cambia MYSQLI_CLIENT_SSL a 0
+mysqli_ssl_set($conn, NULL, NULL, SSL_CERT_PATH, NULL, NULL);
+mysqli_real_connect($conn, $host, $user, $password, $database, 3306, NULL, MYSQLI_CLIENT_SSL);
 
 if (mysqli_connect_errno()) {
     die("Error de conexión: " . mysqli_connect_error());
