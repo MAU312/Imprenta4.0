@@ -13,8 +13,7 @@ class Conexion
         // conexión mysql
         try {
             $options = [
-                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
-                PDO::MYSQL_ATTR_SSL_CA => '/home/site/wwwroot/db/DigiCertGlobalRootCA.crt.pem', // Ruta al certificado SSL
+                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
             ];
             
             $cn = new PDO("mysql:host=".DB_HOST_MYSQL.";dbname=".DB_NAME_MYSQL, DB_USER_MYSQL, DB_PASSWORD_MYSQL, $options);
