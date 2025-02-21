@@ -4,16 +4,26 @@ require_once "global.php";
 
 class Conexion
 {
-    public static function conectar()
+    function __construct()
     {
+        # code...
+    }
+    
+    public static function conectar(){
+        // Conexión MySQL
+        
+        // Aquí hace la conexión a la base de datos, las variables se encuentran en la clase global
         try {
-            // Opciones de conexión
             $options = [
-                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
-                PDO::MYSQL_ATTR_SSL_CA => SSL_CERT_PATH, // Ruta al certificado SSL
+                PDO::MYSQL_ATTR_SSL_CA => SSL_CERT_PATH // Agrega la ruta al certificado SSL
             ];
 
-            $cn = new PDO("mysql:host=".DB_HOST_MYSQL.";dbname=".DB_NAME_MYSQL, DB_USER_MYSQL, DB_PASSWORD_MYSQL, $options);
+            $cn = new PDO("mysql:host=".DB_HOST_MYSQL.
+            ";dbname=".DB_NAME_MYSQL.
+            ";charset=utf8",
+            DB_USER_MYSQL,
+            DB_PASSWORD_MYSQL,
+            $options); // Asegúrate de pasar las opciones
             $cn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $cn;
         } catch (PDOException $ex) {
@@ -21,5 +31,4 @@ class Conexion
         }
     }
 }
-?>
 
