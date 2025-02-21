@@ -4,35 +4,22 @@ require_once "global.php";
 
 class Conexion
 {
-    function __construct()
+    public static function conectar()
     {
-        # code...
-    }
-    
-    public static function conectar(){
-        // conexión mysql
         try {
-            $cn = new PDO(
-                "mysql:host=".DB_HOST_MYSQL.";dbname=".DB_NAME_MYSQL.";charset=utf8;sslmode=require;sslcert=".DB_CERT_PATH,
-                DB_USER_MYSQL,
-                DB_PASSWORD_MYSQL
-            );
+            // Opciones de conexión
+            $options = [
+                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+                PDO::MYSQL_ATTR_SSL_CA => SSL_CERT_PATH, // Ruta al certificado SSL
+            ];
+
+            $cn = new PDO("mysql:host=".DB_HOST_MYSQL.";dbname=".DB_NAME_MYSQL, DB_USER_MYSQL, DB_PASSWORD_MYSQL, $options);
             $cn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $cn;
         } catch (PDOException $ex) {
-            die("Error de conexión: " . $ex->getMessage());
+            die($ex->getMessage());
         }
     }
 }
+?>
 
-// Línea de código que ayuda a saber si está correctamente conectada la BD
-/*
-$conexion = Conexion::conectar();
-
-if ($conexion) {
-    var_dump($conexion);
-    echo "Conexión exitosa a la base de datos";
-} else {
-    echo "Error al conectar a la base de datos";
-}
-*/
