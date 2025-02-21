@@ -2,7 +2,7 @@
 $host = "imprenta4-0.mysql.database.azure.com";
 $user = "Sebastian@imprenta4-0.mysql.database.azure.com";
 $password = "Bootysniper1311";
-$database = "imprenta4-0";
+$database = "imprenta";
 
 // Inicializa la conexión sin SSL
 $conn = mysqli_init();
