@@ -228,49 +228,4 @@ class TablaProductos extends Conexion
             self::desconectar();
         }
     }
-
-    public function editarEntrada() {
-        $query = "CALL editarEntradaMaterial(:idDetalleEntrada, :idMateriales, :proveedor, :factura, :cantidadResma, :pliegosResma, :cantidadPliegos, :precioPliego, :descuento, :tipoCambio)";
-        
-        try {
-            self::getConexion();
-            $stmt = self::$cnx->prepare($query);
-    
-            $stmt->bindParam(":idDetalleEntrada", $this->idDetalleEntrada, PDO::PARAM_INT);
-            $stmt->bindParam(":idMateriales", $this->idMateriales, PDO::PARAM_INT);
-            $stmt->bindParam(":proveedor", $this->proveedor, PDO::PARAM_STR);
-            $stmt->bindParam(":factura", $this->factura, PDO::PARAM_STR);
-            $stmt->bindParam(":cantidadResma", $this->cantidadResma, PDO::PARAM_INT);
-            $stmt->bindParam(":pliegosResma", $this->pliegosResma, PDO::PARAM_INT);
-            $stmt->bindParam(":cantidadPliegos", $this->cantidadPliegos, PDO::PARAM_INT);
-            $stmt->bindParam(":precioPliego", $this->precioPliego, PDO::PARAM_STR);
-            $stmt->bindParam(":descuento", $this->descuento, PDO::PARAM_STR);
-            $stmt->bindParam(":tipoCambio", $this->tipoCambio, PDO::PARAM_STR);
-    
-            $stmt->execute();
-            return true;
-        } catch (PDOException $e) {
-            throw new Exception("Error al actualizar la entrada: " . $e->getMessage());
-        } finally {
-            self::desconectar();
-        }
-    }
-     
-
-    public function eliminarEntrada() {
-        $query = "CALL eliminarEntradaMaterial(:idDetalleEntrada)";
-        
-        try {
-            self::getConexion();
-            $stmt = self::$cnx->prepare($query);
-            $stmt->bindParam(":idDetalleEntrada", $this->idDetalleEntrada, PDO::PARAM_INT);
-            $stmt->execute();
-            return true;
-        } catch (PDOException $e) {
-            throw new Exception("Error al eliminar la entrada: " . $e->getMessage());
-        } finally {
-            self::desconectar();
-        }
-    }
-    
 }
