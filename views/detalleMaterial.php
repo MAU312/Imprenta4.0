@@ -155,8 +155,6 @@
             </div>
         </div>
 
-        
-
         <!-- Popup para agregar salida -->
         <div id="popupSalida" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
             <div class="bg-white rounded-lg p-6 w-full max-w-4xl">
@@ -260,8 +258,6 @@
                         <th class="px-6 py-4 text-left text-gray-700">Descuento</th>
                         <th class="px-6 py-4 text-left text-gray-700">Tipo de Cambio</th>
                         <th class="px-6 py-4 text-left text-gray-700">Precio Total</th>
-                        <th class="px-6 py-4 text-left text-gray-700">Acciones</th>
-
                     </tr>
                 </thead>
                 <tbody id="materialTableBody" class="text-gray-700">
@@ -283,7 +279,6 @@
                         <th class="px-6 py-4 text-left text-gray-700">Precio por Pliego</th>
                         <th class="px-6 py-4 text-left text-gray-700">Tipo de Cambio</th>
                         <th class="px-6 py-4 text-left text-gray-700">Precio Total</th>
-                        <th class="px-6 py-4 text-left text-gray-700">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="salidaTableBody" class="text-gray-700">
