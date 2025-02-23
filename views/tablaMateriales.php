@@ -58,6 +58,16 @@
             </div>
         </div>
 
+        <div id="popupEditar" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+            <div class="bg-white rounded-lg p-6 w-96">
+                <h2 class="text-lg font-bold mb-4">Editar Material</h2>
+                <input type="text" id="editarMaterialName" class="border border-gray-300 rounded px-3 py-2 w-full" placeholder="Nuevo nombre del material">
+                <div class="mt-4 flex justify-end">
+                    <button onclick="guardarEdicion()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Guardar</button>
+                    <button onclick="cerrarPopupEditar()" class="bg-gray-300 text-gray-700 px-4 py-2 rounded ml-2">Cancelar</button>
+                </div>
+            </div>
+        </div>
 
         <script>
             function showPopup() {
@@ -69,7 +79,7 @@
             }
         </script>
 
-
+        
 
         <!-- Tabla de materiales -->
         <div class="w-full bg-white rounded-lg shadow-lg border border-gray-300 mb-6 overflow-x-auto">
@@ -97,6 +107,10 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script src="./assets/JavaScript/mostrar.js"></script>
     <script src="./assets/JavaScript/agregarMaterial.js"></script>
+    <script src="./assets/JavaScript/editarMaterial.js"></script>
+    <script src="./assets/JavaScript/eliminarMaterial.js"></script>
+
+
 </body>
 
 </html>
