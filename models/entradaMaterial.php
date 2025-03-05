@@ -228,4 +228,54 @@ class TablaProductos extends Conexion
             self::desconectar();
         }
     }
+
+    public function editarEntrada() {
+        $query = "CALL editarEntradaMaterial(:idDetalleEntrada, :proveedor, :factura, :cantidadResma, :pliegosResma, :cantidadPliegos, :precioPliego, :descuento, :tipoCambio)";
+    
+        try {
+            self::getConexion();
+            $resultado = self::$cnx->prepare($query);
+    
+            // Vincular parámetros
+            $resultado->bindParam(":idDetalleEntrada", $this->idDetalleEntrada, PDO::PARAM_INT);
+            $resultado->bindParam(":proveedor", $this->proveedor, PDO::PARAM_STR);
+            $resultado->bindParam(":factura", $this->factura, PDO::PARAM_INT);
+            $resultado->bindParam(":cantidadResma", $this->cantidadResma, PDO::PARAM_INT);
+            $resultado->bindParam(":pliegosResma", $this->pliegosResma, PDO::PARAM_INT);
+            $resultado->bindParam(":cantidadPliegos", $this->cantidadPliegos, PDO::PARAM_INT);
+            $resultado->bindParam(":precioPliego", $this->precioPliego, PDO::PARAM_STR);
+            $resultado->bindParam(":descuento", $this->descuento, PDO::PARAM_STR);
+            $resultado->bindParam(":tipoCambio", $this->tipoCambio, PDO::PARAM_STR);
+    
+            // Ejecutar la consulta
+            $resultado->execute();
+    
+            return true; // Retorna true si la edición fue exitosa
+        } catch (PDOException $e) {
+            throw new Exception("Error al editar la entrada: " . $e->getMessage());
+        } finally {
+            self::desconectar();
+        }
+    }
+
+    public function eliminarEntrada() {
+        $query = "CALL eliminarEntradaMaterial(:idDetalleEntrada)";
+    
+        try {
+            self::getConexion();
+            $resultado = self::$cnx->prepare($query);
+    
+            // Vincular parámetros
+            $resultado->bindParam(":idDetalleEntrada", $this->idDetalleEntrada, PDO::PARAM_INT);
+    
+            // Ejecutar la consulta
+            $resultado->execute();
+    
+            return true; // Retorna true si la eliminación fue exitosa
+        } catch (PDOException $e) {
+            throw new Exception("Error al eliminar la entrada: " . $e->getMessage());
+        } finally {
+            self::desconectar();
+        }
+    }
 }

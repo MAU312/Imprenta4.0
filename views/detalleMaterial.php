@@ -83,6 +83,9 @@
 
     <div class="flex-1 p-6">
         <div class="flex items-center mb-6">
+        <button onclick="window.history.back()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-200 ease-in-out mr-4">
+        ← Atrás
+        </button>
 
             <h1 class="text-3xl font-bold text-blue-700 flex-1" style="margin-left: 5%;">Gestión de Materiales</h1>
 
@@ -247,7 +250,9 @@
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script src="./assets/JavaScript/agregarEntrada.js"></script>
-    <script src="./assets/JavaScript/mostrarEntrada.js"></script>
+    <script src="./assets/JavaScript/mostrarEntrada.js"></script>    
+    <script src="./assets/JavaScript/editarEntrada.js"></script>
+    <script src="./assets/JavaScript/eliminarEntrada.js"></script>
     <script src="./assets/JavaScript/agregarSalida.js"></script>
     <script src="./assets/JavaScript/mostrarSalida.js"></script>
     <script>
