@@ -53,7 +53,7 @@ $user_nombre = isset($_SESSION['user_nombre']) ? $_SESSION['user_nombre'] : 'Inv
                         <a href="../views/listaEmpleados.php" class="block p-2 rounded hover:bg-gray-600">Lista de Empleados</a>
                     </li>
                     <li class="mb-2">
-                        <a href="../views/agregarHoras2.php" class="block p-2 rounded hover:bg-gray-600">Horas Trabajadas</a>
+                        <a href="../views/agregarHoras.php" class="block p-2 rounded hover:bg-gray-600">Horas Trabajadas</a>
                     </li>
                 </ul>
             </li>
