@@ -84,7 +84,7 @@
             if (!isNaN(valor)) {
                 const valorEnMM = valor * conversiones[unidadOrigen];
                 const resultado = valorEnMM / conversiones[unidadDestino];
-                document.getElementById('outputValor').value = resultado.toFixed(4);
+                document.getElementById('outputValor').value = resultado.toFixed(1);
             } else {
                 document.getElementById('outputValor').value = '';
             }
