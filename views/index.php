@@ -32,14 +32,14 @@
                         <label for="inputValor" class="mb-1 text-gray-700">Valor:</label>
                         <input type="number" id="inputValor" placeholder="Ingrese valor" class="border rounded-lg p-2" />
                         <select id="inputUnidad" class="border rounded-lg p-2 mt-2">
-                            <option value="mm">Milímetro</option>
-                            <option value="cm">Centímetro</option>
-                            <option value="m">Metro</option>
-                            <option value="km">Kilómetro</option>
-                            <option value="in">Pulgada</option>
-                            <option value="ft">Pie</option>
-                            <option value="yd">Yarda</option>
-                            <option value="mi">Milla</option>
+                            <option value="mm">Milímetros</option>
+                            <option value="cm">Centímetros</option>
+                            <option value="m">Metros</option>
+                            <option value="km">Kilómetros</option>
+                            <option value="in">Pulgadas</option>
+                            <option value="ft">Pies</option>
+                            <option value="yd">Yardas</option>
+                            <option value="mi">Millas</option>
                         </select>
                     </div>
                     <div class="flex justify-center">
@@ -49,14 +49,14 @@
                         <label for="outputValor" class="mb-1 text-gray-700">Resultado:</label>
                         <input type="text" id="outputValor" placeholder="Resultado" class="border rounded-lg p-2" readonly />
                         <select id="outputUnidad" class="border rounded-lg p-2 mt-2">
-                            <option value="mm">Milímetro</option>
-                            <option value="cm" selected>Centímetro</option>
-                            <option value="m">Metro</option>
-                            <option value="km">Kilómetro</option>
-                            <option value="in">Pulgada</option>
-                            <option value="ft">Pie</option>
-                            <option value="yd">Yarda</option>
-                            <option value="mi">Milla</option>
+                            <option value="mm">Milímetros</option>
+                            <option value="cm" selected>Centímetros</option>
+                            <option value="m">Metros</option>
+                            <option value="km">Kilómetros</option>
+                            <option value="in">Pulgadas</option>
+                            <option value="ft">Pies</option>
+                            <option value="yd">Yardas</option>
+                            <option value="mi">Millas</option>
                         </select>
                     </div>
                 </div>
@@ -76,23 +76,18 @@
             mi: 1609344
         };
 
-        function convertir() {
+        document.getElementById('convertButton').addEventListener('click', function() {
             const valor = parseFloat(document.getElementById('inputValor').value);
-            const unidadOrigen = document.getElementById('inputUnidad').value;
-            const unidadDestino = document.getElementById('outputUnidad').value;
+            const unidadDesde = document.getElementById('unitFrom').value;
+            const unidadHasta = document.getElementById('unitTo').value;
 
             if (!isNaN(valor)) {
-                const valorEnMM = valor * conversiones[unidadOrigen];
-                const resultado = valorEnMM / conversiones[unidadDestino];
-                document.getElementById('outputValor').value = resultado.toFixed(1);
+                const resultado = (valor * conversiones[unidadDesde]) / conversiones[unidadHasta];
+                document.getElementById('outputValor').value = Number.isInteger(resultado) ? resultado : resultado.toFixed(6).replace(/\.0+$/, '');
             } else {
                 document.getElementById('outputValor').value = '';
             }
-        }
-
-        document.getElementById('inputValor').addEventListener('input', convertir);
-        document.getElementById('inputUnidad').addEventListener('change', convertir);
-        document.getElementById('outputUnidad').addEventListener('change', convertir);
+        });
     </script>
 </body>
 
