@@ -76,7 +76,7 @@
             mi: 1609344
         };
 
-        document.getElementById('inputValor').addEventListener('input', function() {
+        function convertir() {
             const valor = parseFloat(document.getElementById('inputValor').value);
             const unidadDesde = document.getElementById('inputUnidad').value;
             const unidadHasta = document.getElementById('outputUnidad').value;
@@ -87,7 +87,12 @@
             } else {
                 document.getElementById('outputValor').value = '';
             }
-        });
+        }
+
+        // Agregar los listeners a los cambios
+        document.getElementById('inputValor').addEventListener('input', convertir);
+        document.getElementById('inputUnidad').addEventListener('change', convertir);
+        document.getElementById('outputUnidad').addEventListener('change', convertir);
     </script>
 </body>
 
