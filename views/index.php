@@ -50,7 +50,7 @@
                         <input type="text" id="outputValor" placeholder="Resultado" class="border rounded-lg p-2" readonly />
                         <select id="outputUnidad" class="border rounded-lg p-2 mt-2">
                             <option value="mm">Milímetro</option>
-                            <option value="cm">Centímetro</option>
+                            <option value="cm" selected>Centímetro</option>
                             <option value="m">Metro</option>
                             <option value="km">Kilómetro</option>
                             <option value="in">Pulgada</option>
