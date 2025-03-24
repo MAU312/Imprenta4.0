@@ -76,10 +76,10 @@
             mi: 1609344
         };
 
-        document.getElementById('convertButton').addEventListener('click', function() {
+        document.getElementById('inputValor').addEventListener('input', function() {
             const valor = parseFloat(document.getElementById('inputValor').value);
-            const unidadDesde = document.getElementById('unitFrom').value;
-            const unidadHasta = document.getElementById('unitTo').value;
+            const unidadDesde = document.getElementById('inputUnidad').value;
+            const unidadHasta = document.getElementById('outputUnidad').value;
 
             if (!isNaN(valor)) {
                 const resultado = (valor * conversiones[unidadDesde]) / conversiones[unidadHasta];
