@@ -6,18 +6,35 @@ if (!$id) {
     echo "<script>alert('Identificación no válida.'); window.location.href='listaEmpleados.php';</script>";
     exit;
 }
+
 $empleado = new Empleado();
 $empleado->setIdentificacion($id);
 
-// Verificar si el empleado existe antes de listar sus datos
+// Verificar si el empleado existe antes de mostrar sus datos
 if (!$empleado->verificar()) {
     echo "<script>alert('El empleado no existe.'); window.location.href='listaEmpleados.php';</script>";
     exit;
 }
 
+// Usar listar() para obtener todos los empleados
 $data = $empleado->listar();
-$empleadoData = $data[0];
+
+// Filtrar el empleado específico por identificación
+$empleadoData = null;
+foreach ($data as $empleadoItem) {
+    if ($empleadoItem['identificacion'] == $id) {
+        $empleadoData = $empleadoItem;
+        break;
+    }
+}
+
+// Si no se encontró el empleado, redirigir o mostrar un mensaje
+if (!$empleadoData) {
+    echo "<script>alert('Empleado no encontrado.'); window.location.href='listaEmpleados.php';</script>";
+    exit;
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 
