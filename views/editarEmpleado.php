@@ -8,6 +8,13 @@ if (!$id) {
 }
 $empleado = new Empleado();
 $empleado->setIdentificacion($id);
+
+// Verificar si el empleado existe antes de listar sus datos
+if (!$empleado->verificar()) {
+    echo "<script>alert('El empleado no existe.'); window.location.href='listaEmpleados.php';</script>";
+    exit;
+}
+
 $data = $empleado->listar();
 $empleadoData = $data[0];
 ?>
