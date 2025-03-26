@@ -1,33 +1,16 @@
 <?php
 require_once '../models/Empleado.php';
 
-// Obtener el id desde la URL
 $id = $_GET['id'] ?? null;
 if (!$id) {
     echo "<script>alert('Identificación no válida.'); window.location.href='listaEmpleados.php';</script>";
     exit;
 }
-
-// Crear el objeto empleado y obtener todos los registros
 $empleado = new Empleado();
-$data = $empleado->listar(); // Esto trae todos los empleados
-
-// Filtrar el empleado correspondiente al id de la URL
-$empleadoData = null;
-foreach ($data as $empleadoItem) {
-    if ($empleadoItem['identificacion'] == $id) {
-        $empleadoData = $empleadoItem;
-        break; // Ya lo encontramos, no es necesario seguir buscando
-    }
-}
-
-// Si no se encuentra el empleado, redirigir
-if (!$empleadoData) {
-    echo "<script>alert('Empleado no encontrado.'); window.location.href='listaEmpleados.php';</script>";
-    exit;
-}
+$empleado->setIdentificacion($id);
+$data = $empleado->listar();
+$empleadoData = $data[0];
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 
