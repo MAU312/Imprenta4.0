@@ -58,7 +58,7 @@ $(document).ready(function () {
                             <a href="detalleEmpleado.php?identificacion=${row.identificacion}" class="btnDetalles bg-blue-500 text-white px-5 py-0 rounded-lg hover:bg-blue-600">
                                 Detalles
                             </a>
-                            <a href="editarEmpleado.php?id=${row.identificacion}" class="btnEditar bg-yellow-500 text-white px-5 py-0 rounded-lg hover:bg-yellow-600 ml-2">
+                            <a href="editarEmpleado.php?identificacion=${row.identificacion}" class="btnEditar bg-yellow-500 text-white px-5 py-0 rounded-lg hover:bg-yellow-600 ml-2">
                                 Editar
                             </a>
                             <a href="javascript:void(0);" class="btnEliminar bg-red-500 text-white px-5 py-0 rounded-lg hover:bg-red-600 ml-2" 

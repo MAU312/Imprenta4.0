@@ -694,22 +694,22 @@ class Empleado extends Conexion
         }
     }
 
-    public function listarPorId($id)
+    public function listarPorId($identificacion)
 {
     // Modificamos la consulta para obtener un solo empleado por su ID
     $query = "SELECT 
-        id, identificacion, numero_asegurado, nombre, primer_apellido, segundo_apellido,
+        identificacion, numero_asegurado, nombre, primer_apellido, segundo_apellido,
         fecha_nacimiento, edad, telefono1, correo, sexo, estado_civil, lugar_nacimiento, nacionalidad, direccion_domicilio,
         telefono2, nombre_contacto1, parentesco_contacto1, telefono_contacto1, direccion_contacto1, nombre_contacto2,
         parentesco_contacto2, telefono_contacto2, direccion_contacto2, tipo_sangre, padecimientos, discapacidades, intervenciones,
         uso_aparatos, medicamentos, dosificacion, frecuencia, proposito, fecha_ingreso, jefe_supervisor, puesto_actual, ultimo_grado_estudio
-    FROM empleados WHERE id = :id;"; // Agregamos el filtro por id
+    FROM empleados WHERE identificacion = :identificacion;"; // Agregamos el filtro por id
 
     try {
         self::getConexion();
 
         $resultado = self::$cnx->prepare($query);
-        $resultado->bindParam(':id', $id, PDO::PARAM_INT); // Vínculo del parámetro
+        $resultado->bindParam(':id', $identificacion, PDO::PARAM_INT); // Vínculo del parámetro
         $resultado->execute();
         $fila = $resultado->fetch(PDO::FETCH_ASSOC); // Solo necesitamos una fila
 
