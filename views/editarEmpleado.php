@@ -1,8 +1,8 @@
 <?php
 require_once '../models/Empleado.php';
 
-$identificacion = $_GET['id'] ?? null; // Obtener el ID desde la URL
-if (!$id) {
+$identificacion = $_GET['identificacion'] ?? null; // Obtener el ID desde la URL
+if (!$identificacion) {
     echo "<script>alert('Identificación no válida.'); window.location.href='listaEmpleados.php';</script>";
     exit;
 }
