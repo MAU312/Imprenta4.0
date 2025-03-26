@@ -6,11 +6,25 @@ if (!$id) {
     echo "<script>alert('Identificación no válida.'); window.location.href='listaEmpleados.php';</script>";
     exit;
 }
+
 $empleado = new Empleado();
-$empleado->setIdentificacion($id);
-$data = $empleado->listar();
-$empleadoData = $data[0];
+$data = $empleado->listar(); // Esto devuelve todos los empleados
+
+// Filtrar el empleado con el ID recibido en la URL
+$empleadoData = null;
+foreach ($data as $empleadoItem) {
+    if ($empleadoItem['id'] == $id) {  // Suponiendo que 'id' es el campo que identifica al empleado
+        $empleadoData = $empleadoItem;
+        break; // Si encuentras el empleado, puedes salir del bucle
+    }
+}
+
+if (!$empleadoData) {
+    echo "<script>alert('Empleado no encontrado.'); window.location.href='listaEmpleados.php';</script>";
+    exit;
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 
