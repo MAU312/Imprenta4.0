@@ -10,17 +10,10 @@ if (!$id) {
 $empleado = new Empleado();
 $empleado->setIdentificacion($id);
 
-// Verificar si el empleado existe antes de mostrar sus datos
-if (!$empleado->verificar()) {
-    echo "<script>alert('El empleado no existe.'); window.location.href='listaEmpleados.php';</script>";
-    exit;
-}
-
-// Usar listar() para obtener todos los empleados
+// Obtener todos los empleados y filtrar el empleado con la identificación proporcionada
 $data = $empleado->listar();
-
-// Filtrar el empleado específico por identificación
 $empleadoData = null;
+
 foreach ($data as $empleadoItem) {
     if ($empleadoItem['identificacion'] == $id) {
         $empleadoData = $empleadoItem;
@@ -28,7 +21,7 @@ foreach ($data as $empleadoItem) {
     }
 }
 
-// Si no se encontró el empleado, redirigir o mostrar un mensaje
+// Si no se encontró el empleado, redirigir a la lista de empleados
 if (!$empleadoData) {
     echo "<script>alert('Empleado no encontrado.'); window.location.href='listaEmpleados.php';</script>";
     exit;
