@@ -693,4 +693,23 @@ class Empleado extends Conexion
             throw new Exception("Error al eliminar empleado: " . $e->getMessage());
         }
     }
+
+    public function obtenerPorId($id)
+    {
+        $query = "SELECT * FROM empleados WHERE identificacion = :identificacion";
+        try {
+            self::getConexion();
+            $resultado = self::$cnx->prepare($query);
+            $resultado->execute([':identificacion' => $id]);
+
+            // Si el empleado es encontrado, devolver el resultado
+            if ($resultado->rowCount() > 0) {
+                return $resultado->fetch(PDO::FETCH_OBJ);  // Retorna el objeto del empleado
+            } else {
+                return null;  // Si no se encuentra, devuelve null
+            }
+        } catch (PDOException $e) {
+            throw new Exception("Error al obtener el empleado: " . $e->getMessage());
+        }
+    }
 }
