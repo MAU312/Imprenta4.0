@@ -709,7 +709,7 @@ class Empleado extends Conexion
         self::getConexion();
 
         $resultado = self::$cnx->prepare($query);
-        $resultado->bindParam(':id', $identificacion, PDO::PARAM_INT); // Vínculo del parámetro
+        $resultado->bindParam(':identificacion', $identificacion, PDO::PARAM_INT); // Vínculo del parámetro
         $resultado->execute();
         $fila = $resultado->fetch(PDO::FETCH_ASSOC); // Solo necesitamos una fila
 
