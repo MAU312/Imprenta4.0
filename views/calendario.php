@@ -243,10 +243,18 @@
 <body class="bg-gray-100">
   <?php include './assets/Fragments/sidebar.php'; ?>
 
-  <div class="flex h-screen w-full overflow-hidden">
-    <div id="calendar" class="flex-1 overflow-auto"></div>
-  </div>
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <div class="w-1/4 bg-gray-200 p-4 overflow-y-auto">
+      <!-- El contenido del sidebar se carga aquí -->
+    </div>
 
+    <!-- Contenido Principal (Calendario) -->
+    <div class="w-3/4 p-4 overflow-auto">
+      <div id="calendar" class="h-full"></div>
+    </div>
+  </div>
 </body>
+
 
 </html>
