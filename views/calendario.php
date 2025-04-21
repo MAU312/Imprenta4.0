@@ -22,14 +22,12 @@
         events: '../controllers/fetchEvents.php',
         locale: 'es',
         selectable: true,
-        editable: true, // Habilita drag and drop y redimensionamiento
+        editable: true,
 
-        // Evento cuando se mueve un evento
         eventDrop: function (info) {
           updateEventDate(info.event);
         },
 
-        // Evento cuando se redimensiona un evento
         eventResize: function (info) {
           updateEventDate(info.event);
         },
@@ -55,7 +53,6 @@
           });
 
           if (formValues) {
-            // Add event
             fetch("../controllers/eventHandler.php", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -68,8 +65,6 @@
                 } else {
                   Swal.fire(data.error, '', 'error');
                 }
-
-                // Refetch events from all sources and rerender
                 calendar.refetchEvents();
               })
               .catch(console.error);
@@ -82,34 +77,25 @@
           var endDate = event.end;
           var today = new Date();
 
-          // Reset all background colors
           info.el.style.backgroundColor = '';
 
-          // Check if the event is within the first 2 days
           var firstDay = new Date(startDate);
           var secondDay = new Date(startDate);
           secondDay.setDate(firstDay.getDate() + 1);
 
-          // Check if the event is the last day (arrival day)
           var arrivalDay = new Date(endDate);
 
-          // Set colors based on event dates
           if (today <= secondDay) {
-            // Blue for the first 2 days
             info.el.style.backgroundColor = 'blue';
           } else if (today >= secondDay && today <= arrivalDay) {
-            // Yellow for the days in between
             info.el.style.backgroundColor = 'yellow';
           } else if (today === arrivalDay) {
-            // Green for the arrival day
             info.el.style.backgroundColor = 'green';
           }
         },
 
         eventClick: function (info) {
           info.jsEvent.preventDefault();
-
-          // Change the border color
           info.el.style.borderColor = 'red';
 
           Swal.fire({
@@ -124,7 +110,6 @@
             denyButtonText: 'Editar',
           }).then((result) => {
             if (result.isConfirmed) {
-              // Delete event
               fetch("../controllers/eventHandler.php", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -137,13 +122,10 @@
                   } else {
                     Swal.fire(data.error, '', 'error');
                   }
-
-                  // Refetch events from all sources and rerender
                   calendar.refetchEvents();
                 })
                 .catch(console.error);
             } else if (result.isDenied) {
-              // Edit event
               Swal.fire({
                 title: 'Editar Evento',
                 html:
@@ -152,7 +134,7 @@
                   '<input id="swalEvtURL_edit" class="swal2-input" placeholder="Ingresar URL" value="' + info.event.url + '">' +
                   '<input id="swalEvtStart_edit" type="datetime-local" class="swal2-input" value="' + formatDateForInput(info.event.start) + '">' +
                   '<input id="swalEvtEnd_edit" type="datetime-local" class="swal2-input" value="' + formatDateForInput(info.event.end) + '">' +
-                  '<input id="swalEvtCausaCambio_edit" class="swal2-input" placeholder="Causa del cambio">', // Nuevo campo CausaCambio
+                  '<input id="swalEvtCausaCambio_edit" class="swal2-input" placeholder="Causa del cambio">',
                 focusConfirm: false,
                 confirmButtonText: 'Guardar',
                 showCancelButton: true,
@@ -164,12 +146,11 @@
                     document.getElementById('swalEvtURL_edit').value,
                     document.getElementById('swalEvtStart_edit').value,
                     document.getElementById('swalEvtEnd_edit').value,
-                    document.getElementById('swalEvtCausaCambio_edit').value // Nuevo campo CausaCambio
+                    document.getElementById('swalEvtCausaCambio_edit').value
                   ];
                 }
               }).then((result) => {
                 if (result.value) {
-                  // Edit event
                   const [title, description, url, start, end, causaCambio] = result.value;
 
                   fetch("../controllers/eventHandler.php", {
@@ -178,7 +159,7 @@
                     body: JSON.stringify({
                       request_type: 'editEvent',
                       event_id: info.event.id,
-                      event_data: [title, description, url, causaCambio], // Incluir CausaCambio
+                      event_data: [title, description, url, causaCambio],
                       start: start,
                       end: end
                     }),
@@ -190,8 +171,6 @@
                       } else {
                         Swal.fire(data.error, '', 'error');
                       }
-
-                      // Refetch events from all sources and rerender
                       calendar.refetchEvents();
                     })
                     .catch(console.error);
@@ -205,7 +184,6 @@
       calendar.render();
     });
 
-    // Función para formatear fechas
     function formatDateForInput(date) {
       if (!date) return '';
       const d = new Date(date);
@@ -213,7 +191,6 @@
       return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
     }
 
-    // Función para actualizar la fecha del evento en el servidor
     function updateEventDate(event) {
       fetch("../controllers/eventHandler.php", {
         method: "POST",
@@ -222,7 +199,7 @@
           request_type: 'updateEventDate',
           event_id: event.id,
           start: event.startStr,
-          end: event.end ? event.endStr : null, // Si el evento no tiene fin, se envía null
+          end: event.end ? event.endStr : null,
         }),
       })
         .then(response => response.json())
@@ -234,27 +211,19 @@
               icon: 'success',
               confirmButtonText: 'OK'
             }).then(() => {
-              // Refrescar la página después de que el usuario haga clic en "OK"
               window.location.reload();
             });
           } else {
             Swal.fire(data.error, '', 'error');
-            // Si hay un error, revertir el cambio en el calendario
             if (event.setDates) {
-              // Usar setDates para revertir el cambio si el método está disponible
               event.setDates(event.start, event.end);
-            } else {
-              console.error('No se pudo revertir el evento: método revert no disponible');
             }
           }
         })
         .catch(error => {
           console.error(error);
           if (event.setDates) {
-            // Usar setDates para revertir el cambio en caso de error
             event.setDates(event.start, event.end);
-          } else {
-            console.error('No se pudo revertir el evento: método revert no disponible');
           }
         });
     }
@@ -262,54 +231,10 @@
 </head>
 
 <body class="bg-gray-100">
+  <?php include './assets/Fragments/sidebar.php'; ?>
   <div class="flex h-screen">
-    <!-- Sidebar -->
-    <div id="sidebar" class="w-1/4 bg-gray-200 rounded-lg shadow-lg p-4 overflow-y-auto">
-      <script>
-        document.addEventListener('DOMContentLoaded', function () {
-          fetch('./assets/Fragments/sidebar.php')
-            .then(response => {
-              if (!response.ok) throw new Error('Error al cargar el sidebar: ' + response.status);
-              return response.text();
-            })
-            .then(data => {
-              document.getElementById('sidebar').innerHTML = data;
-            })
-            .catch(error => {
-              console.error(error);
-              document.getElementById('sidebar').innerHTML =
-                '<p class="text-red-500 text-sm">Error al cargar el menú lateral. Intente más tarde.</p>';
-            });
-        });
-      </script>
-    </div>
-
-    <!-- Contenido Principal -->
-    <div class="w-3/4 p-4 overflow-y-auto">
-      <!-- Título -->
-      <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Calendario de Importaciones</h1>
-
-      <!-- Leyenda -->
-      <div class="flex justify-around mb-4">
-        <div class="flex items-center">
-          <div class="w-4 h-4 bg-blue-500 rounded-full mr-2"></div>
-          <span class="text-sm text-gray-700">Firmada</span>
-        </div>
-        <div class="flex items-center">
-          <div class="w-4 h-4 bg-yellow-500 rounded-full mr-2"></div>
-          <span class="text-sm text-gray-700">En transición</span>
-        </div>
-        <div class="flex items-center">
-          <div class="w-4 h-4 bg-green-500 rounded-full mr-2"></div>
-          <span class="text-sm text-gray-700">Llegada</span>
-        </div>
-      </div>
-
-      <!-- Calendario -->
-      <div class="bg-white rounded-lg shadow-lg p-4 h-full">
-        <div id="calendar" class="h-[500px] md:h-[650px] lg:h-[800px]"></div>
-      </div>
-    </div>
+    <div id="calendar" class="flex-1 p-4"></div>
   </div>
 </body>
+
 </html>
