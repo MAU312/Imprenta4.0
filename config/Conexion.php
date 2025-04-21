@@ -1,5 +1,4 @@
 <?php
-// La forma de hacer llamados a la clase
 require_once "global.php";
 
 class Conexion
@@ -8,8 +7,8 @@ class Conexion
         // conexion mysql
         try {
             $options = array(
-                PDO::MYSQL_ATTR_SSL_CA => SSL_CERT_PATH, // Ruta del certificado
-                PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false // Cambia a true si deseas verificar el servidor
+                PDO::MYSQL_ATTR_SSL_CA => SSL_CERT_PATH, 
+                PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false 
             );
             
             $cn = new PDO("mysql:host=".DB_HOST_MYSQL.
@@ -17,7 +16,7 @@ class Conexion
             ";charset=utf8",
             DB_USER_MYSQL,
             DB_PASSWORD_MYSQL,
-            $options); // Agrega las opciones SSL aquí
+            $options); 
 
             $cn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $cn;
