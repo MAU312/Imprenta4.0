@@ -38,7 +38,7 @@ $user_nombre = isset($_SESSION['user_nombre']) ? $_SESSION['user_nombre'] : 'Inv
                 </a>
                 <ul id="importacionesDropdown" class="hidden bg-gray-700 rounded-lg mt-2 p-2 relative left-0 w-full">
                     <li class="mb-2">
-                        <a href="../views/calendario.html" class="block p-2 rounded hover:bg-gray-600">Calendario</a>
+                        <a href="../views/calendario.php" class="block p-2 rounded hover:bg-gray-600">Calendario</a>
                     </li>
                 </ul>
             </li>

@@ -98,6 +98,6 @@ if ($jsonObj->request_type == 'addEvent') {
     }
 } else {
     // Respuesta si el tipo de solicitud no es válido
-    echo json_encode(['error' => 'Tipo de solicitud no válido']);
+    echo json_encode(['error' => 'Tipo de solicitud no válido']);
 }
 ?>
