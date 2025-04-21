@@ -250,7 +250,7 @@
     </div>
 
     <!-- Contenido Principal (Calendario) -->
-    <div class="w-3/4 p-4 overflow-auto">
+    <div class="w-3/4 h-full p-4 overflow-auto">
       <div id="calendar" class="h-full"></div>
     </div>
   </div>
