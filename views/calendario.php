@@ -17,21 +17,20 @@
 
       var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
-        height: 'auto',
+        height: '100%', // Se ajusta la altura al 100% del contenedor disponible
         contentHeight: 'auto',
         events: '../controllers/fetchEvents.php',
         locale: 'es',
         selectable: true,
-        editable: true,
-
+        editable: true, // Habilita drag and drop y redimensionamiento
+        // Evento cuando se mueve un evento
         eventDrop: function (info) {
           updateEventDate(info.event);
         },
-
+        // Evento cuando se redimensiona un evento
         eventResize: function (info) {
           updateEventDate(info.event);
         },
-
         select: async function (start, end, allDay) {
           const { value: formValues } = await Swal.fire({
             title: 'Añadir evento de importación',
@@ -53,6 +52,7 @@
           });
 
           if (formValues) {
+            // Add event
             fetch("../controllers/eventHandler.php", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -65,6 +65,8 @@
                 } else {
                   Swal.fire(data.error, '', 'error');
                 }
+
+                // Refetch events from all sources and rerender
                 calendar.refetchEvents();
               })
               .catch(console.error);
@@ -77,25 +79,34 @@
           var endDate = event.end;
           var today = new Date();
 
+          // Reset all background colors
           info.el.style.backgroundColor = '';
 
+          // Check if the event is within the first 2 days
           var firstDay = new Date(startDate);
           var secondDay = new Date(startDate);
           secondDay.setDate(firstDay.getDate() + 1);
 
+          // Check if the event is the last day (arrival day)
           var arrivalDay = new Date(endDate);
 
+          // Set colors based on event dates
           if (today <= secondDay) {
+            // Blue for the first 2 days
             info.el.style.backgroundColor = 'blue';
           } else if (today >= secondDay && today <= arrivalDay) {
+            // Yellow for the days in between
             info.el.style.backgroundColor = 'yellow';
           } else if (today === arrivalDay) {
+            // Green for the arrival day
             info.el.style.backgroundColor = 'green';
           }
         },
 
         eventClick: function (info) {
           info.jsEvent.preventDefault();
+
+          // Change the border color
           info.el.style.borderColor = 'red';
 
           Swal.fire({
@@ -110,6 +121,7 @@
             denyButtonText: 'Editar',
           }).then((result) => {
             if (result.isConfirmed) {
+              // Delete event
               fetch("../controllers/eventHandler.php", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -122,10 +134,13 @@
                   } else {
                     Swal.fire(data.error, '', 'error');
                   }
+
+                  // Refetch events from all sources and rerender
                   calendar.refetchEvents();
                 })
                 .catch(console.error);
             } else if (result.isDenied) {
+              // Edit event
               Swal.fire({
                 title: 'Editar Evento',
                 html:
@@ -134,7 +149,7 @@
                   '<input id="swalEvtURL_edit" class="swal2-input" placeholder="Ingresar URL" value="' + info.event.url + '">' +
                   '<input id="swalEvtStart_edit" type="datetime-local" class="swal2-input" value="' + formatDateForInput(info.event.start) + '">' +
                   '<input id="swalEvtEnd_edit" type="datetime-local" class="swal2-input" value="' + formatDateForInput(info.event.end) + '">' +
-                  '<input id="swalEvtCausaCambio_edit" class="swal2-input" placeholder="Causa del cambio">',
+                  '<input id="swalEvtCausaCambio_edit" class="swal2-input" placeholder="Causa del cambio">', // Nuevo campo CausaCambio
                 focusConfirm: false,
                 confirmButtonText: 'Guardar',
                 showCancelButton: true,
@@ -146,11 +161,12 @@
                     document.getElementById('swalEvtURL_edit').value,
                     document.getElementById('swalEvtStart_edit').value,
                     document.getElementById('swalEvtEnd_edit').value,
-                    document.getElementById('swalEvtCausaCambio_edit').value
+                    document.getElementById('swalEvtCausaCambio_edit').value // Nuevo campo CausaCambio
                   ];
                 }
               }).then((result) => {
                 if (result.value) {
+                  // Edit event
                   const [title, description, url, start, end, causaCambio] = result.value;
 
                   fetch("../controllers/eventHandler.php", {
@@ -159,7 +175,7 @@
                     body: JSON.stringify({
                       request_type: 'editEvent',
                       event_id: info.event.id,
-                      event_data: [title, description, url, causaCambio],
+                      event_data: [title, description, url, causaCambio], // Incluir CausaCambio
                       start: start,
                       end: end
                     }),
@@ -171,6 +187,8 @@
                       } else {
                         Swal.fire(data.error, '', 'error');
                       }
+
+                      // Refetch events from all sources and rerender
                       calendar.refetchEvents();
                     })
                     .catch(console.error);
@@ -184,6 +202,7 @@
       calendar.render();
     });
 
+    // Función para formatear fechas
     function formatDateForInput(date) {
       if (!date) return '';
       const d = new Date(date);
@@ -191,6 +210,7 @@
       return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
     }
 
+    // Función para actualizar la fecha del evento en el servidor
     function updateEventDate(event) {
       fetch("../controllers/eventHandler.php", {
         method: "POST",
@@ -199,42 +219,34 @@
           request_type: 'updateEventDate',
           event_id: event.id,
           start: event.startStr,
-          end: event.end ? event.endStr : null,
+          end: event.end ? event.endStr : null, // Si el evento no tiene fin, se envía null
         }),
       })
         .then(response => response.json())
         .then(data => {
           if (data.status == 1) {
             Swal.fire({
-              title: 'Fecha actualizada correctamente!',
-              text: 'La página se recargará para aplicar los cambios.',
               icon: 'success',
-              confirmButtonText: 'OK'
-            }).then(() => {
-              window.location.reload();
+              title: 'Fecha actualizada correctamente',
+              showConfirmButton: false,
+              timer: 1500
             });
           } else {
             Swal.fire(data.error, '', 'error');
-            if (event.setDates) {
-              event.setDates(event.start, event.end);
-            }
           }
         })
-        .catch(error => {
-          console.error(error);
-          if (event.setDates) {
-            event.setDates(event.start, event.end);
-          }
-        });
+        .catch(console.error);
     }
   </script>
 </head>
 
 <body class="bg-gray-100">
   <?php include './assets/Fragments/sidebar.php'; ?>
-  <div class="flex h-screen">
-    <div id="calendar" class="flex-1 p-4"></div>
+
+  <div class="flex h-screen w-full overflow-hidden">
+    <div id="calendar" class="flex-1 overflow-auto"></div>
   </div>
+
 </body>
 
 </html>
