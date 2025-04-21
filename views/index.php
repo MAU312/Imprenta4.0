@@ -47,6 +47,9 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script>
         let isPulgadasToCentimetros = true; // Para saber si estamos convirtiendo de pulgadas a centímetros
 

@@ -35,7 +35,7 @@ function agregar()
         // Recorrer los datos de los empleados
         foreach ($data as $empleado) {
             // Validar que los datos del empleado estén completos
-            if (empty($empleado['nombre']) || empty($empleado['periodo']) || empty($empleado['diasTrabajados']) || empty($empleado['horasDeLlegada']) || empty($empleado['horasDeSalida'])) {
+            if (empty($empleado['nombre']) || empty($empleado['periodo']) || empty($empleado['diasTrabajados']) || empty($empleado['horaMarca1']) || empty($empleado['horaMarca2'])) {
                 echo json_encode(["success" => false, "message" => "Datos incompletos para el empleado: " . $empleado['nombre']]);
                 return;
             }
@@ -44,8 +44,8 @@ function agregar()
             $horariosEmpleados->setNombre($empleado['nombre']);
             $horariosEmpleados->setPeriodo($empleado['periodo']);
             $horariosEmpleados->setDiasTrabajados($empleado['diasTrabajados']);
-            $horariosEmpleados->setHorasDeLlegada($empleado['horasDeLlegada']);
-            $horariosEmpleados->setHorasDeSalida($empleado['horasDeSalida']);
+            $horariosEmpleados->setHorasDeLlegada($empleado['horaMarca1']);
+            $horariosEmpleados->setHorasDeSalida($empleado['horaMarca2']);
 
             // Guardar los datos en la base de datos
             if (!$horariosEmpleados->agregar()) {

@@ -7,8 +7,8 @@ class HorariosEmpleados extends Conexion
     private $nombre;
     private $periodo;
     private $diasTrabajados = []; // Array de días trabajados
-    private $horasDeLlegada = []; // Array de horas de llegada
-    private $horasDeSalida = [];  // Array de horas de salida
+    private $horaMarca1 = []; // Array de horas de llegada
+    private $horaMarca2 = [];  // Array de horas de salida
 
     // Getters y setters
 
@@ -49,22 +49,22 @@ class HorariosEmpleados extends Conexion
 
     public function getHorasDeLlegada()
     {
-        return $this->horasDeLlegada;
+        return $this->horaMarca1;
     }
 
-    public function setHorasDeLlegada($horasDeLlegada)
+    public function setHorasDeLlegada($horaMarca1)
     {
-        $this->horasDeLlegada = $horasDeLlegada;
+        $this->horaMarca1 = $horaMarca1;
     }
 
     public function getHorasDeSalida()
     {
-        return $this->horasDeSalida;
+        return $this->horaMarca2;
     }
 
-    public function setHorasDeSalida($horasDeSalida)
+    public function setHorasDeSalida($horaMarca2)
     {
-        $this->horasDeSalida = $horasDeSalida;
+        $this->horaMarca2 = $horaMarca2;
     }
 
     public static function getConexion()
@@ -94,8 +94,8 @@ class HorariosEmpleados extends Conexion
 
             // Insertar los días trabajados y las horas en una tabla relacionada
             foreach ($this->diasTrabajados as $index => $dia) {
-                $horaLlegada = $this->horasDeLlegada[$index];
-                $horaSalida = $this->horasDeSalida[$index];
+                $horaLlegada = $this->horaMarca1[$index];
+                $horaSalida = $this->horaMarca2[$index];
 
                 $sql = "INSERT INTO dias_trabajados (empleado_id, dia, hora_llegada, hora_salida) VALUES (?, ?, ?, ?)";
                 $stmt = self::$cnx->prepare($sql);
