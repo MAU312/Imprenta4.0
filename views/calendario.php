@@ -12,7 +12,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="./assets/JavaScript/fullcalendar/lib/locales/es.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
       var calendarEl = document.getElementById('calendar');
 
       var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -24,21 +24,22 @@
         selectable: true,
         editable: true, // Habilita drag and drop y redimensionamiento
         // Evento cuando se mueve un evento
-        eventDrop: function (info) {
+        eventDrop: function(info) {
           updateEventDate(info.event);
         },
         // Evento cuando se redimensiona un evento
-        eventResize: function (info) {
+        eventResize: function(info) {
           updateEventDate(info.event);
         },
-        select: async function (start, end, allDay) {
-          const { value: formValues } = await Swal.fire({
+        select: async function(start, end, allDay) {
+          const {
+            value: formValues
+          } = await Swal.fire({
             title: 'Añadir evento de importación',
             confirmButtonText: 'Guardar',
             showCloseButton: true,
             showCancelButton: true,
-            html:
-              '<input id="swalEvtTitle" class="swal2-input" placeholder="Ingresar título">' +
+            html: '<input id="swalEvtTitle" class="swal2-input" placeholder="Ingresar título">' +
               '<textarea id="swalEvtDesc" class="swal2-input" placeholder="Ingresar información"></textarea>' +
               '<input id="swalEvtURL" class="swal2-input" placeholder="Agregar URL de rastreo">',
             focusConfirm: false,
@@ -54,10 +55,17 @@
           if (formValues) {
             // Add event
             fetch("../controllers/eventHandler.php", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ request_type: 'addEvent', start: start.startStr, end: start.endStr, event_data: formValues }),
-            })
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                  request_type: 'addEvent',
+                  start: start.startStr,
+                  end: start.endStr,
+                  event_data: formValues
+                }),
+              })
               .then(response => response.json())
               .then(data => {
                 if (data.status == 1) {
@@ -73,7 +81,7 @@
           }
         },
 
-        eventRender: function (info) {
+        eventRender: function(info) {
           var event = info.event;
           var startDate = event.start;
           var endDate = event.end;
@@ -103,7 +111,7 @@
           }
         },
 
-        eventClick: function (info) {
+        eventClick: function(info) {
           info.jsEvent.preventDefault();
 
           // Change the border color
@@ -123,10 +131,15 @@
             if (result.isConfirmed) {
               // Delete event
               fetch("../controllers/eventHandler.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ request_type: 'deleteEvent', event_id: info.event.id }),
-              })
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify({
+                    request_type: 'deleteEvent',
+                    event_id: info.event.id
+                  }),
+                })
                 .then(response => response.json())
                 .then(data => {
                   if (data.status == 1) {
@@ -143,8 +156,7 @@
               // Edit event
               Swal.fire({
                 title: 'Editar Evento',
-                html:
-                  '<input id="swalEvtTitle_edit" class="swal2-input" placeholder="Ingresar título" value="' + info.event.title + '">' +
+                html: '<input id="swalEvtTitle_edit" class="swal2-input" placeholder="Ingresar título" value="' + info.event.title + '">' +
                   '<textarea id="swalEvtDesc_edit" class="swal2-input" placeholder="Ingresar descripción">' + info.event.extendedProps.description + '</textarea>' +
                   '<input id="swalEvtURL_edit" class="swal2-input" placeholder="Ingresar URL" value="' + info.event.url + '">' +
                   '<input id="swalEvtStart_edit" type="datetime-local" class="swal2-input" value="' + formatDateForInput(info.event.start) + '">' +
@@ -170,16 +182,18 @@
                   const [title, description, url, start, end, causaCambio] = result.value;
 
                   fetch("../controllers/eventHandler.php", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                      request_type: 'editEvent',
-                      event_id: info.event.id,
-                      event_data: [title, description, url, causaCambio], // Incluir CausaCambio
-                      start: start,
-                      end: end
-                    }),
-                  })
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json"
+                      },
+                      body: JSON.stringify({
+                        request_type: 'editEvent',
+                        event_id: info.event.id,
+                        event_data: [title, description, url, causaCambio], // Incluir CausaCambio
+                        start: start,
+                        end: end
+                      }),
+                    })
                     .then(response => response.json())
                     .then(data => {
                       if (data.status == 1) {
@@ -213,15 +227,17 @@
     // Función para actualizar la fecha del evento en el servidor
     function updateEventDate(event) {
       fetch("../controllers/eventHandler.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          request_type: 'updateEventDate',
-          event_id: event.id,
-          start: event.startStr,
-          end: event.end ? event.endStr : null, // Si el evento no tiene fin, se envía null
-        }),
-      })
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            request_type: 'updateEventDate',
+            event_id: event.id,
+            start: event.startStr,
+            end: event.end ? event.endStr : null, // Si el evento no tiene fin, se envía null
+          }),
+        })
         .then(response => response.json())
         .then(data => {
           if (data.status == 1) {
@@ -242,13 +258,15 @@
 
 <body class="bg-gray-100 m-0 p-0 overflow-hidden">
   <div class="flex h-screen w-screen">
-    
+
     <!-- Sidebar -->
     <?php include './assets/Fragments/sidebar.php'; ?>
 
     <!-- Contenedor del calendario -->
-    <div class="flex-1 overflow-hidden">
-      <div id="calendar" class="h-full w-full"></div>
+    <div class="flex-1 overflow-hidden p-4">
+      <div class="bg-white rounded-xl shadow-md p-4 h-full w-full overflow-auto">
+        <div id="calendar" class="h-full w-full"></div>
+      </div>
     </div>
 
   </div>
