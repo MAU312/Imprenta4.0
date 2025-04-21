@@ -240,18 +240,18 @@
   </script>
 </head>
 
-<body class="bg-gray-100">
-  <div class="flex h-screen">
-    <!-- Sidebar incluido -->
+<body class="bg-gray-100 m-0 p-0 overflow-hidden">
+  <div class="flex h-screen w-screen">
+    
+    <!-- Sidebar -->
     <?php include './assets/Fragments/sidebar.php'; ?>
 
-    <!-- Calendario -->
-    <div class="flex-1 p-4 overflow-auto">
+    <!-- Contenedor del calendario -->
+    <div class="flex-1 overflow-hidden">
       <div id="calendar" class="h-full w-full"></div>
     </div>
+
   </div>
 </body>
-
-
 
 </html>
