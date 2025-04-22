@@ -11,6 +11,11 @@
   <script src="./assets/JavaScript/fullcalendar/lib/main.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="./assets/JavaScript/fullcalendar/lib/locales/es.js"></script>
+  <style>
+    .fc-license-message {
+      display: none !important;
+    }
+  </style>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       var calendarEl = document.getElementById('calendar');
@@ -262,14 +267,36 @@
     <!-- Sidebar -->
     <?php include './assets/Fragments/sidebar.php'; ?>
 
-    <!-- Contenedor del calendario -->
-    <div class="flex-1 overflow-hidden p-4">
-      <div class="bg-white rounded-xl shadow-md p-4 h-full w-full overflow-auto">
-        <div id="calendar" class="h-full w-full"></div>
+    <div>
+      <!-- Contenedor principal del calendario + leyenda -->
+      <div class="flex-1 overflow-hidden p-4 flex flex-col">
+
+        <!-- Leyenda -->
+        <div class="flex justify-around mb-4">
+          <div class="flex items-center">
+            <div class="w-4 h-4 bg-blue-500 rounded-full mr-2"></div>
+            <span class="text-sm text-gray-700">Firmada</span>
+          </div>
+          <div class="flex items-center">
+            <div class="w-4 h-4 bg-yellow-500 rounded-full mr-2"></div>
+            <span class="text-sm text-gray-700">En transición</span>
+          </div>
+          <div class="flex items-center">
+            <div class="w-4 h-4 bg-green-500 rounded-full mr-2"></div>
+            <span class="text-sm text-gray-700">Llegada</span>
+          </div>
+        </div>
+
+        <!-- Calendario -->
+        <div class="bg-white rounded-xl shadow-md p-4 h-full w-full overflow-auto">
+          <div id="calendar" class="h-full w-full"></div>
+        </div>
+
       </div>
     </div>
 
   </div>
 </body>
+
 
 </html>
