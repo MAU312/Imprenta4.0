@@ -11,39 +11,45 @@
   <script src="./assets/JavaScript/fullcalendar/lib/main.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="./assets/JavaScript/fullcalendar/lib/locales/es.js"></script>
+  <style>
+    .fc-license-message {
+      display: none !important;
+    }
+  </style>
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
       var calendarEl = document.getElementById('calendar');
 
       var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
-        height: 'auto',
+        height: '100%', // Se ajusta la altura al 100% del contenedor disponible
         contentHeight: 'auto',
         events: '../controllers/fetchEvents.php',
         locale: 'es',
         selectable: true,
         editable: true, // Habilita drag and drop y redimensionamiento
-
         // Evento cuando se mueve un evento
-        eventDrop: function (info) {
+        eventDrop: function(info) {
           updateEventDate(info.event);
         },
-
         // Evento cuando se redimensiona un evento
-        eventResize: function (info) {
+        eventResize: function(info) {
           updateEventDate(info.event);
         },
-
-        select: async function (start, end, allDay) {
-          const { value: formValues } = await Swal.fire({
+        select: async function(start, end, allDay) {
+          const {
+            value: formValues
+          } = await Swal.fire({
             title: 'Añadir evento de importación',
             confirmButtonText: 'Guardar',
             showCloseButton: true,
             showCancelButton: true,
-            html:
-              '<input id="swalEvtTitle" class="swal2-input" placeholder="Ingresar título">' +
-              '<textarea id="swalEvtDesc" class="swal2-input" placeholder="Ingresar información"></textarea>' +
-              '<input id="swalEvtURL" class="swal2-input" placeholder="Agregar URL de rastreo">',
+            html: `
+              <div class="space-y-3 text-left">
+                <input id="swalEvtTitle" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="Ingresar título">
+                <textarea id="swalEvtDesc" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="Ingresar información"></textarea>
+                <input id="swalEvtURL" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="Agregar URL de rastreo">
+              </div>`,
             focusConfirm: false,
             preConfirm: () => {
               return [
@@ -51,16 +57,28 @@
                 document.getElementById('swalEvtDesc').value,
                 document.getElementById('swalEvtURL').value
               ]
-            }
+            },
+            customClass: {
+              confirmButton: 'bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded ml-2',
+              cancelButton: 'bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded ml-2',
+            },
+            buttonsStyling: false
           });
 
           if (formValues) {
             // Add event
             fetch("../controllers/eventHandler.php", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ request_type: 'addEvent', start: start.startStr, end: start.endStr, event_data: formValues }),
-            })
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                  request_type: 'addEvent',
+                  start: start.startStr,
+                  end: start.endStr,
+                  event_data: formValues
+                }),
+              })
               .then(response => response.json())
               .then(data => {
                 if (data.status == 1) {
@@ -76,7 +94,7 @@
           }
         },
 
-        eventRender: function (info) {
+        eventRender: function(info) {
           var event = info.event;
           var startDate = event.start;
           var endDate = event.end;
@@ -106,7 +124,7 @@
           }
         },
 
-        eventClick: function (info) {
+        eventClick: function(info) {
           info.jsEvent.preventDefault();
 
           // Change the border color
@@ -122,14 +140,25 @@
             cancelButtonText: 'Cancelar',
             confirmButtonText: 'Eliminar',
             denyButtonText: 'Editar',
+            customClass: {
+              confirmButton: 'bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded ml-2',
+              denyButton: 'bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 rounded ml-2',
+              cancelButton: 'bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded ml-2'
+            },
+            buttonsStyling: false
           }).then((result) => {
             if (result.isConfirmed) {
               // Delete event
               fetch("../controllers/eventHandler.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ request_type: 'deleteEvent', event_id: info.event.id }),
-              })
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify({
+                    request_type: 'deleteEvent',
+                    event_id: info.event.id
+                  }),
+                })
                 .then(response => response.json())
                 .then(data => {
                   if (data.status == 1) {
@@ -146,13 +175,13 @@
               // Edit event
               Swal.fire({
                 title: 'Editar Evento',
-                html:
-                  '<input id="swalEvtTitle_edit" class="swal2-input" placeholder="Ingresar título" value="' + info.event.title + '">' +
-                  '<textarea id="swalEvtDesc_edit" class="swal2-input" placeholder="Ingresar descripción">' + info.event.extendedProps.description + '</textarea>' +
-                  '<input id="swalEvtURL_edit" class="swal2-input" placeholder="Ingresar URL" value="' + info.event.url + '">' +
-                  '<input id="swalEvtStart_edit" type="datetime-local" class="swal2-input" value="' + formatDateForInput(info.event.start) + '">' +
-                  '<input id="swalEvtEnd_edit" type="datetime-local" class="swal2-input" value="' + formatDateForInput(info.event.end) + '">' +
-                  '<input id="swalEvtCausaCambio_edit" class="swal2-input" placeholder="Causa del cambio">', // Nuevo campo CausaCambio
+                html: `
+                  <input id="swalEvtTitle_edit" class="swal2-input" placeholder="Ingresar título" value="${info.event.title}">
+                <textarea id="swalEvtDesc_edit" class="swal2-textarea" placeholder="Ingresar descripción">${info.event.extendedProps.description}</textarea>
+                <input id="swalEvtURL_edit" class="swal2-input" placeholder="Ingresar URL" value="${info.event.url}">
+                <input id="swalEvtStart_edit" type="datetime-local" class="swal2-input" value="${formatDateForInput(info.event.start)}">
+                <input id="swalEvtEnd_edit" type="datetime-local" class="swal2-input" value="${formatDateForInput(info.event.end)}">
+                <input id="swalEvtCausaCambio_edit" class="swal2-input" placeholder="Causa del cambio">`,
                 focusConfirm: false,
                 confirmButtonText: 'Guardar',
                 showCancelButton: true,
@@ -173,16 +202,18 @@
                   const [title, description, url, start, end, causaCambio] = result.value;
 
                   fetch("../controllers/eventHandler.php", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                      request_type: 'editEvent',
-                      event_id: info.event.id,
-                      event_data: [title, description, url, causaCambio], // Incluir CausaCambio
-                      start: start,
-                      end: end
-                    }),
-                  })
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json"
+                      },
+                      body: JSON.stringify({
+                        request_type: 'editEvent',
+                        event_id: info.event.id,
+                        event_data: [title, description, url, causaCambio], // Incluir CausaCambio
+                        start: start,
+                        end: end
+                      }),
+                    })
                     .then(response => response.json())
                     .then(data => {
                       if (data.status == 1) {
@@ -216,100 +247,71 @@
     // Función para actualizar la fecha del evento en el servidor
     function updateEventDate(event) {
       fetch("../controllers/eventHandler.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          request_type: 'updateEventDate',
-          event_id: event.id,
-          start: event.startStr,
-          end: event.end ? event.endStr : null, // Si el evento no tiene fin, se envía null
-        }),
-      })
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            request_type: 'updateEventDate',
+            event_id: event.id,
+            start: event.startStr,
+            end: event.end ? event.endStr : null, // Si el evento no tiene fin, se envía null
+          }),
+        })
         .then(response => response.json())
         .then(data => {
           if (data.status == 1) {
             Swal.fire({
-              title: 'Fecha actualizada correctamente!',
-              text: 'La página se recargará para aplicar los cambios.',
               icon: 'success',
-              confirmButtonText: 'OK'
-            }).then(() => {
-              // Refrescar la página después de que el usuario haga clic en "OK"
-              window.location.reload();
+              title: 'Fecha actualizada correctamente',
+              showConfirmButton: false,
+              timer: 1500
             });
           } else {
             Swal.fire(data.error, '', 'error');
-            // Si hay un error, revertir el cambio en el calendario
-            if (event.setDates) {
-              // Usar setDates para revertir el cambio si el método está disponible
-              event.setDates(event.start, event.end);
-            } else {
-              console.error('No se pudo revertir el evento: método revert no disponible');
-            }
           }
         })
-        .catch(error => {
-          console.error(error);
-          if (event.setDates) {
-            // Usar setDates para revertir el cambio en caso de error
-            event.setDates(event.start, event.end);
-          } else {
-            console.error('No se pudo revertir el evento: método revert no disponible');
-          }
-        });
+        .catch(console.error);
     }
   </script>
 </head>
 
-<body class="bg-gray-100">
-  <div class="flex h-screen">
+<body class="bg-gray-100 m-0 p-0 overflow-hidden">
+  <div class="flex h-screen w-screen">
+
     <!-- Sidebar -->
-    <div id="sidebar" class="w-1/4 bg-gray-200 rounded-lg shadow-lg p-4 overflow-y-auto">
-      <script>
-        document.addEventListener('DOMContentLoaded', function () {
-          fetch('./assets/Fragments/sidebar.php')
-            .then(response => {
-              if (!response.ok) throw new Error('Error al cargar el sidebar: ' + response.status);
-              return response.text();
-            })
-            .then(data => {
-              document.getElementById('sidebar').innerHTML = data;
-            })
-            .catch(error => {
-              console.error(error);
-              document.getElementById('sidebar').innerHTML =
-                '<p class="text-red-500 text-sm">Error al cargar el menú lateral. Intente más tarde.</p>';
-            });
-        });
-      </script>
-    </div>
+    <?php include './assets/Fragments/sidebar.php'; ?>
 
-    <!-- Contenido Principal -->
-    <div class="w-3/4 p-4 overflow-y-auto">
-      <!-- Título -->
-      <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Calendario de Importaciones</h1>
+    <div>
+      <!-- Contenedor principal del calendario + leyenda -->
+      <div class="flex-1 overflow-hidden p-4 flex flex-col">
 
-      <!-- Leyenda -->
-      <div class="flex justify-around mb-4">
-        <div class="flex items-center">
-          <div class="w-4 h-4 bg-blue-500 rounded-full mr-2"></div>
-          <span class="text-sm text-gray-700">Firmada</span>
+        <!-- Leyenda -->
+        <div class="flex justify-around mb-4">
+          <div class="flex items-center">
+            <div class="w-4 h-4 bg-blue-500 rounded-full mr-2"></div>
+            <span class="text-sm text-gray-700">Firmada</span>
+          </div>
+          <div class="flex items-center">
+            <div class="w-4 h-4 bg-yellow-500 rounded-full mr-2"></div>
+            <span class="text-sm text-gray-700">En transición</span>
+          </div>
+          <div class="flex items-center">
+            <div class="w-4 h-4 bg-green-500 rounded-full mr-2"></div>
+            <span class="text-sm text-gray-700">Llegada</span>
+          </div>
         </div>
-        <div class="flex items-center">
-          <div class="w-4 h-4 bg-yellow-500 rounded-full mr-2"></div>
-          <span class="text-sm text-gray-700">En transición</span>
-        </div>
-        <div class="flex items-center">
-          <div class="w-4 h-4 bg-green-500 rounded-full mr-2"></div>
-          <span class="text-sm text-gray-700">Llegada</span>
-        </div>
-      </div>
 
-      <!-- Calendario -->
-      <div class="bg-white rounded-lg shadow-lg p-4 h-full">
-        <div id="calendar" class="h-[500px] md:h-[650px] lg:h-[800px]"></div>
+        <!-- Calendario -->
+        <div class="bg-white rounded-xl shadow-md p-4 h-full w-full overflow-auto">
+          <div id="calendar" class="h-full w-full"></div>
+        </div>
+
       </div>
     </div>
+
   </div>
 </body>
+
+
 </html>

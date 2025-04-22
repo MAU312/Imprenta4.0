@@ -693,4 +693,77 @@ class Empleado extends Conexion
             throw new Exception("Error al eliminar empleado: " . $e->getMessage());
         }
     }
+
+    public function listarPorId($identificacion)
+{
+    // Modificamos la consulta para obtener un solo empleado por su ID
+    $query = "SELECT 
+        identificacion, numero_asegurado, nombre, primer_apellido, segundo_apellido,
+        fecha_nacimiento, edad, telefono1, correo, sexo, estado_civil, lugar_nacimiento, nacionalidad, direccion_domicilio,
+        telefono2, nombre_contacto1, parentesco_contacto1, telefono_contacto1, direccion_contacto1, nombre_contacto2,
+        parentesco_contacto2, telefono_contacto2, direccion_contacto2, tipo_sangre, padecimientos, discapacidades, intervenciones,
+        uso_aparatos, medicamentos, dosificacion, frecuencia, proposito, fecha_ingreso, jefe_supervisor, puesto_actual, ultimo_grado_estudio
+    FROM empleados WHERE identificacion = :identificacion;"; // Agregamos el filtro por id
+
+    try {
+        self::getConexion();
+
+        $resultado = self::$cnx->prepare($query);
+        $resultado->bindParam(':identificacion', $identificacion, PDO::PARAM_INT); // Vínculo del parámetro
+        $resultado->execute();
+        $fila = $resultado->fetch(PDO::FETCH_ASSOC); // Solo necesitamos una fila
+
+        // Verificamos si se encontró un resultado
+        if ($fila) {
+            $empleado = new self();
+            // Asignamos todos los valores a los atributos de la clase
+            $empleado->setIdentificacion($fila["identificacion"]);
+            $empleado->setNumeroAsegurado($fila["numero_asegurado"]);
+            $empleado->setNombre($fila["nombre"]);
+            $empleado->setPrimerApellido($fila["primer_apellido"]);
+            $empleado->setSegundoApellido($fila["segundo_apellido"]);
+            $empleado->setFechaNacimiento($fila["fecha_nacimiento"]);
+            $empleado->setEdad($fila["edad"]);
+            $empleado->setTelefono1($fila["telefono1"]);
+            $empleado->setCorreo($fila["correo"]);
+            $empleado->setSexo($fila["sexo"]);
+            $empleado->setEstadoCivil($fila["estado_civil"]);
+            $empleado->setLugarNacimiento($fila["lugar_nacimiento"]);
+            $empleado->setNacionalidad($fila["nacionalidad"]);
+            $empleado->setDireccionDomicilio($fila["direccion_domicilio"]);
+            $empleado->setTelefono2($fila["telefono2"]);
+            $empleado->setNombreContacto1($fila["nombre_contacto1"]);
+            $empleado->setParentescoContacto1($fila["parentesco_contacto1"]);
+            $empleado->setTelefonoContacto1($fila["telefono_contacto1"]);
+            $empleado->setDireccionContacto1($fila["direccion_contacto1"]);
+            $empleado->setNombreContacto2($fila["nombre_contacto2"]);
+            $empleado->setParentescoContacto2($fila["parentesco_contacto2"]);
+            $empleado->setTelefonoContacto2($fila["telefono_contacto2"]);
+            $empleado->setDireccionContacto2($fila["direccion_contacto2"]);
+            $empleado->setTipoSangre($fila["tipo_sangre"]);
+            $empleado->setPadecimientos($fila["padecimientos"]);
+            $empleado->setDiscapacidades($fila["discapacidades"]);
+            $empleado->setIntervenciones($fila["intervenciones"]);
+            $empleado->setUsoAparatos($fila["uso_aparatos"]);
+            $empleado->setMedicamentos($fila["medicamentos"]);
+            $empleado->setDosificacion($fila["dosificacion"]);
+            $empleado->setFrecuencia($fila["frecuencia"]);
+            $empleado->setProposito($fila["proposito"]);
+            $empleado->setFechaIngreso($fila["fecha_ingreso"]);
+            $empleado->setJefeSupervisor($fila["jefe_supervisor"]);
+            $empleado->setPuestoActual($fila["puesto_actual"]);
+            $empleado->setUltimoGradoEstudio($fila["ultimo_grado_estudio"]);
+
+            return $empleado;
+        } else {
+            return null; // Si no se encuentra el empleado, retornamos null
+        }
+
+    } catch (PDOException $e) {
+        throw new Exception("Error al obtener el empleado: " . $e->getMessage());
+    } finally {
+        self::desconectar();
+    }
+}
+
 }

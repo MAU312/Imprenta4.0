@@ -1,0 +1,6 @@
+runtime: php81 
+env: standard
+
+handlers:
+  - url: /.*
+    script: auto

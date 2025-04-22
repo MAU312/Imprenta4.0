@@ -1,16 +1,23 @@
 <?php
 require_once '../models/Empleado.php';
 
-$id = $_GET['id'] ?? null;
-if (!$id) {
+$identificacion = $_GET['identificacion'] ?? null; // Obtener el ID desde la URL
+if (!$identificacion) {
     echo "<script>alert('Identificación no válida.'); window.location.href='listaEmpleados.php';</script>";
     exit;
 }
+
 $empleado = new Empleado();
-$empleado->setIdentificacion($id);
-$data = $empleado->listar();
-$empleadoData = $data[0];
+$empleadoData = $empleado->listarPorId($identificacion); // Obtener el empleado por su ID
+
+// Si no se encuentra el empleado con ese ID, redirige a la lista
+if (!$empleadoData) {
+    echo "<script>alert('Empleado no encontrado.'); window.location.href='listaEmpleados.php';</script>";
+    exit;
+}
 ?>
+
+
 <!DOCTYPE html>
 <html lang="es">
 
