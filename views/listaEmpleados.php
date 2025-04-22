@@ -11,6 +11,9 @@
         body {
             font-family: 'Roboto', sans-serif;
         }
+        tbody tr:not(:last-child) {
+            border-bottom: 5px solid #e0e0e0;
+        }
     </style>
 </head>
 
@@ -26,41 +29,9 @@
                 <thead class="bg-gray-200">
                     <tr>
                         <th class="px-6 py-3 text-left text-gray-700">Identificación</th>
-                        <th class="px-6 py-3 text-left text-gray-700">N° Asegurado</th>
                         <th class="px-6 py-3 text-left text-gray-700">Nombre</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Primer Apellido</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Segundo Apellido</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Fecha de nacimiento</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Edad</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Teléfono 1</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Correo electrónico</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Sexo</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Estado civil</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Lugar de nacimiento</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Nacionalidad</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Dirección</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Teléfono 2</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Contacto 1</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Parentezco 1</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Teléfono 1</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Dirección contacto 1</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Contacto 2</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Parentezco 2</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Teléfono 2</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Dirección contacto 2</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Tipo de sangre</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Padecimientos</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Discapacidades</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Intervenciones</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Uso de aparatos</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Medicamentos</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Dosificación</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Frecuencia</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Propósito</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Ingreso empresa</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Supervisor</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Puesto actual</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Último grado</th>
+                        <th class="px-6 py-3 text-left text-gray-700">Apellido</th>
+                        <th class="px-6 py-3 text-left text-gray-700">Teléfono</th>
                         <th class="px-6 py-3 text-left text-gray-700">Acciones</th>
                     </tr>
                 </thead>
@@ -70,13 +41,8 @@
             </table>
         </div>
 
-        <!-- Botones para agregar, editar y eliminar -->
         <div class="flex justify-center space-x-4 mb-6">
             <button id="btnAgregar" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200"><i class="fas fa-plus"></i> Agregar Empleado</button>
-            <div class="flex items-center space-x-2">
-                <input type="text" id="identificacionEmpleado" class="border border-gray-300 rounded-lg px-4 py-2" placeholder="Identificación">
-                <button id="btnEditar" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition duration-200"><i class="fas fa-edit"></i> Editar Empleado</button>
-            </div>
         </div>
 
         <!-- Footer -->

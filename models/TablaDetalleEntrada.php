@@ -5,7 +5,7 @@ class TablaDetalleEntrada extends Conexion
 {
     protected static $cnx;
     private $idDetalleEntrada;
-    private $idMaterial;
+    private $idMaterial; // <- antes era $idMateriales
     private $fechaDetalle;
     private $proveedor;
     private $factura;
@@ -41,6 +41,7 @@ class TablaDetalleEntrada extends Conexion
     {
         $this->idMaterial = $idMaterial;
     }
+
 
     public function getFechaDetalle()
     {
@@ -164,7 +165,7 @@ class TablaDetalleEntrada extends Conexion
 
     public function listar()
     {
-        $query = "CALL listarDetalleEntrada()"; 
+        $query = "CALL listarDetalleEntrada()";
 
         try {
             self::getConexion();
@@ -195,6 +196,79 @@ class TablaDetalleEntrada extends Conexion
             return $data;
         } catch (PDOException $e) {
             throw new Exception("Error al obtener los registros: " . $e->getMessage());
+        } finally {
+            self::desconectar();
+        }
+    }
+
+    public function editarEntrada()
+    {
+        // Consulta para llamar al stored procedure
+        $query = "CALL editarEntradaMaterial(
+            :idDetalleEntrada,
+            :proveedor, 
+            :factura, 
+            :cantidadResma, 
+            :pliegosResma, 
+            :cantidadPliegos, 
+            :precioPliego, 
+            :descuento, 
+            :tipoCambio
+          )";
+
+        try {
+            self::getConexion();
+
+            // Preparar la consulta
+            $stmt = self::$cnx->prepare($query);
+
+            // Depuración de los valores
+            error_log("Proveedor: " . $this->proveedor); // Verifica que el valor de proveedor es correcto
+            error_log("Factura: " . $this->factura); // Verifica que el valor de factura es correcto
+
+            // Vincular los parámetros
+            $stmt->bindParam(':idDetalleEntrada', $this->idDetalleEntrada);
+            $stmt->bindParam(':proveedor', $this->proveedor);
+            $stmt->bindParam(':factura', $this->factura);
+            $stmt->bindParam(':cantidadResma', $this->cantidadResma);
+            $stmt->bindParam(':pliegosResma', $this->pliegosResma);
+            $stmt->bindParam(':cantidadPliegos', $this->cantidadPliegos);
+            $stmt->bindParam(':precioPliego', $this->precioPliego);
+            $stmt->bindParam(':descuento', $this->descuento);
+            $stmt->bindParam(':tipoCambio', $this->tipoCambio);
+
+            // Ejecutar la consulta
+            $resultado = $stmt->execute();
+
+            if (!$resultado) {
+                $errorInfo = $stmt->errorInfo();
+                error_log("Error en editarEntrada: " . implode(" | ", $errorInfo)); // <- Esto se verá en logs
+            }
+
+            return $resultado;
+        } catch (PDOException $e) {
+            error_log("Error en editarEntrada: " . $e->getMessage());  // Esto registra el error en el log
+            throw new Exception("Error al editar la entrada: " . $e->getMessage());  // Aquí aún puedes lanzar la excepción para manejarla fuera
+        } finally {
+            self::desconectar();
+        }
+    }
+
+
+
+    public function eliminarEntrada()
+    {
+        $query = "DELETE FROM detalleentrada WHERE idDetalleEntrada = :idDetalleEntrada";
+
+        try {
+            self::getConexion();
+
+            $stmt = self::$cnx->prepare($query);
+            $stmt->bindParam(':idDetalleEntrada', $this->idDetalleEntrada);
+
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            throw new Exception("Error al eliminar la entrada: " . $e->getMessage());
         } finally {
             self::desconectar();
         }

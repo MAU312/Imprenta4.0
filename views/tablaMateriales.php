@@ -109,8 +109,6 @@
     <script src="./assets/JavaScript/agregarMaterial.js"></script>
     <script src="./assets/JavaScript/editarMaterial.js"></script>
     <script src="./assets/JavaScript/eliminarMaterial.js"></script>
-
-
 </body>
 
 </html>

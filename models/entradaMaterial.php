@@ -166,7 +166,7 @@ class TablaProductos extends Conexion
     // Obtener detalles por idMaterial
     public function obtenerDetallesPorMaterial($idMaterial)
     {
-        // Query para obtener los detalles del material, pero sin seleccionar idMateriales
+        // Query para obtener los detalles del material
         $query = "SELECT * FROM detalleentrada WHERE idMateriales = :idMaterial";
 
         try {
@@ -180,13 +180,7 @@ class TablaProductos extends Conexion
             // Recuperamos todas las filas
             $filas = $resultado->fetchAll(PDO::FETCH_ASSOC); // Obtener como array asociativo
 
-            // Eliminar el campo 'idMateriales' de cada fila
-            foreach ($filas as &$fila) {
-                unset($fila['idMateriales']);
-            }
-            unset($fila); // Liberar la referencia
-
-            return $filas; // Retornar los resultados sin el campo idMateriales
+            return $filas; // Retornar los resultados
         } catch (PDOException $e) {
             throw new Exception("Error al obtener los detalles: " . $e->getMessage());
         } finally {
@@ -230,48 +224,42 @@ class TablaProductos extends Conexion
     }
 
     public function editarEntrada() {
-        $query = "CALL editarEntradaMaterial(:idDetalleEntrada, :proveedor, :factura, :cantidadResma, :pliegosResma, :cantidadPliegos, :precioPliego, :descuento, :tipoCambio)";
-    
+        $query = "CALL editarEntradaMaterial(:idDetalleEntrada, :idMateriales, :proveedor, :factura, :cantidadResma, :pliegosResma, :cantidadPliegos, :precioPliego, :descuento, :tipoCambio)";
+        
         try {
             self::getConexion();
-            $resultado = self::$cnx->prepare($query);
+            $stmt = self::$cnx->prepare($query);
     
-            // Vincular parámetros
-            $resultado->bindParam(":idDetalleEntrada", $this->idDetalleEntrada, PDO::PARAM_INT);
-            $resultado->bindParam(":proveedor", $this->proveedor, PDO::PARAM_STR);
-            $resultado->bindParam(":factura", $this->factura, PDO::PARAM_INT);
-            $resultado->bindParam(":cantidadResma", $this->cantidadResma, PDO::PARAM_INT);
-            $resultado->bindParam(":pliegosResma", $this->pliegosResma, PDO::PARAM_INT);
-            $resultado->bindParam(":cantidadPliegos", $this->cantidadPliegos, PDO::PARAM_INT);
-            $resultado->bindParam(":precioPliego", $this->precioPliego, PDO::PARAM_STR);
-            $resultado->bindParam(":descuento", $this->descuento, PDO::PARAM_STR);
-            $resultado->bindParam(":tipoCambio", $this->tipoCambio, PDO::PARAM_STR);
+            $stmt->bindParam(":idDetalleEntrada", $this->idDetalleEntrada, PDO::PARAM_INT);
+            $stmt->bindParam(":idMateriales", $this->idMateriales, PDO::PARAM_INT);
+            $stmt->bindParam(":proveedor", $this->proveedor, PDO::PARAM_STR);
+            $stmt->bindParam(":factura", $this->factura, PDO::PARAM_STR);
+            $stmt->bindParam(":cantidadResma", $this->cantidadResma, PDO::PARAM_INT);
+            $stmt->bindParam(":pliegosResma", $this->pliegosResma, PDO::PARAM_INT);
+            $stmt->bindParam(":cantidadPliegos", $this->cantidadPliegos, PDO::PARAM_INT);
+            $stmt->bindParam(":precioPliego", $this->precioPliego, PDO::PARAM_STR);
+            $stmt->bindParam(":descuento", $this->descuento, PDO::PARAM_STR);
+            $stmt->bindParam(":tipoCambio", $this->tipoCambio, PDO::PARAM_STR);
     
-            // Ejecutar la consulta
-            $resultado->execute();
-    
-            return true; // Retorna true si la edición fue exitosa
+            $stmt->execute();
+            return true;
         } catch (PDOException $e) {
-            throw new Exception("Error al editar la entrada: " . $e->getMessage());
+            throw new Exception("Error al actualizar la entrada: " . $e->getMessage());
         } finally {
             self::desconectar();
         }
     }
+     
 
     public function eliminarEntrada() {
         $query = "CALL eliminarEntradaMaterial(:idDetalleEntrada)";
-    
+        
         try {
             self::getConexion();
-            $resultado = self::$cnx->prepare($query);
-    
-            // Vincular parámetros
-            $resultado->bindParam(":idDetalleEntrada", $this->idDetalleEntrada, PDO::PARAM_INT);
-    
-            // Ejecutar la consulta
-            $resultado->execute();
-    
-            return true; // Retorna true si la eliminación fue exitosa
+            $stmt = self::$cnx->prepare($query);
+            $stmt->bindParam(":idDetalleEntrada", $this->idDetalleEntrada, PDO::PARAM_INT);
+            $stmt->execute();
+            return true;
         } catch (PDOException $e) {
             throw new Exception("Error al eliminar la entrada: " . $e->getMessage());
         } finally {

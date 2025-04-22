@@ -417,7 +417,13 @@ class Empleado extends Conexion
 
     public function listar()
     {
-        $query = "CALL listarEmpleados()";
+        $query = "SELECT 
+        id, identificacion, numero_asegurado, nombre, primer_apellido, segundo_apellido,
+        fecha_nacimiento, edad, telefono1, correo, sexo, estado_civil, lugar_nacimiento, nacionalidad, direccion_domicilio,
+        telefono2, nombre_contacto1, parentesco_contacto1, telefono_contacto1, direccion_contacto1, nombre_contacto2,
+        parentesco_contacto2, telefono_contacto2, direccion_contacto2, tipo_sangre, padecimientos, discapacidades, intervenciones,
+        uso_aparatos, medicamentos, dosificacion, frecuencia, proposito, fecha_ingreso, jefe_supervisor, puesto_actual, ultimo_grado_estudio
+    FROM empleados;";
 
         try {
             self::getConexion();
@@ -654,6 +660,7 @@ class Empleado extends Conexion
             self::desconectar();
         }
     }
+
     public function obtenerDetalles($identificacion)
     {
         $query = "SELECT * FROM empleados WHERE identificacion = :identificacion";
@@ -671,6 +678,19 @@ class Empleado extends Conexion
             throw new Exception("Error al obtener los detalles del empleado: " . $e->getMessage());
         } finally {
             self::desconectar();
+        }
+    }
+
+    public function eliminar($identificacion)
+    {
+        try {
+            self::getConexion();
+            $sql = "DELETE FROM empleados WHERE identificacion = :identificacion";
+            $stmt = self::$cnx->prepare($sql);
+            $stmt->bindParam(':identificacion', $identificacion, PDO::PARAM_STR);
+            return $stmt->execute();
+        } catch (Exception $e) {
+            throw new Exception("Error al eliminar empleado: " . $e->getMessage());
         }
     }
 }

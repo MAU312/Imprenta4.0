@@ -111,14 +111,12 @@ class TablaProductos extends Conexion
     public function editar()
     {
         $query = "CALL editarMaterial(:idMateriales, :Material)";
-
         try {
             self::getConexion();
             $resultado = self::$cnx->prepare($query);
             $resultado->bindParam(":idMateriales", $this->idMateriales, PDO::PARAM_INT);
             $resultado->bindParam(":Material", $this->Material, PDO::PARAM_STR);
             $resultado->execute();
-
             return true;
         } catch (PDOException $e) {
             throw new Exception("Error al editar el material: " . $e->getMessage());
@@ -126,7 +124,6 @@ class TablaProductos extends Conexion
             self::desconectar();
         }
     }
-
     public function eliminar() 
     {
         $query = "CALL eliminarMaterial(:idMateriales)";
@@ -151,7 +148,6 @@ class TablaProductos extends Conexion
             self::desconectar();
         }
     }
-
 
     public function existeMaterial()
     {

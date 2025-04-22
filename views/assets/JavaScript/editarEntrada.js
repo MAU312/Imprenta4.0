@@ -1,14 +1,14 @@
 function editarEntrada() {
     // Obtener los valores del formulario de edición
-    const idDetalleEntrada = document.getElementById('editarIdDetalleEntrada').value;
-    const proveedor = document.getElementById('editarProveedor').value;
-    const factura = document.getElementById('editarFactura').value;
-    const cantidadResma = document.getElementById('editarCantidadResma').value;
-    const pliegosResma = document.getElementById('editarPliegosResma').value;
-    const cantidadPliegos = document.getElementById('editarCantidadPliegos').value;
-    const precioPliego = document.getElementById('editarPrecioPliego').value;
-    const descuento = document.getElementById('editarDescuento').value;
-    const tipoCambio = document.getElementById('editarTipoCambio').value;
+    
+    const proveedor = document.getElementById('proveedorEditar').value;
+    const factura = document.getElementById('facturaEditar').value;
+    const cantidadResma = document.getElementById('cantidadResmaEditar').value;
+    const pliegosResma = document.getElementById('pliegosResmaEditar').value;
+    const cantidadPliegos = document.getElementById('cantidadPliegosEditar').value;
+    const precioPliego = document.getElementById('precioPliegoEditar').value;
+    const descuento = document.getElementById('descuentoEditar').value;
+    const tipoCambio = document.getElementById('tipoCambioEditar').value;
 
     // Validar que los campos obligatorios no estén vacíos
     if (!proveedor || !factura || !cantidadResma || !pliegosResma || !cantidadPliegos || !precioPliego) {

@@ -1,7 +1,5 @@
-
 function editarMaterial() {
     const nuevoNombre = document.getElementById('editarMaterialName').value;
-
     if (!nuevoNombre) {
         Swal.fire({
             icon: 'error',
@@ -10,7 +8,6 @@ function editarMaterial() {
         });
         return;
     }
-
     $.ajax({
         url: '../controllers/TablaProductoController.php?op=editar',
         type: 'POST',
