@@ -58,7 +58,7 @@
             </div>
         </div>
 
-        <div id="popupEditar" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div id="popupEditar" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden" style="z-index: 1000;">
             <div class="bg-white rounded-lg p-6 w-96">
                 <h2 class="text-lg font-bold mb-4">Editar Material</h2>
                 <input type="text" id="editarMaterialName" class="border border-gray-300 rounded px-3 py-2 w-full" placeholder="Nuevo nombre del material">
