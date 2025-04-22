@@ -28,47 +28,41 @@ switch ($_GET["op"]) {
         break;
 }
 
-function listar()
-{
+function listar() {
     try {
-        // Crear una instancia del modelo
         $empleado = new Empleado();
-
-        // Obtener los datos de los empleados
-        $datos = $empleado->listar();
-
-        // Contar el total de registros sin filtrar
-        $totalRegistros = count($datos);
-
-        // Verificar si hay datos
-        if (!empty($datos)) {
-            // Transformar los datos a un array de forma separada
-            $data = transformarDatos($datos);
-
-            // Preparar los resultados para la respuesta JSON
-            $resultados = array(
-                "success" => true,
-                "draw" => intval($_POST['draw']), // El draw debe venir del cliente
-                "recordsTotal" => $totalRegistros, // Total de registros en la base de datos
-                "recordsFiltered" => $totalRegistros,
-                "data" => $data
-            );
-        } else {
-            // Enviar mensaje de error si no hay datos
-            $resultados = array(
-                "success" => false,
-                "message" => "No hay empleados disponibles."
-            );
-        }
-
-        // Enviar la respuesta JSON
-        echo json_encode($resultados);
+        
+        // Parámetros de DataTables
+        $start = isset($_POST['start']) ? (int)$_POST['start'] : 0;
+        $length = isset($_POST['length']) ? (int)$_POST['length'] : 10;
+        $searchValue = isset($_POST['search']['value']) ? trim($_POST['search']['value']) : '';
+        
+        // Obtener datos
+        $datos = $empleado->listar($start, $length, $searchValue);
+        $totalRegistros = $empleado->contarTotal();
+        $totalFiltrados = $searchValue ? $empleado->contarFiltrados($searchValue) : $totalRegistros;
+        
+        $response = [
+            "draw" => intval($_POST['draw']),
+            "recordsTotal" => $totalRegistros,
+            "recordsFiltered" => $totalFiltrados,
+            "data" => $datos
+        ];
+        
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        
     } catch (Exception $e) {
-        // Enviar mensaje de error si ocurrió una excepción
-        echo json_encode([
-            "success" => false,
-            "message" => "Error: " . $e->getMessage()
-        ]);
+        $response = [
+            "draw" => intval($_POST['draw'] ?? 0),
+            "recordsTotal" => 0,
+            "recordsFiltered" => 0,
+            "data" => [],
+            "error" => $e->getMessage()
+        ];
+        
+        header('Content-Type: application/json');
+        echo json_encode($response);
     }
 }
 

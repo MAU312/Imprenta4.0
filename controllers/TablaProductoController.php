@@ -27,41 +27,51 @@ switch ($_GET["op"]) {
 function listar()
 {
     try {
-        // Crear una instancia del modelo
         $tablaProductos = new TablaProductos();
+        
+        // Parámetros de DataTables
+        $start = isset($_GET['start']) ? intval($_GET['start']) : 0;
+        $length = isset($_GET['length']) ? intval($_GET['length']) : 10;
+        $searchValue = isset($_GET['searchValue']) ? trim($_GET['searchValue']) : '';
+        
+        // Obtener los datos con filtrado
+        $datos = $tablaProductos->listar($start, $length, $searchValue);
+        
+        // Obtener el total de registros
+        $totalRegistros = $tablaProductos->contarTotalRegistros();
+        
+        // Obtener el total de registros filtrados
+        $totalFiltrados = $searchValue ? $tablaProductos->contarRegistrosFiltrados($searchValue) : $totalRegistros;
 
-        // Obtener los datos de la lista de productos
-        $datos = $tablaProductos->listar();
-
-        // Verificar si hay datos
         if (!empty($datos)) {
-            // Transformar los datos a un array de forma separada
             $data = transformarDatos($datos);
-
-            // Preparar los resultados para la respuesta JSON
+            
             $resultados = array(
                 "success" => true,
+                "draw" => isset($_GET['draw']) ? intval($_GET['draw']) : 1,
+                "recordsTotal" => $totalRegistros,
+                "recordsFiltered" => $totalFiltrados,
                 "data" => $data
             );
         } else {
-            // Enviar mensaje de error si no hay datos
             $resultados = array(
-                "success" => false,
-                "message" => "No hay datos disponibles."
+                "success" => true,
+                "draw" => isset($_GET['draw']) ? intval($_GET['draw']) : 1,
+                "recordsTotal" => 0,
+                "recordsFiltered" => 0,
+                "data" => array(),
+                "message" => "No se encontraron registros"
             );
         }
 
-        // Enviar la respuesta JSON
         echo json_encode($resultados);
     } catch (Exception $e) {
-        // Enviar mensaje de error si ocurrió una excepción
         echo json_encode([
             "success" => false,
             "message" => "Error: " . $e->getMessage()
         ]);
     }
 }
-
 /**
  * Función separada para transformar los datos de objetos a arrays
  */

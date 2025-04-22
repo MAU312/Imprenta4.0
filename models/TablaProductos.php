@@ -56,36 +56,87 @@ class TablaProductos extends Conexion
         self::$cnx = null;
     }
 
-    public function listar()
-    {
-        $query = "CALL listarMateriales()";
-
-        try {
-            // Intentamos conectar dentro del bloque try para capturar cualquier fallo en la conexión
-            self::getConexion();
-
-            $resultado = self::$cnx->prepare($query);
-            $resultado->execute();
-            $filas = $resultado->fetchAll();
-
-            $data = array();
-            foreach ($filas as $fila) {
-                $tabla = new self();  // Asumiendo que esta clase tiene setters para cada atributo
-                $tabla->setIdMateriales($fila["idMateriales"]);
-                $tabla->setMaterial($fila["Material"]);
-                $tabla->setCantidad_Inventario($fila["Cantidad_Inventario"]);
-                $tabla->setValor_Inventario($fila["Valor_Inventario"]);
-                $data[] = $tabla;
-            }
-
-            return $data;
-        } catch (PDOException $e) {
-            throw new Exception("Error al obtener los registros: " . $e->getMessage());
-        } finally {
-            // Aseguramos la desconexión al final de la ejecución
-            self::desconectar();
-        }
+    public function listar($start = 0, $length = 10, $searchValue = '')
+{
+    $query = "SELECT * FROM materiales";
+    
+    // Añadir condición de búsqueda si existe
+    if (!empty($searchValue)) {
+        $query .= " WHERE Material LIKE :searchValue";
     }
+    
+    $query .= " LIMIT :start, :length";
+    
+    try {
+        self::getConexion();
+        $resultado = self::$cnx->prepare($query);
+        
+        // Bind parameters
+        if (!empty($searchValue)) {
+            $searchParam = "%" . $searchValue . "%";
+            $resultado->bindParam(":searchValue", $searchParam, PDO::PARAM_STR);
+        }
+        
+        $resultado->bindParam(":start", $start, PDO::PARAM_INT);
+        $resultado->bindParam(":length", $length, PDO::PARAM_INT);
+        $resultado->execute();
+        $filas = $resultado->fetchAll();
+
+        $data = array();
+        foreach ($filas as $fila) {
+            $tabla = new self();
+            $tabla->setIdMateriales($fila["idMateriales"]);
+            $tabla->setMaterial($fila["Material"]);
+            $tabla->setCantidad_Inventario($fila["Cantidad_Inventario"]);
+            $tabla->setValor_Inventario($fila["Valor_Inventario"]);
+            $data[] = $tabla;
+        }
+
+        return $data;
+    } catch (PDOException $e) {
+        throw new Exception("Error al obtener los registros: " . $e->getMessage());
+    } finally {
+        self::desconectar();
+    }
+}
+
+public function contarTotalRegistros()
+{
+    $query = "SELECT COUNT(*) as total FROM materiales";
+    
+    try {
+        self::getConexion();
+        $resultado = self::$cnx->prepare($query);
+        $resultado->execute();
+        $fila = $resultado->fetch(PDO::FETCH_ASSOC);
+        
+        return $fila['total'];
+    } catch (PDOException $e) {
+        throw new Exception("Error al contar registros: " . $e->getMessage());
+    } finally {
+        self::desconectar();
+    }
+}
+
+public function contarRegistrosFiltrados($searchValue)
+{
+    $query = "SELECT COUNT(*) as total FROM materiales WHERE Material LIKE :searchValue";
+    
+    try {
+        self::getConexion();
+        $resultado = self::$cnx->prepare($query);
+        $searchParam = "%" . $searchValue . "%";
+        $resultado->bindParam(":searchValue", $searchParam, PDO::PARAM_STR);
+        $resultado->execute();
+        $fila = $resultado->fetch(PDO::FETCH_ASSOC);
+        
+        return $fila['total'];
+    } catch (PDOException $e) {
+        throw new Exception("Error al contar registros filtrados: " . $e->getMessage());
+    } finally {
+        self::desconectar();
+    }
+}
 
     public function agregar()
     {
