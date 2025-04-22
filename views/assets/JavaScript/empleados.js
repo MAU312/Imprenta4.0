@@ -55,13 +55,13 @@ $(document).ready(function () {
                     "data": null,
                     "render": function (data, type, row) {
                         return `
-                            <a href="detalleEmpleado.php?identificacion=${row.identificacion}" class="btnDetalles bg-blue-500 text-white px-5 py-0 rounded-lg hover:bg-blue-600">
+                            <a href="detalleEmpleado.php?identificacion=${row.identificacion}" class="btnDetalles bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200 ease-in-out inline-block">
                                 Detalles
                             </a>
-                            <a href="editarEmpleado.php?identificacion=${row.identificacion}" class="btnEditar bg-yellow-500 text-white px-5 py-0 rounded-lg hover:bg-yellow-600 ml-2">
+                            <a href="editarEmpleado.php?identificacion=${row.identificacion}" class="btnEditar bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition duration-200 ease-in-out inline-block">
                                 Editar
                             </a>
-                            <a href="javascript:void(0);" class="btnEliminar bg-red-500 text-white px-5 py-0 rounded-lg hover:bg-red-600 ml-2" 
+                            <a href="javascript:void(0);" class="btnEliminar bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-200 ease-in-out inline-block" 
                                onclick="eliminarEmpleado(event, ${row.identificacion})">
                                 Eliminar
                             </a>

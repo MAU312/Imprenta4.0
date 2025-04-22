@@ -44,9 +44,12 @@
             confirmButtonText: 'Guardar',
             showCloseButton: true,
             showCancelButton: true,
-            html: '<input id="swalEvtTitle" class="swal2-input" placeholder="Ingresar título">' +
-              '<textarea id="swalEvtDesc" class="swal2-input" placeholder="Ingresar información"></textarea>' +
-              '<input id="swalEvtURL" class="swal2-input" placeholder="Agregar URL de rastreo">',
+            html: `
+              <div class="space-y-3 text-left">
+                <input id="swalEvtTitle" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="Ingresar título">
+                <textarea id="swalEvtDesc" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="Ingresar información"></textarea>
+                <input id="swalEvtURL" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="Agregar URL de rastreo">
+              </div>`,
             focusConfirm: false,
             preConfirm: () => {
               return [
@@ -54,7 +57,12 @@
                 document.getElementById('swalEvtDesc').value,
                 document.getElementById('swalEvtURL').value
               ]
-            }
+            },
+            customClass: {
+              confirmButton: 'bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded ml-2',
+              cancelButton: 'bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded ml-2',
+            },
+            buttonsStyling: false
           });
 
           if (formValues) {
@@ -132,6 +140,12 @@
             cancelButtonText: 'Cancelar',
             confirmButtonText: 'Eliminar',
             denyButtonText: 'Editar',
+            customClass: {
+              confirmButton: 'bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded ml-2',
+              denyButton: 'bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 rounded ml-2',
+              cancelButton: 'bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded ml-2'
+            },
+            buttonsStyling: false
           }).then((result) => {
             if (result.isConfirmed) {
               // Delete event
@@ -161,12 +175,13 @@
               // Edit event
               Swal.fire({
                 title: 'Editar Evento',
-                html: '<input id="swalEvtTitle_edit" class="swal2-input" placeholder="Ingresar título" value="' + info.event.title + '">' +
-                  '<textarea id="swalEvtDesc_edit" class="swal2-input" placeholder="Ingresar descripción">' + info.event.extendedProps.description + '</textarea>' +
-                  '<input id="swalEvtURL_edit" class="swal2-input" placeholder="Ingresar URL" value="' + info.event.url + '">' +
-                  '<input id="swalEvtStart_edit" type="datetime-local" class="swal2-input" value="' + formatDateForInput(info.event.start) + '">' +
-                  '<input id="swalEvtEnd_edit" type="datetime-local" class="swal2-input" value="' + formatDateForInput(info.event.end) + '">' +
-                  '<input id="swalEvtCausaCambio_edit" class="swal2-input" placeholder="Causa del cambio">', // Nuevo campo CausaCambio
+                html: `
+                  <input id="swalEvtTitle_edit" class="swal2-input" placeholder="Ingresar título" value="${info.event.title}">
+                <textarea id="swalEvtDesc_edit" class="swal2-textarea" placeholder="Ingresar descripción">${info.event.extendedProps.description}</textarea>
+                <input id="swalEvtURL_edit" class="swal2-input" placeholder="Ingresar URL" value="${info.event.url}">
+                <input id="swalEvtStart_edit" type="datetime-local" class="swal2-input" value="${formatDateForInput(info.event.start)}">
+                <input id="swalEvtEnd_edit" type="datetime-local" class="swal2-input" value="${formatDateForInput(info.event.end)}">
+                <input id="swalEvtCausaCambio_edit" class="swal2-input" placeholder="Causa del cambio">`,
                 focusConfirm: false,
                 confirmButtonText: 'Guardar',
                 showCancelButton: true,

@@ -7,12 +7,15 @@
     <title>Gestión de Información Personal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
         }
-        tbody tr:not(:last-child) {
-            border-bottom: 5px solid #e0e0e0;
+
+        /* Efecto de hover en las filas de la tabla */
+        #tblEmpleados tbody tr:hover {
+            background-color: #f0f4f8;
         }
     </style>
 </head>
@@ -22,17 +25,20 @@
     <?php include './assets/Fragments/sidebar.php'; ?>
 
     <div class="flex-1 p-6">
-        <h1 class="text-3xl font-bold mb-6 text-center text-blue-700">Gestión de Información Personal</h1>
+        <div class="flex items-center mb-6">
+            <h1 class="text-3xl font-bold text-blue-700 flex-1 text-center">Gestión de Información Personal</h1>
+        </div>
 
-        <div class="bg-white rounded-lg shadow-md border border-gray-300 mb-6 overflow-hidden">
-            <table id="tblEmpleados" class="table-auto w-full bg-white rounded-lg">
+        <!-- Tabla de empleados -->
+        <div class="w-full bg-white rounded-lg shadow-lg border border-gray-300 mb-6 overflow-x-auto">
+            <table id="tblEmpleados" class="min-w-full bg-white rounded-lg border-collapse">
                 <thead class="bg-gray-200">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-gray-700">Identificación</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Nombre</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Apellido</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Teléfono</th>
-                        <th class="px-6 py-3 text-left text-gray-700">Acciones</th>
+                    <tr class="border-b">
+                        <th class="px-6 py-4 text-left text-gray-700">Identificación</th>
+                        <th class="px-6 py-4 text-left text-gray-700">Nombre</th>
+                        <th class="px-6 py-4 text-left text-gray-700">Apellido</th>
+                        <th class="px-6 py-4 text-left text-gray-700">Teléfono</th>
+                        <th class="px-6 py-4 text-left text-gray-700">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="empleadoTableBody" class="text-gray-700">
@@ -42,7 +48,12 @@
         </div>
 
         <div class="flex justify-center space-x-4 mb-6">
-            <button id="btnAgregar" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200"><i class="fas fa-plus"></i> Agregar Empleado</button>
+            <button id="btnAgregar" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                Agregar Empleado
+            </button>
         </div>
 
         <!-- Footer -->
