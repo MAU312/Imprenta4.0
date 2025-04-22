@@ -7,6 +7,8 @@
     <title>Subir Archivo Excel</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body class="bg-gradient-to-r from-blue-50 to-indigo-100">
@@ -32,10 +34,10 @@
                             class="border-2 border-indigo-500 p-4 rounded-lg w-2/3 bg-gray-50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-300" />
                     </div>
 
-                    <!-- Botón de impresión -->
+                    <!-- Botón de subir datos -->
                     <div class="flex justify-center">
                         <button id="printButton" class="w-1/3 py-3 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-300"
-                            disabled>Imprimir Nombres y Periodos</button>
+                            disabled>Subir Datos</button>
                     </div>
                 </div>
 
@@ -49,25 +51,54 @@
     </div>
 
     <script>
+        let empleados = []; // Variable global para almacenar los datos de los empleados
+
         document.getElementById('excelFile').addEventListener('change', function(event) {
             const file = event.target.files[0];
+
+            // Validar que el archivo sea un Excel
+            if (!file || !file.name.match(/\.(xlsx|xls)$/)) {
+                alert("Por favor, sube un archivo Excel válido.");
+                return;
+            }
+
             const reader = new FileReader();
 
+            // Mostrar mensaje de carga
+            const resultadosDiv = document.getElementById('resultados');
+            resultadosDiv.innerHTML = "<p>Procesando archivo, por favor espera...</p>";
+
             reader.onload = function(e) {
-                const data = new Uint8Array(e.target.result);
-                const workbook = XLSX.read(data, {
-                    type: 'array'
-                });
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, {
+                        type: 'array'
+                    });
 
-                const sheetName = workbook.SheetNames[0]; // Asumimos que estamos trabajando con la primera hoja
-                const sheet = workbook.Sheets[sheetName];
+                    const sheetName = workbook.SheetNames[0]; // Asumimos que estamos trabajando con la primera hoja
+                    const sheet = workbook.Sheets[sheetName];
 
-                const rows = XLSX.utils.sheet_to_json(sheet, {
-                    header: 1
-                });
+                    const rows = XLSX.utils.sheet_to_json(sheet, {
+                        header: 1
+                    });
 
-                // Llamamos a la función para imprimir los nombres y los periodos
-                leer(rows);
+                    // Limpiar resultados anteriores
+                    resultadosDiv.innerHTML = "";
+
+                    // Llamamos a la función para procesar los datos
+                    leer(rows);
+
+                    // Habilitar el botón de subir datos
+                    document.getElementById('printButton').disabled = false;
+                } catch (error) {
+                    console.error("Error al procesar el archivo:", error);
+                    resultadosDiv.innerHTML = "<p class='text-red-500'>Hubo un error al procesar el archivo. Por favor, inténtalo de nuevo.</p>";
+                }
+            };
+
+            reader.onerror = function(e) {
+                console.error("Error al leer el archivo:", e.target.error);
+                resultadosDiv.innerHTML = "<p class='text-red-500'>Hubo un error al leer el archivo. Por favor, inténtalo de nuevo.</p>";
             };
 
             reader.readAsArrayBuffer(file);
@@ -77,6 +108,26 @@
             const date = new Date((excelDate - 25569) * 86400 * 1000); // Convierte la fecha
             const offset = date.getTimezoneOffset(); // Ajustar la zona horaria
             return new Date(date.getTime() + offset * 60 * 1000);
+        }
+
+        function extraerHoras(rows, columna) {
+            const horas = [];
+            for (let i = 10; i <= rows.length; i += 18) {
+                for (let j = 0; j < 7; j++) {
+                    const valor = rows[i + j - 1] ? rows[i + j - 1][columna] : null;
+                    if (valor) {
+                        if (typeof valor === 'number') {
+                            const fechaConvertida = excelDateToJSDate(valor);
+                            horas.push(fechaConvertida.toLocaleString());
+                        } else {
+                            horas.push(String(valor).trim());
+                        }
+                    } else {
+                        horas.push("");
+                    }
+                }
+            }
+            return horas;
         }
 
         function leer(rows) {
@@ -90,51 +141,19 @@
                 periodRows.push(i);
             }
 
-            const textoPlano = [];
-            const horaInicio = [];
-            const horaSalida = [];
-
-            // Generar las filas donde se encuentran los datos, siguiendo el patrón
-            for (let i = 10; i <= rows.length; i += 18) {
-                for (let j = 0; j < 7; j++) { // Leer 7 filas consecutivas (bloque)
-                    horaInicio.push(i + j); // Guardamos la fila a leer para hora de llegada
-                    horaSalida.push(i + j); // Guardamos la fila a leer para hora de salida
-                }
-            }
-
-            // Leer las filas especificadas y extraer las horas de llegada (columna D) y salida (columna E)
-            horaInicio.forEach(fila => {
-                const valor = rows[fila - 1] ? rows[fila - 1][3] : null; // Ajustar índice base 0 (columna D)
-                if (valor) {
-                    if (typeof valor === 'number') {
-                        const fechaConvertida = excelDateToJSDate(valor);
-                        textoPlano.push(fechaConvertida.toLocaleString());
-                    } else {
-                        textoPlano.push(String(valor).trim());
-                    }
-                } else {
-                    textoPlano.push(""); // Si no hay valor, lo dejamos vacío
-                }
-            });
-
-            const textoSalida = []; // Array para las horas de salida
-
-            horaSalida.forEach(fila => {
-                const valor = rows[fila - 1] ? rows[fila - 1][4] : null; // Ajustar índice base 0 (columna E)
-                if (valor) {
-                    if (typeof valor === 'number') {
-                        const fechaConvertida = excelDateToJSDate(valor);
-                        textoSalida.push(fechaConvertida.toLocaleString());
-                    } else {
-                        textoSalida.push(String(valor).trim());
-                    }
-                } else {
-                    textoSalida.push(""); // Si no hay valor, lo dejamos vacío
-                }
-            });
+            const marca1 = extraerHoras(rows, 3); // Columna D
+            const marca2 = extraerHoras(rows, 4); // Columna E
+            const marca3 = extraerHoras(rows, 5); // Columna F
+            const marca4 = extraerHoras(rows, 6); // Columna G
+            const marca5 = extraerHoras(rows, 7); // Columna H
+            const marca6 = extraerHoras(rows, 8); // Columna I
+            const marca7 = extraerHoras(rows, 9); // Columna J
+            const marca8 = extraerHoras(rows, 10); // Columna K
+            const marca9 = extraerHoras(rows, 11); // Columna L
+            const marca10 = extraerHoras(rows, 12); // Columna M
 
             // Creamos un objeto para almacenar los resultados de manera estructurada
-            const empleados = [];
+            empleados = []; // Reiniciar la variable global
 
             nameRows.forEach((rowIndex, i) => {
                 const name = rows[rowIndex - 1] ? rows[rowIndex - 1][4] : undefined;
@@ -159,8 +178,16 @@
                         nombre: name,
                         periodo: period,
                         diasTrabajados: fechas,
-                        horasDeLlegada: textoPlano.slice(i * 7, (i + 1) * 7),
-                        horasDeSalida: textoSalida.slice(i * 7, (i + 1) * 7)
+                        horaMarca1: marca1.slice(i * 7, (i + 1) * 7),
+                        horaMarca2: marca2.slice(i * 7, (i + 1) * 7),
+                        horaMarca3: marca3.slice(i * 7, (i + 1) * 7),
+                        horaMarca4: marca4.slice(i * 7, (i + 1) * 7),
+                        horaMarca5: marca5.slice(i * 7, (i + 1) * 7),
+                        horaMarca6: marca6.slice(i * 7, (i + 1) * 7),
+                        horaMarca7: marca7.slice(i * 7, (i + 1) * 7),
+                        horaMarca8: marca8.slice(i * 7, (i + 1) * 7),
+                        horaMarca9: marca9.slice(i * 7, (i + 1) * 7),
+                        horaMarca10: marca10.slice(i * 7, (i + 1) * 7)
                     };
 
                     empleados.push(empleado);
@@ -174,26 +201,135 @@
                     <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200 mb-4">
                         <h3 class="text-xl font-semibold text-gray-800 mb-2">${empleado.nombre}</h3>
                         <p class="text-lg text-gray-600 mb-4">Periodo: ${empleado.periodo}</p>
-                        <ul class="space-y-4">`;
+                        <table class="min-w-full bg-white">
+                            <thead>
+                                <tr>
+                                    <th class="py-2">Día</th>
+                                    <th class="py-2">Marca 1</th>
+                                    <th class="py-2">Marca 2</th>
+                                    <th class="py-2">Marca 3</th>
+                                    <th class="py-2">Marca 4</th>
+                                    <th class="py-2">Marca 5</th>
+                                    <th class="py-2">Marca 6</th>
+                                    <th class="py-2">Marca 7</th>
+                                    <th class="py-2">Marca 8</th>
+                                    <th class="py-2">Marca 9</th>
+                                    <th class="py-2">Marca 10</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
 
                 empleado.diasTrabajados.forEach((dia, index) => {
-                    const horaEntrada = empleado.horasDeLlegada[index] || "No registrado";
-                    const horaSalida = empleado.horasDeSalida[index] || "No registrado";
+                    const hora1 = empleado.horaMarca1[index] || "No registrado";
+                    const hora2 = empleado.horaMarca2[index] || "No registrado";
+                    const hora3 = empleado.horaMarca3[index] || "No registrado";
+                    const hora4 = empleado.horaMarca4[index] || "No registrado";
+                    const hora5 = empleado.horaMarca5[index] || "No registrado";
+                    const hora6 = empleado.horaMarca6[index] || "No registrado";
+                    const hora7 = empleado.horaMarca7[index] || "No registrado";
+                    const hora8 = empleado.horaMarca8[index] || "No registrado";
+                    const hora9 = empleado.horaMarca9[index] || "No registrado";
+                    const hora10 = empleado.horaMarca10[index] || "No registrado";
                     empleadoInfo += `
-                        <li class="flex justify-between bg-gray-50 rounded-lg p-4">
-                            <span class="text-gray-800">${dia}</span>
-                            <span class="text-gray-600">Hora de llegada: ${horaEntrada}</span>
-                            <span class="text-gray-600">Hora de salida: ${horaSalida}</span>
-                        </li>`;
+                        <tr class="bg-gray-50">
+                            <td class="py-2 px-4">${dia}</td>
+                            <td class="py-2 px-4">
+                                <div contenteditable="true" class="editable">${hora1}</div>
+                            </td>
+                            <td class="py-2 px-4">
+                                <div contenteditable="true" class="editable">${hora2}</div>
+                            </td>
+                            <td class="py-2 px-4">
+                                <div contenteditable="true" class="editable">${hora3}</div>
+                            </td>
+                            <td class="py-2 px-4">
+                                <div contenteditable="true" class="editable">${hora4}</div>
+                            </td>
+                            <td class="py-2 px-4">
+                                <div contenteditable="true" class="editable">${hora5}</div>
+                            </td>
+                            <td class="py-2 px-4">
+                                <div contenteditable="true" class="editable">${hora6}</div>
+                            </td>
+                            <td class="py-2 px-4">
+                                <div contenteditable="true" class="editable">${hora7}</div>
+                            </td>
+                            <td class="py-2 px-4">
+                                <div contenteditable="true" class="editable">${hora8}</div>
+                            </td>
+                            <td class="py-2 px-4">
+                                <div contenteditable="true" class="editable">${hora9}</div>
+                            </td>
+                            <td class="py-2 px-4">
+                                <div contenteditable="true" class="editable">${hora10}</div>
+                            </td>
+                        </tr>`;
+
                 });
 
-                empleadoInfo += `</ul></div>`;
+                empleadoInfo += `</tbody></table></div>`;
 
                 resultadosDiv.innerHTML += empleadoInfo;
             });
         }
-    </script>
 
+        // Habilitar la funcionalidad de subir datos
+        document.getElementById('printButton').addEventListener('click', function() {
+            // Verificar si hay datos para enviar
+            if (empleados.length === 0) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'No hay datos para subir. Por favor, carga un archivo Excel primero.',
+                    icon: 'error',
+                });
+                return;
+            }
+
+            // Mostrar un mensaje de carga
+            const resultadosDiv = document.getElementById('resultados');
+            resultadosDiv.innerHTML = "<p>Subiendo datos, por favor espera...</p>";
+
+            // Enviar los datos al controlador usando fetch
+            fetch('../controllers/HorariosEmpleadosController.php?op=agregar', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(empleados)
+                })
+                .then(response => response.json()) // Parsear la respuesta como JSON
+                .then(data => {
+                    // Manejar la respuesta del servidor
+                    if (data.success) {
+                        Swal.fire({
+                            title: 'Éxito!',
+                            text: data.message, // Mostrar el mensaje del servidor
+                            icon: 'success',
+                        }).then(() => {
+                            window.location.reload(); // Recarga la página para ver los cambios
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: data.message, // Mostrar el mensaje de error del servidor
+                            icon: 'error',
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Hubo un error al enviar los datos.',
+                        icon: 'error',
+                    });
+                })
+                .finally(() => {
+                    // Limpiar el mensaje de carga
+                    resultadosDiv.innerHTML = "";
+                });
+        });
+    </script>
 </body>
 
 </html>

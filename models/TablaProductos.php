@@ -108,6 +108,46 @@ class TablaProductos extends Conexion
         }
     }
 
+    public function editar()
+    {
+        $query = "CALL editarMaterial(:idMateriales, :Material)";
+        try {
+            self::getConexion();
+            $resultado = self::$cnx->prepare($query);
+            $resultado->bindParam(":idMateriales", $this->idMateriales, PDO::PARAM_INT);
+            $resultado->bindParam(":Material", $this->Material, PDO::PARAM_STR);
+            $resultado->execute();
+            return true;
+        } catch (PDOException $e) {
+            throw new Exception("Error al editar el material: " . $e->getMessage());
+        } finally {
+            self::desconectar();
+        }
+    }
+    public function eliminar() 
+    {
+        $query = "CALL eliminarMaterial(:idMateriales)";
+    
+        try {
+            // Conectar a la base de datos
+            self::getConexion();
+    
+            // Preparar la consulta
+            $resultado = self::$cnx->prepare($query);
+            $resultado->bindParam(":idMateriales", $this->idMateriales, PDO::PARAM_INT);
+    
+            // Ejecutar la consulta
+            $resultado->execute();
+    
+            // Retornar true si se eliminó correctamente
+            return true;
+        } catch (PDOException $e) {
+            throw new Exception("Error al eliminar el material: " . $e->getMessage());
+        } finally {
+            // Desconectar de la base de datos
+            self::desconectar();
+        }
+    }
 
     public function existeMaterial()
     {
