@@ -48,12 +48,13 @@
         </div>
 
         <div class="flex justify-center space-x-4 mb-6">
-            <button id="btnAgregar" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200">
+            <button id="btnAgregar" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200 flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                 </svg>
-                Agregar Empleado
+                <span>Agregar Empleado</span>
             </button>
+
         </div>
 
         <!-- Footer -->
