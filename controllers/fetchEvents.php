@@ -1,45 +1,51 @@
 <?php
-require_once '../config/global.php';  // Conexión a la base de datos
+require_once '../config/Conexion.php';
 
-// Filtrar eventos por fecha del calendario
-$where_sql = ''; 
-if(!empty($_GET['start']) && !empty($_GET['end'])){ 
-    $where_sql .= " WHERE start BETWEEN '".$_GET['start']."' AND '".$_GET['end']."' "; 
+try {
+    $db = Conexion::conectar();
+} catch (PDOException $e) {
+    echo json_encode(['error' => 'Conexión fallida: ' . $e->getMessage()]);
+    exit;
 }
 
-// Obtener eventos de la base de datos
-$sql = "SELECT * FROM events $where_sql"; 
-$result = $db->query($sql);  
+$where_sql = '';
+$params = [];
 
-$eventsArr = array(); 
-if ($result->num_rows > 0) { 
-    while ($row = $result->fetch_assoc()) { 
-        // Convertir fechas a timestamp
-        $event_start = strtotime($row['start']);
-        $event_end = strtotime($row['end']);
-        $current_date = strtotime(date('Y-m-d'));
-
-        // Calcular la diferencia de días entre la fecha actual y la fecha de inicio
-        $days_until_start = ($event_start - $current_date) / (60 * 60 * 24);
-
-        // Determinar el color del evento
-        if ($current_date > $event_end) {
-            $event_color = 'green';  // Verde si el evento ya terminó
-        } elseif ($days_until_start <= 5 && $days_until_start > 0) {
-            $event_color = 'yellow'; // Amarillo si la fecha de inicio está a menos de 5 días
-        } elseif ($current_date >= $event_start && $current_date <= $event_end) {
-            $event_color = 'green';   // Azul si el evento está en progreso
-        } else {
-            $event_color = 'default'; // Color predeterminado si no se aplica ninguna condición
-        }
-
-        // Agregar color a los eventos
-        $row['color'] = $event_color;
-        array_push($eventsArr, $row); 
-    } 
+if (!empty($_GET['start']) && !empty($_GET['end'])) {
+    $where_sql = " WHERE start BETWEEN ? AND ?";
+    $params = [$_GET['start'], $_GET['end']];
 }
 
+$sql = "SELECT * FROM events $where_sql";
+$stmt = $db->prepare($sql);
+$stmt->execute($params);
+$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Renderizar los eventos en formato JSON
+$eventsArr = [];
+$current_date = new DateTime(); // Fecha actual
+
+foreach ($results as $row) {
+    $event_start = new DateTime($row['start']);
+    $event_end = new DateTime($row['end']);
+    
+    // Calculamos la diferencia en días
+    $interval = $current_date->diff($event_start);
+    $days_difference = $interval->days;
+    
+    // Aplicamos las reglas de colores
+    if ($current_date >= $event_end) {
+        // Evento ya pasó (incluyendo si termina hoy)
+        $row['color'] = 'green';
+    } elseif ($current_date >= $event_start || $days_difference <= 5) {
+        // Evento en los próximos 5 días o ya empezó pero no terminó
+        $row['color'] = 'yellow';
+    } else {
+        // Evento a más de 5 días
+        $row['color'] = 'blue';
+    }
+    
+    $eventsArr[] = $row;
+}
+
 echo json_encode($eventsArr);
 ?>
