@@ -8,7 +8,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body class="bg-gradient-to-r from-blue-50 to-indigo-100">
@@ -46,6 +45,8 @@
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script>
         let empleados = [];
 
@@ -64,13 +65,9 @@
             reader.onload = function(e) {
                 try {
                     const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, {
-                        type: 'array'
-                    });
+                    const workbook = XLSX.read(data, { type: 'array' });
                     const sheet = workbook.Sheets[workbook.SheetNames[0]];
-                    const rows = XLSX.utils.sheet_to_json(sheet, {
-                        header: 1
-                    });
+                    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
                     resultadosDiv.innerHTML = "";
                     leer(rows);
@@ -228,8 +225,7 @@
             const resultadosDiv = document.getElementById('resultados');
             resultadosDiv.innerHTML = "<p>Subiendo datos, por favor espera...</p>";
 
-            const BASE_URL = 'https://imprenta4-0-fjhpejh5ate0dzbu.canadacentral-01.azurewebsites.net';
-            fetch(`${BASE_URL}/controllers/HorariosEmpleadosController.php?op=agregar`, {
+            fetch('../controllers/HorariosEmpleadosController.php?op=agregar', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
