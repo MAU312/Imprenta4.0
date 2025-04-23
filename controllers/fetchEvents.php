@@ -27,11 +27,11 @@ $current_date = new DateTime(); // Fecha actual
 foreach ($results as $row) {
     $event_start = new DateTime($row['start']);
     $event_end = new DateTime($row['end']);
-
+    
     // Calculamos la diferencia en días
     $interval = $current_date->diff($event_start);
     $days_difference = $interval->days;
-
+    
     // Aplicamos las reglas de colores
     if ($current_date >= $event_end) {
         // Evento ya pasó (incluyendo si termina hoy)
@@ -43,7 +43,7 @@ foreach ($results as $row) {
         // Evento a más de 5 días
         $row['color'] = 'blue';
     }
-
+    
     $eventsArr[] = $row;
 }
 
