@@ -64,9 +64,13 @@
             reader.onload = function(e) {
                 try {
                     const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
+                    const workbook = XLSX.read(data, {
+                        type: 'array'
+                    });
                     const sheet = workbook.Sheets[workbook.SheetNames[0]];
-                    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+                    const rows = XLSX.utils.sheet_to_json(sheet, {
+                        header: 1
+                    });
 
                     resultadosDiv.innerHTML = "";
                     leer(rows);
@@ -224,7 +228,8 @@
             const resultadosDiv = document.getElementById('resultados');
             resultadosDiv.innerHTML = "<p>Subiendo datos, por favor espera...</p>";
 
-            fetch('../controllers/HorariosEmpleadosController.php?op=agregar', {
+            const BASE_URL = 'https://imprenta4-0-fjhpejh5ate0dzbu.canadacentral-01.azurewebsites.net';
+            fetch(`${BASE_URL}/controllers/HorariosEmpleadosController.php?op=agregar`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
