@@ -88,7 +88,7 @@
                     <select id="anio" name="anio" class="px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <?php
                         $anio_actual = isset($_GET['anio']) ? $_GET['anio'] : 2025;
-                        for ($i = 2020; $i <= 2030; $i++) {
+                        for ($i = 2020; $i <= 2025; $i++) {
                             echo "<option value='$i' " . ($i == $anio_actual ? 'selected' : '') . ">$i</option>";
                         }
                         ?>
@@ -108,7 +108,7 @@
                     <select id="anio2" name="anio2" class="px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <?php
                         $anio_actual = isset($_GET['anio2']) ? $_GET['anio2'] : 2025;
-                        for ($i = 2020; $i <= 2030; $i++) {
+                        for ($i = 2020; $i <= 2025; $i++) {
                             echo "<option value='$i' " . ($i == $anio_actual ? 'selected' : '') . ">$i</option>";
                         }
                         ?>
