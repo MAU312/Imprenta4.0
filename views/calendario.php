@@ -95,32 +95,9 @@
         },
 
         eventRender: function(info) {
-          var event = info.event;
-          var startDate = event.start;
-          var endDate = event.end;
-          var today = new Date();
-
-          // Reset all background colors
-          info.el.style.backgroundColor = '';
-
-          // Check if the event is within the first 2 days
-          var firstDay = new Date(startDate);
-          var secondDay = new Date(startDate);
-          secondDay.setDate(firstDay.getDate() + 1);
-
-          // Check if the event is the last day (arrival day)
-          var arrivalDay = new Date(endDate);
-
-          // Set colors based on event dates
-          if (today <= secondDay) {
-            // Blue for the first 2 days
-            info.el.style.backgroundColor = 'blue';
-          } else if (today >= secondDay && today <= arrivalDay) {
-            // Yellow for the days in between
-            info.el.style.backgroundColor = 'yellow';
-          } else if (today === arrivalDay) {
-            // Green for the arrival day
-            info.el.style.backgroundColor = 'green';
+          // Usamos el color que viene del backend
+          if (info.event.extendedProps.color) {
+            info.el.style.backgroundColor = info.event.extendedProps.color;
           }
         },
 
