@@ -1,6 +1,6 @@
 <?php
 // Include database configuration file  
-require_once '../config/global.php';
+require_once '../config/Conexion.php';
 
 // Retrieve JSON from POST body 
 $jsonStr = file_get_contents('php://input');
