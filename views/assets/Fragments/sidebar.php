@@ -8,8 +8,9 @@ $user_nombre = isset($_SESSION['user_nombre']) ? $_SESSION['user_nombre'] : 'Inv
 
 <div class="flex flex-col w-64 bg-gray-800 text-white sticky top-0 h-screen">
     <div class="flex items-center justify-center h-16 border-b border-gray-700">
-        <h1 class="text-xl font-bold"><?php echo htmlspecialchars($user_nombre); ?></h1>
+        <img src="https://3dde2107da.clvaw-cdnwnd.com/69b4400873fc9f680628be28f54d3f05/200000001-f13bbf13be/450/LOGO%20AC1.webp?ph=3dde2107da" alt="Logo AC1" class="h-12">
     </div>
+
 
     <nav class="flex-1 overflow-y-auto">
         <ul class="p-4">
