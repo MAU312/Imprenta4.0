@@ -29,6 +29,7 @@ class Conexion
 {
     public static function conectar()
     {
+        function __construct() {}
         // conexion mysql
         try {
             $options = array(

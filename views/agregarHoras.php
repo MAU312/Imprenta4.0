@@ -65,9 +65,13 @@
             reader.onload = function(e) {
                 try {
                     const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
+                    const workbook = XLSX.read(data, {
+                        type: 'array'
+                    });
                     const sheet = workbook.Sheets[workbook.SheetNames[0]];
-                    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+                    const rows = XLSX.utils.sheet_to_json(sheet, {
+                        header: 1
+                    });
 
                     resultadosDiv.innerHTML = "";
                     leer(rows);
