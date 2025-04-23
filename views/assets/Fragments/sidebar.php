@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 
 // Verifica si la sesión de 'user_nombre' está definida
 $user_nombre = isset($_SESSION['user_nombre']) ? $_SESSION['user_nombre'] : 'Invitado';
