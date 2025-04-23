@@ -1,6 +1,8 @@
 <?php
 require_once '../models/HorariosEmpleados.php'; // Asegúrate de que este archivo esté en la ubicación correcta
 
+echo "Hola desde el controlador";
+
 // Verificar si se ha enviado la operación deseada
 if (isset($_GET["op"])) {
     switch ($_GET["op"]) {
