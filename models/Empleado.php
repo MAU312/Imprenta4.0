@@ -415,70 +415,62 @@ class Empleado extends Conexion
         self::$cnx = null;
     }
 
-    public function listar()
+    public function listar($start = 0, $length = 10, $searchValue = '')
     {
-        $query = "SELECT 
-        id, identificacion, numero_asegurado, nombre, primer_apellido, segundo_apellido,
-        fecha_nacimiento, edad, telefono1, correo, sexo, estado_civil, lugar_nacimiento, nacionalidad, direccion_domicilio,
-        telefono2, nombre_contacto1, parentesco_contacto1, telefono_contacto1, direccion_contacto1, nombre_contacto2,
-        parentesco_contacto2, telefono_contacto2, direccion_contacto2, tipo_sangre, padecimientos, discapacidades, intervenciones,
-        uso_aparatos, medicamentos, dosificacion, frecuencia, proposito, fecha_ingreso, jefe_supervisor, puesto_actual, ultimo_grado_estudio
-    FROM empleados;";
+        $query = "SELECT * FROM empleados";
+
+        if (!empty($searchValue)) {
+            $query .= " WHERE nombre LIKE :search OR primer_apellido LIKE :search";
+        }
+
+        $query .= " LIMIT :start, :length";
 
         try {
             self::getConexion();
+            $stmt = self::$cnx->prepare($query);
 
-            $resultado = self::$cnx->prepare($query);
-            $resultado->execute();
-            $filas = $resultado->fetchAll(PDO::FETCH_ASSOC);
-
-            $data = array();
-            foreach ($filas as $fila) {
-                $tabla = new self();
-                $tabla->setIdentificacion($fila["identificacion"]);
-                $tabla->setNumeroAsegurado($fila["numero_asegurado"]);
-                $tabla->setNombre($fila["nombre"]);
-                $tabla->setPrimerApellido($fila["primer_apellido"]);
-                $tabla->setSegundoApellido($fila["segundo_apellido"]);
-                $tabla->setFechaNacimiento($fila["fecha_nacimiento"]);
-                $tabla->setEdad($fila["edad"]);
-                $tabla->setTelefono1($fila["telefono1"]);
-                $tabla->setCorreo($fila["correo"]);
-                $tabla->setSexo($fila["sexo"]);
-                $tabla->setEstadoCivil($fila["estado_civil"]);
-                $tabla->setLugarNacimiento($fila["lugar_nacimiento"]);
-                $tabla->setNacionalidad($fila["nacionalidad"]);
-                $tabla->setDireccionDomicilio($fila["direccion_domicilio"]);
-                $tabla->setTelefono2($fila["telefono2"]);
-                $tabla->setNombreContacto1($fila["nombre_contacto1"]);
-                $tabla->setParentescoContacto1($fila["parentesco_contacto1"]);
-                $tabla->setTelefonoContacto1($fila["telefono_contacto1"]);
-                $tabla->setDireccionContacto1($fila["direccion_contacto1"]);
-                $tabla->setNombreContacto2($fila["nombre_contacto2"]);
-                $tabla->setParentescoContacto2($fila["parentesco_contacto2"]);
-                $tabla->setTelefonoContacto2($fila["telefono_contacto2"]);
-                $tabla->setDireccionContacto2($fila["direccion_contacto2"]);
-                $tabla->setTipoSangre($fila["tipo_sangre"]);
-                $tabla->setPadecimientos($fila["padecimientos"]);
-                $tabla->setDiscapacidades($fila["discapacidades"]);
-                $tabla->setIntervenciones($fila["intervenciones"]);
-                $tabla->setUsoAparatos($fila["uso_aparatos"]);
-                $tabla->setMedicamentos($fila["medicamentos"]);
-                $tabla->setDosificacion($fila["dosificacion"]);
-                $tabla->setFrecuencia($fila["frecuencia"]);
-                $tabla->setProposito($fila["proposito"]);
-                $tabla->setFechaIngreso($fila["fecha_ingreso"]);
-                $tabla->setJefeSupervisor($fila["jefe_supervisor"]);
-                $tabla->setPuestoActual($fila["puesto_actual"]);
-                $tabla->setUltimoGradoEstudio($fila["ultimo_grado_estudio"]);
-                $data[] = $tabla;
+            if (!empty($searchValue)) {
+                $searchParam = "%$searchValue%";
+                $stmt->bindParam(':search', $searchParam);
             }
 
-            return $data;
+            $stmt->bindParam(':start', $start, PDO::PARAM_INT);
+            $stmt->bindParam(':length', $length, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            throw new Exception("Error al obtener los empleados: " . $e->getMessage());
-        } finally {
-            self::desconectar();
+            throw new Exception("Error al listar empleados: " . $e->getMessage());
+        }
+    }
+
+    public function contarTotal()
+    {
+        $query = "SELECT COUNT(*) FROM empleados";
+
+        try {
+            self::getConexion();
+            return self::$cnx->query($query)->fetchColumn();
+        } catch (PDOException $e) {
+            throw new Exception("Error al contar empleados: " . $e->getMessage());
+        }
+    }
+
+    public function contarFiltrados($searchValue)
+    {
+        $query = "SELECT COUNT(*) FROM empleados 
+                 WHERE nombre LIKE :search OR primer_apellido LIKE :search";
+
+        try {
+            self::getConexion();
+            $stmt = self::$cnx->prepare($query);
+            $searchParam = "%$searchValue%";
+            $stmt->bindParam(':search', $searchParam);
+            $stmt->execute();
+
+            return $stmt->fetchColumn();
+        } catch (PDOException $e) {
+            throw new Exception("Error al contar empleados filtrados: " . $e->getMessage());
         }
     }
 
@@ -676,6 +668,77 @@ class Empleado extends Conexion
             return $empleado;
         } catch (PDOException $e) {
             throw new Exception("Error al obtener los detalles del empleado: " . $e->getMessage());
+        } finally {
+            self::desconectar();
+        }
+    }
+
+    public function listarPorId($identificacion)
+    {
+        // Modificamos la consulta para obtener un solo empleado por su ID
+        $query = "SELECT 
+        identificacion, numero_asegurado, nombre, primer_apellido, segundo_apellido,
+        fecha_nacimiento, edad, telefono1, correo, sexo, estado_civil, lugar_nacimiento, nacionalidad, direccion_domicilio,
+        telefono2, nombre_contacto1, parentesco_contacto1, telefono_contacto1, direccion_contacto1, nombre_contacto2,
+        parentesco_contacto2, telefono_contacto2, direccion_contacto2, tipo_sangre, padecimientos, discapacidades, intervenciones,
+        uso_aparatos, medicamentos, dosificacion, frecuencia, proposito, fecha_ingreso, jefe_supervisor, puesto_actual, ultimo_grado_estudio
+    FROM empleados WHERE identificacion = :identificacion;"; // Agregamos el filtro por id
+
+        try {
+            self::getConexion();
+
+            $resultado = self::$cnx->prepare($query);
+            $resultado->bindParam(':identificacion', $identificacion, PDO::PARAM_INT); // Vínculo del parámetro
+            $resultado->execute();
+            $fila = $resultado->fetch(PDO::FETCH_ASSOC); // Solo necesitamos una fila
+
+            // Verificamos si se encontró un resultado
+            if ($fila) {
+                $empleado = new self();
+                // Asignamos todos los valores a los atributos de la clase
+                $empleado->setIdentificacion($fila["identificacion"]);
+                $empleado->setNumeroAsegurado($fila["numero_asegurado"]);
+                $empleado->setNombre($fila["nombre"]);
+                $empleado->setPrimerApellido($fila["primer_apellido"]);
+                $empleado->setSegundoApellido($fila["segundo_apellido"]);
+                $empleado->setFechaNacimiento($fila["fecha_nacimiento"]);
+                $empleado->setEdad($fila["edad"]);
+                $empleado->setTelefono1($fila["telefono1"]);
+                $empleado->setCorreo($fila["correo"]);
+                $empleado->setSexo($fila["sexo"]);
+                $empleado->setEstadoCivil($fila["estado_civil"]);
+                $empleado->setLugarNacimiento($fila["lugar_nacimiento"]);
+                $empleado->setNacionalidad($fila["nacionalidad"]);
+                $empleado->setDireccionDomicilio($fila["direccion_domicilio"]);
+                $empleado->setTelefono2($fila["telefono2"]);
+                $empleado->setNombreContacto1($fila["nombre_contacto1"]);
+                $empleado->setParentescoContacto1($fila["parentesco_contacto1"]);
+                $empleado->setTelefonoContacto1($fila["telefono_contacto1"]);
+                $empleado->setDireccionContacto1($fila["direccion_contacto1"]);
+                $empleado->setNombreContacto2($fila["nombre_contacto2"]);
+                $empleado->setParentescoContacto2($fila["parentesco_contacto2"]);
+                $empleado->setTelefonoContacto2($fila["telefono_contacto2"]);
+                $empleado->setDireccionContacto2($fila["direccion_contacto2"]);
+                $empleado->setTipoSangre($fila["tipo_sangre"]);
+                $empleado->setPadecimientos($fila["padecimientos"]);
+                $empleado->setDiscapacidades($fila["discapacidades"]);
+                $empleado->setIntervenciones($fila["intervenciones"]);
+                $empleado->setUsoAparatos($fila["uso_aparatos"]);
+                $empleado->setMedicamentos($fila["medicamentos"]);
+                $empleado->setDosificacion($fila["dosificacion"]);
+                $empleado->setFrecuencia($fila["frecuencia"]);
+                $empleado->setProposito($fila["proposito"]);
+                $empleado->setFechaIngreso($fila["fecha_ingreso"]);
+                $empleado->setJefeSupervisor($fila["jefe_supervisor"]);
+                $empleado->setPuestoActual($fila["puesto_actual"]);
+                $empleado->setUltimoGradoEstudio($fila["ultimo_grado_estudio"]);
+
+                return $empleado;
+            } else {
+                return null; // Si no se encuentra el empleado, retornamos null
+            }
+        } catch (PDOException $e) {
+            throw new Exception("Error al obtener el empleado: " . $e->getMessage());
         } finally {
             self::desconectar();
         }

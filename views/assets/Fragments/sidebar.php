@@ -14,8 +14,9 @@ $user_nombre = isset($_SESSION['user_nombre']) ? $_SESSION['user_nombre'] : 'Inv
     <nav class="flex-1 overflow-y-auto">
         <ul class="p-4">
             <li class="mb-2">
-                <a href="../views/index.php" class="block p-2 rounded hover:bg-gray-700">
-                    <i class="fas fa-home mr-2"></i> Inicio
+                <a href="../views/index.php" class="block p-2 rounded hover:bg-gray-700 flex items-center">
+                    <i class="fas fa-home mr-2"></i>
+                    <span class="flex-grow text-center">Inicio</span>
                 </a>
             </li>
 
@@ -56,12 +57,6 @@ $user_nombre = isset($_SESSION['user_nombre']) ? $_SESSION['user_nombre'] : 'Inv
                         <a href="../views/agregarHoras.php" class="block p-2 rounded hover:bg-gray-600">Horas Trabajadas</a>
                     </li>
                 </ul>
-            </li>
-
-            <li class="mb-2">
-                <a href="../views/login.php" class="block p-2 rounded hover:bg-gray-700">
-                    <i class="fas fa-cogs mr-2"></i> Configuraciones
-                </a>
             </li>
         </ul>
     </nav>

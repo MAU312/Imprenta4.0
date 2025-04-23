@@ -58,18 +58,40 @@
             </div>
         </div>
 
-        <div id="popupEditar" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-            <div class="bg-white rounded-lg p-6 w-96">
+        <div id="popupEditar" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-[9999]">
+            <div class="bg-white rounded-lg p-6 w-96 relative z-[10000]">
                 <h2 class="text-lg font-bold mb-4">Editar Material</h2>
                 <input type="text" id="editarMaterialName" class="border border-gray-300 rounded px-3 py-2 w-full" placeholder="Nuevo nombre del material">
                 <div class="mt-4 flex justify-end">
-                    <button onclick="guardarEdicion()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Guardar</button>
-                    <button onclick="cerrarPopupEditar()" class="bg-gray-300 text-gray-700 px-4 py-2 rounded ml-2">Cancelar</button>
+                    <button id="btnGuardarEdicion" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Guardar</button>
+                    <button onclick="closePopupEditar()" class="bg-gray-300 text-gray-700 px-4 py-2 rounded ml-2">Cancelar</button>
                 </div>
             </div>
         </div>
 
         <script>
+            function abrirPopupEditar(idMaterial, nombreActual) {
+                document.getElementById('editarMaterialName').value = nombreActual;
+                document.getElementById('popupEditar').classList.remove('hidden');
+
+                const botonGuardar = document.getElementById('btnGuardarEdicion');
+
+                // Eliminar cualquier evento previo para evitar múltiples llamadas
+                const nuevoBoton = botonGuardar.cloneNode(true);
+                botonGuardar.parentNode.replaceChild(nuevoBoton, botonGuardar);
+
+                // Agregar nuevo evento con los datos actuales
+                nuevoBoton.addEventListener('click', function() {
+                    editarMaterial(idMaterial, nombreActual);
+                });
+            }
+
+
+
+            function closePopupEditar() {
+                document.getElementById('popupEditar').classList.add('hidden');
+            }
+
             function showPopup() {
                 document.getElementById('popup').classList.remove('hidden');
             }
@@ -79,7 +101,7 @@
             }
         </script>
 
-        
+
 
         <!-- Tabla de materiales -->
         <div class="w-full bg-white rounded-lg shadow-lg border border-gray-300 mb-6 overflow-x-auto">

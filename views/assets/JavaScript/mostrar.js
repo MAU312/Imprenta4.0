@@ -15,28 +15,31 @@ $(document).ready(function () {
         tabla = $('#tbllistado').DataTable({
             "processing": true,
             "serverSide": true,
-            "paging": false,
-            "searching": false,
-            "info": false,
+            // Quita estas líneas que están desactivando las funciones:
+            // "paging": false,
+            // "searching": false,
+            // "info": false,
+
             "ajax": {
                 "url": '../controllers/TablaProductoController.php?op=listar',
                 "type": 'GET',
                 "dataType": 'json',
+                "data": function (d) {
+                    // Puedes agregar parámetros adicionales aquí si es necesario
+                    d.searchValue = d.search.value;
+                },
                 "error": function (xhr, status, error) {
                     console.error("Error en la solicitud:", error);
                     console.error("Respuesta del servidor:", xhr.responseText);
                     alert("Hubo un problema al cargar los productos. Intenta de nuevo más tarde.");
                 }
             },
-            "destroy": true,
-            "iDisplayLength": 5,
             "columns": [
                 { "data": "idMateriales" },
                 { "data": "material" },
                 {
                     "data": "cantidad_inventario",
                     "render": function (data, type, row) {
-                        // Acumular materiales con inventario bajo
                         if (row.cantidad_inventario < 1000) {
                             materialesBajoInventario.push(`${row.material} (${row.cantidad_inventario} unidades)`);
                         }
@@ -48,24 +51,53 @@ $(document).ready(function () {
                     "data": null,
                     "render": function (data, type, row) {
                         return `
-                            <div class="flex justify-center">
                             <div class="flex justify-center space-x-2">
-                                <button onclick="redirectToDetail(${row.idMateriales})" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200 ease-in-out">
+                                <button onclick="redirectToDetail(${row.idMateriales})" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                                     Detalles
                                 </button>
-                                <button onclick="abrirPopupEditar(${row.idMateriales}, '${row.material}')" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition duration-200 ease-in-out">
+                                <button onclick="abrirPopupEditar(${row.idMateriales}, '${row.material.replace(/'/g, "\\'")}')" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
                                     Editar
                                 </button>
-                                <button onclick="eliminarMaterial(${row.idMateriales})" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-200 ease-in-out">
+                                <button onclick="eliminarMaterial(${row.idMateriales})" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
                                     Eliminar
                                 </button>
                             </div>
                         `;
-                    }
+                    },
+                    "orderable": false
                 }
             ],
+            "language": {
+                "lengthMenu": "Mostrar _MENU_ registros por página",
+                "zeroRecords": "No se encontraron resultados",
+                "info": "Mostrando página _PAGE_ de _PAGES_",
+                "infoEmpty": "No hay registros disponibles",
+                "infoFiltered": "(filtrado de _MAX_ registros totales)",
+                "search": "Buscar:",
+                "paginate": {
+                    "first": "Primera",
+                    "last": "Última",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            },
+            "lengthMenu": [5, 10, 25, 50, 100],
+            "pageLength": 10,
+            "dom": '<"top"lf>rt<"bottom"p><"clear">', // Esta configuración organiza los elementos
             "initComplete": function () {
-                // Mostrar alerta después de cargar la tabla si hay materiales con inventario bajo
+                // Personalizar el input de búsqueda
+                $('.dataTables_filter input')
+                    .attr('placeholder', 'Buscar...')
+                    .addClass('border border-gray-300 rounded px-3 py-1 ml-2');
+
+                // Personalizar el dropdown de cantidad de registros
+                $('.dataTables_length label').contents().filter(function () {
+                    return this.nodeType === 3;
+                }).remove();
+                $('.dataTables_length label').prepend('Mostrar ');
+                $('.dataTables_length label').append(' registros');
+
+                // Mostrar alerta de inventarios bajos
                 if (materialesBajoInventario.length > 0) {
                     Swal.fire({
                         toast: true,
@@ -80,7 +112,7 @@ $(document).ready(function () {
                 }
             }
         });
-    }    
+    }
 
     // Llamar a la función para listar productos al cargar el documento
     listarProductosTodos();
@@ -90,7 +122,7 @@ $(document).ready(function () {
 function redirectToDetail(idMaterial) {
     window.location.href = `detalleMaterial.php?idMaterial=${idMaterial}`;
 }
-
+/*
 // Función para abrir el popup de edición
 function abrirPopupEditar(idMaterial, nombreMaterial) {
     materialIdActual = idMaterial; // Guardar el ID del material
@@ -148,3 +180,4 @@ function guardarEdicion() {
         }
     });
 }
+    */

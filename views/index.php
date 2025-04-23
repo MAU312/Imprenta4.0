@@ -20,51 +20,64 @@
     <?php include './assets/Fragments/sidebar.php'; ?>
 
     <div class="flex-1 p-6">
-        <h1 class="text-3xl font-bold mb-6 text-center text-blue-700">Home</h1>
+        <h1 class="text-3xl font-bold mb-6 text-center text-blue-700">Administración Servicios Gráficos A.C.</h1>
+        <div class="flex justify-center items-center gap-24 p-4">
+            <div class="bg-white bg-opacity-80 p-4 rounded-2xl shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300 ease-in-out w-1/4 text-center">
+                <h2 class="text-lg font-semibold text-gray-700">Valor Total del Inventario</h2>
+                <p id="valor-total" class="text-2xl font-bold text-green-600 mt-2">
+                </p>
+            </div>
 
-        <!-- Conversor de medidas con icono mejorado -->
-        <div class="w-full max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
-            <h2 class="text-xl font-semibold mb-4 text-center">Conversor de Medidas</h2>
-            <div class="flex flex-col space-y-4">
-                <div class="flex justify-between items-center">
-                    <div class="flex flex-col w-1/2 pr-2">
-                        <label for="inputValor" class="mb-1 text-gray-700">Valor:</label>
-                        <input type="number" id="inputValor" placeholder="Ingrese valor" class="border rounded-lg p-2" />
-                        <select id="inputUnidad" class="border rounded-lg p-2 mt-2">
-                            <option value="mm">Milímetros</option>
-                            <option value="cm">Centímetros</option>
-                            <option value="m">Metros</option>
-                            <option value="km">Kilómetros</option>
-                            <option value="in">Pulgadas</option>
-                            <option value="ft">Pies</option>
-                            <option value="yd">Yardas</option>
-                            <option value="mi">Millas</option>
-                        </select>
+            <!-- Conversor de medidas con icono mejorado -->
+            <div class="bg-white rounded-lg shadow-md p-6 w-1/4 text-center">
+                <h2 class="text-xl font-semibold mb-3 text-center">Conversor de Medidas</h2>
+                <div class="flex flex-col space-y-2"> <!-- Espaciado entre campos -->
+                    <div class="flex justify-between items-center mb-2"> <!-- Reducción del margen inferior -->
+                        <div class="flex flex-col w-1/2 pr-1">
+                            <label for="inputValor" class="mb-1 text-gray-700">Valor:</label>
+                            <input type="number" id="inputValor" placeholder="Ingrese valor" class="border rounded-lg p-2" />
+                            <select id="inputUnidad" class="border rounded-lg p-2 mt-2">
+                                <option value="mm">Milímetros</option>
+                                <option value="cm">Centímetros</option>
+                                <option value="m">Metros</option>
+                                <option value="km">Kilómetros</option>
+                                <option value="in">Pulgadas</option>
+                                <option value="ft">Pies</option>
+                                <option value="yd">Yardas</option>
+                                <option value="mi">Millas</option>
+                            </select>
+                        </div>
+                        <div class="flex justify-center">
+                            <span class="text-2xl">=</span>
+                        </div>
+                        <div class="flex flex-col w-1/2 pl-1">
+                            <label for="outputValor" class="mb-1 text-gray-700">Resultado:</label>
+                            <input type="text" id="outputValor" placeholder="Resultado" class="border rounded-lg p-2" readonly />
+                            <select id="outputUnidad" class="border rounded-lg p-2 mt-2">
+                                <option value="mm">Milímetros</option>
+                                <option value="cm" selected>Centímetros</option>
+                                <option value="m">Metros</option>
+                                <option value="km">Kilómetros</option>
+                                <option value="in">Pulgadas</option>
+                                <option value="ft">Pies</option>
+                                <option value="yd">Yardas</option>
+                                <option value="mi">Millas</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="flex justify-center">
-                        <span class="text-2xl">=</span>
-                    </div>
-                    <div class="flex flex-col w-1/2 pl-2">
-                        <label for="outputValor" class="mb-1 text-gray-700">Resultado:</label>
-                        <input type="text" id="outputValor" placeholder="Resultado" class="border rounded-lg p-2" readonly />
-                        <select id="outputUnidad" class="border rounded-lg p-2 mt-2">
-                            <option value="mm">Milímetros</option>
-                            <option value="cm" selected>Centímetros</option>
-                            <option value="m">Metros</option>
-                            <option value="km">Kilómetros</option>
-                            <option value="in">Pulgadas</option>
-                            <option value="ft">Pies</option>
-                            <option value="yd">Yardas</option>
-                            <option value="mi">Millas</option>
-                        </select>
-                    </div>
-
+                    <button onclick="limpiarConversor()" class="mt-2 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 flex items-center justify-center text-sm w-fit mx-auto">
+                        <i class="fas fa-eraser mr-1"></i> Limpiar
+                    </button>
                 </div>
-                <button onclick="limpiarConversor()" class="mt-4 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 flex items-center justify-center text-sm w-fit mx-auto">
-                    <i class="fas fa-eraser mr-1"></i> Limpiar
-                </button>
+            </div>
+
+            <div class="bg-white bg-opacity-80 p-4 rounded-2xl shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300 ease-in-out w-1/4 text-center">
+                <h2 class="text-lg font-semibold text-gray-700">Importaciones en el mes</h2>
+                <p id="importaciones-total" class="text-2xl font-bold text-green-600 mt-2">
+                </p>
             </div>
         </div>
+
         <!-- Ventas por Mes -->
         <div class="flex flex-wrap justify-center gap-6 p-4">
             <!-- Gráfico de Ventas por Mes -->
@@ -102,13 +115,11 @@
                     </select>
                 </div>
 
-                <!-- Canvas -->
+                <!-- Canvas Mauricio -->
                 <h2 class="text-2xl font-bold mb-4 text-center">Gastos vs Ingresos (por mes)</h2>
                 <canvas id="graficoGastosIngresos"></canvas>
             </div>
         </div>
-
-
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -134,11 +145,27 @@
 
             if (!isNaN(valor)) {
                 const resultado = (valor * conversiones[unidadDesde]) / conversiones[unidadHasta];
-                document.getElementById('outputValor').value = Number.isInteger(resultado) ? resultado : resultado.toFixed(6).replace(/\.0+$/, '');
+                document.getElementById('outputValor').value = Number.isInteger(resultado) ? resultado : resultado.toFixed(4).replace(/\.0+$/, '');
             } else {
                 document.getElementById('outputValor').value = '';
             }
         }
+
+        function limpiarConversor() {
+            // Restablecer el valor de entrada a un valor vacío
+            document.getElementById('inputValor').value = '';
+
+            // Restablecer la unidad de entrada a "Centímetros"
+            document.getElementById('inputUnidad').value = 'cm';
+
+            // Restablecer el valor de salida a un valor vacío
+            document.getElementById('outputValor').value = '';
+
+            // Restablecer la unidad de salida a "Pulgadas"
+            document.getElementById('outputUnidad').value = 'in';
+        }
+
+
 
         // Agregar los listeners a los cambios
         document.getElementById('inputValor').addEventListener('input', convertir);
@@ -259,6 +286,30 @@
 
             // Agregar un event listener para actualizar el gráfico de gastos e ingresos al cambiar el año
             document.getElementById('anio2').addEventListener('change', cargarGraficoGastosIngresos);
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('../controllers/valorInventario.php?op=valorTotal')
+                .then(response => response.json())
+                .then(data => {
+                    const contador = document.getElementById("valor-total");
+                    contador.textContent = `₡${data.total}`;
+                })
+                .catch(error => {
+                    console.error("Error al obtener el valor total del inventario:", error);
+                });
+
+            fetch('../controllers/valorInventario.php?op=importacionesMes')
+                .then(response => response.json())
+                .then(data => {
+                    const contador = document.getElementById("importaciones-total");
+                    contador.textContent = `${data.total}`;
+                })
+                .catch(error => {
+                    console.error("Error al obtener la cantidad de importaciones:", error);
+                });
         });
     </script>
 

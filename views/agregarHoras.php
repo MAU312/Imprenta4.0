@@ -21,7 +21,7 @@
             <div class="bg-white shadow-lg rounded-lg p-8 space-y-8">
 
                 <div class="text-center">
-                    <h1 class="text-4xl font-extrabold text-gray-800 mb-4">Subir Archivo Excel</h1>
+                    <h1 class="text-4xl font-extrabold text-gray-800 mb-4">Revision de Horas</h1>
                     <p class="text-lg text-gray-600">Carga tu archivo Excel y verás la información de las horas de llegada y salida de los empleados.</p>
                 </div>
 

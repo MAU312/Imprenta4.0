@@ -13,7 +13,7 @@ switch ($_GET["op"]) {
 
     case 'editar':
         editar();
-        break;    
+        break;
     case 'detalles':
         //listarDetalles(); // Llama a la función para obtener detalles
         break;
@@ -27,41 +27,51 @@ switch ($_GET["op"]) {
 function listar()
 {
     try {
-        // Crear una instancia del modelo
         $tablaProductos = new TablaProductos();
 
-        // Obtener los datos de la lista de productos
-        $datos = $tablaProductos->listar();
+        // Parámetros de DataTables
+        $start = isset($_GET['start']) ? intval($_GET['start']) : 0;
+        $length = isset($_GET['length']) ? intval($_GET['length']) : 10;
+        $searchValue = isset($_GET['searchValue']) ? trim($_GET['searchValue']) : '';
 
-        // Verificar si hay datos
+        // Obtener los datos con filtrado
+        $datos = $tablaProductos->listar($start, $length, $searchValue);
+
+        // Obtener el total de registros
+        $totalRegistros = $tablaProductos->contarTotalRegistros();
+
+        // Obtener el total de registros filtrados
+        $totalFiltrados = $searchValue ? $tablaProductos->contarRegistrosFiltrados($searchValue) : $totalRegistros;
+
         if (!empty($datos)) {
-            // Transformar los datos a un array de forma separada
             $data = transformarDatos($datos);
 
-            // Preparar los resultados para la respuesta JSON
             $resultados = array(
                 "success" => true,
+                "draw" => isset($_GET['draw']) ? intval($_GET['draw']) : 1,
+                "recordsTotal" => $totalRegistros,
+                "recordsFiltered" => $totalFiltrados,
                 "data" => $data
             );
         } else {
-            // Enviar mensaje de error si no hay datos
             $resultados = array(
-                "success" => false,
-                "message" => "No hay datos disponibles."
+                "success" => true,
+                "draw" => isset($_GET['draw']) ? intval($_GET['draw']) : 1,
+                "recordsTotal" => 0,
+                "recordsFiltered" => 0,
+                "data" => array(),
+                "message" => "No se encontraron registros"
             );
         }
 
-        // Enviar la respuesta JSON
         echo json_encode($resultados);
     } catch (Exception $e) {
-        // Enviar mensaje de error si ocurrió una excepción
         echo json_encode([
             "success" => false,
             "message" => "Error: " . $e->getMessage()
         ]);
     }
 }
-
 /**
  * Función separada para transformar los datos de objetos a arrays
  */
@@ -109,19 +119,26 @@ function agregar()
         echo "Error: " . $e->getMessage(); // Captura de errores
     }
 }
-function editar() {
-    $idMateriales = isset($_POST["idMateriales"]) ? intval($_POST["idMateriales"]) : 0;
-    $material = isset($_POST["material"]) ? trim($_POST["material"]) : "";
+function editar()
+{
+    // Leer datos del cuerpo JSON
+    $input = json_decode(file_get_contents("php://input"), true);
+
+    $idMateriales = isset($input["idMateriales"]) ? intval($input["idMateriales"]) : 0;
+    $material = isset($input["material"]) ? trim($input["material"]) : "";
+
     if (empty($idMateriales) || empty($material)) {
         echo json_encode(["success" => false, "message" => "Datos incompletos"]);
         return;
     }
+
     $tablaProductos = new TablaProductos();
     $tablaProductos->setIdMateriales($idMateriales);
     $tablaProductos->setMaterial($material);
+
     try {
         if ($tablaProductos->editar()) {
-            echo json_encode(["success" => true]); // Enviar respuesta JSON correcta
+            echo json_encode(["success" => true]);
         } else {
             echo json_encode(["success" => false, "message" => "Error al actualizar"]);
         }
@@ -129,7 +146,9 @@ function editar() {
         echo json_encode(["success" => false, "message" => $e->getMessage()]);
     }
 }
-function eliminar() {
+
+function eliminar()
+{
     // Obtener el ID del material a eliminar
     $idMateriales = isset($_POST["idMateriales"]) ? intval($_POST["idMateriales"]) : 0;
     if (empty($idMateriales)) {
